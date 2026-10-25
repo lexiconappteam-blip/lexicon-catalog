@@ -4,6 +4,7 @@
 в отдельном закрытом репозитории.
 
 - [Скачать Android ARM64 0.5.0](https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.5.0/lexicon-0.5.0-arm64.apk)
+- [Скачать Linux x64 0.5.0](https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.5.0/lexicon-0.5.0-linux-x64.tar.gz)
 - [Каталог словарей](catalog.json)
 - [Метаданные обновлений](app.json)
 - [Новости](news.json)

@@ -9,5 +9,12 @@
     "notes": "Обновление Lexicon"
   },
   "ios": null,
-  "linux": null
+  "linux": {
+    "version": "0.5.0",
+    "build": 5,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.5.0/lexicon-0.5.0-linux-x64.tar.gz",
+    "sha256": "1aa5a17a16a089cf3a5c8d156dd48222c1f88fa3e7fb486650e719deb224e916",
+    "bytes": 12000642,
+    "notes": "Распакуйте папку сборки целиком. Пользовательские данные хранятся отдельно."
+  }
 }
