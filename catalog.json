@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "dictionaries": [
+    {
+      "id": "default",
+      "name": "Толковый словарь",
+      "version": 1,
+      "count": 39778,
+      "bytes": 3043328,
+      "sha256": "aff89d91560d47f6171ebd3db2699e2f2fc69e2949078aa5257c4ae7563466fd",
+      "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/dictionary-v1/dictionary-v1.sqlite3"
+    }
+  ]
+}

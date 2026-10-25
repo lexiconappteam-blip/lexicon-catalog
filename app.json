@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "android": {
+    "version": "0.5.0",
+    "build": 5,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.5.0/lexicon-0.5.0-arm64.apk",
+    "sha256": "c1e1dd0310b1f58df84aaaf69d6245cdb1df7b08b654a693222a3662953ce985",
+    "bytes": 21794068,
+    "notes": "Обновление Lexicon"
+  },
+  "ios": null,
+  "linux": null
+}
