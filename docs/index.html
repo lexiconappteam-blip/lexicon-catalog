@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="ru"><head>
+<base href="/lexicon-catalog/">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10131b"><meta name="description" content="Lexicon — поиск слов в словаре: страница, колонка, номер статьи.">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Lexicon">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" href="favicon.png"><link rel="manifest" href="manifest.json"><title>Lexicon</title>
+<style>html,body{margin:0;background:#10131b;color:#e0e4ed;font-family:system-ui}#loading{position:fixed;inset:0;display:grid;place-content:center;text-align:center;gap:12px}#loading small{color:#a4acbc}</style>
+</head><body><div id="loading"><strong>Lexicon</strong><small>Открываем словарь…</small></div>
+<script>
+window.lexiconCheckForUpdate=async()=>{
+ if(!('serviceWorker' in navigator))throw Error('Updates unavailable');
+ const r=await navigator.serviceWorker.getRegistration();if(!r)throw Error('No service worker');
+ await r.update();
+ if(r.installing)await new Promise((resolve,reject)=>{const w=r.installing;const timer=setTimeout(()=>reject(Error('Update timed out')),30000);w.addEventListener('statechange',()=>{if(w.state==='installed'||w.state==='redundant'){clearTimeout(timer);resolve();}});});
+ if(r.waiting){if(confirm('Обновление Lexicon готово. Открыть новую версию сейчас?')){navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload(),{once:true});r.waiting.postMessage({type:'ACTIVATE_UPDATE'});}return 'waiting';}
+ return 'latest';
+};
+(async()=>{
+ if('serviceWorker' in navigator){try{await navigator.serviceWorker.register('lexicon-sw.js',{updateViaCache:'none'});await navigator.serviceWorker.ready;}catch(e){console.warn('Offline cache unavailable',e);}}
+ const s=document.createElement('script');s.src='flutter_bootstrap.js';s.async=true;document.body.appendChild(s);
+ window.addEventListener('flutter-first-frame',()=>document.getElementById('loading')?.remove());
+})();
+</script></body></html>
