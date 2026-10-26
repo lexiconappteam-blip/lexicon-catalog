@@ -1,4 +1,4 @@
-const CACHE='lexicon-ce65a9ce89e12bb5';
+const CACHE='lexicon-9444ff7841ff3e71';
 const FILES=["index.html", "flutter_bootstrap.js", "flutter.js", "main.dart.js", "sqlite3.wasm", "sqflite_sw.js", "manifest.json", "icons/apple-touch-icon.png", "icons/Icon-192.png", "icons/Icon-512.png", "assets/AssetManifest.bin", "assets/NOTICES", "assets/AssetManifest.bin.json", "assets/FontManifest.json", "assets/shaders/ink_sparkle.frag", "assets/shaders/stretch_effect.frag", "assets/assets/dictionary.sqlite3", "assets/fonts/MaterialIcons-Regular.otf", "assets/fonts/fallback/Roboto-Regular.ttf", "assets/assets/fonts/DejaVuSans.ttf"];
 self.addEventListener('install',event=>event.waitUntil((async()=>{
  const cache=await caches.open(CACHE);await cache.addAll(FILES);
