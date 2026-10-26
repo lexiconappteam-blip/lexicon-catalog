@@ -1,20 +1,20 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.6.0",
-    "build": 6,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.0/lexicon-0.6.0-arm64.apk",
-    "sha256": "2cc5702f4bb31daed30bd8a002b08ecab7d8416a1bdbbe686b5919ded2987d78",
-    "bytes": 21794068,
-    "notes": "Автокопирование после паузы во вводе. Переключатель уведомлений об ошибках, технических работах и обновлениях."
+    "version": "0.6.1",
+    "build": 7,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.1/lexicon-0.6.1-arm64.apk",
+    "sha256": "67827e1f7b8dfd7055f17b5afa98ea4008bf31f4e6463ea6ce477136ed1a1c56",
+    "bytes": 22170335,
+    "notes": "Замена Ё на Е в словаре. Поиск Е/Ё равнозначен. Сохранены координаты статей, история и настройки."
   },
   "ios": null,
   "linux": {
-    "version": "0.5.0",
-    "build": 5,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.5.0/lexicon-0.5.0-linux-x64.tar.gz",
-    "sha256": "1aa5a17a16a089cf3a5c8d156dd48222c1f88fa3e7fb486650e719deb224e916",
-    "bytes": 12000642,
-    "notes": "Распакуйте папку сборки целиком. Пользовательские данные хранятся отдельно."
+    "version": "0.6.1",
+    "build": 7,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.1/lexicon-0.6.1-linux-x64.tar.gz",
+    "sha256": "b37486e0f0b32a1ab56856ffb279df07ba0b6dc122407afb17fbc10b9d5e4735",
+    "bytes": 12381852,
+    "notes": "Замена Ё на Е в словаре. Поиск Е/Ё равнозначен. Сохранены координаты статей, история и настройки."
   }
 }
