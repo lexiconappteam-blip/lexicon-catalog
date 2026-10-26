@@ -1,20 +1,20 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.6.1",
-    "build": 7,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.1/lexicon-0.6.1-arm64.apk",
-    "sha256": "67827e1f7b8dfd7055f17b5afa98ea4008bf31f4e6463ea6ce477136ed1a1c56",
-    "bytes": 22170335,
-    "notes": "Замена Ё на Е в словаре. Поиск Е/Ё равнозначен. Сохранены координаты статей, история и настройки."
+    "version": "0.6.2",
+    "build": 8,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.2/lexicon-0.6.2-arm64.apk",
+    "sha256": "191ac0b473f0d13a1cd6ee1da0c114805345f4cf92250c71b68a3a28f82d7cb0",
+    "bytes": 22181503,
+    "notes": "755 исправлений написания и проверенные номера статей в 20 колонках. Обновление словаря без потери истории."
   },
   "ios": null,
   "linux": {
-    "version": "0.6.1",
-    "build": 7,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.1/lexicon-0.6.1-linux-x64.tar.gz",
-    "sha256": "b37486e0f0b32a1ab56856ffb279df07ba0b6dc122407afb17fbc10b9d5e4735",
-    "bytes": 12381852,
-    "notes": "Замена Ё на Е в словаре. Поиск Е/Ё равнозначен. Сохранены координаты статей, история и настройки."
+    "version": "0.6.2",
+    "build": 8,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.2/lexicon-0.6.2-linux-x64.tar.gz",
+    "sha256": "197e53e50e7996eae1c4c5575f2936878c67e296a4ea45ec7d48afe4ea724364",
+    "bytes": 12392959,
+    "notes": "Исправленный словарь. Распакуйте папку bundle целиком; настройки и история хранятся отдельно."
   }
 }
