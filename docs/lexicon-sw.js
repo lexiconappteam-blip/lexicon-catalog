@@ -1,7 +1,9 @@
-const CACHE='lexicon-7e84e445766f3875';
+const CACHE='lexicon-e4f2047ccdd73358';
 const FILES=["index.html", "flutter_bootstrap.js", "flutter.js", "main.dart.js", "sqlite3.wasm", "sqflite_sw.js", "manifest.json", "icons/apple-touch-icon.png", "icons/Icon-192.png", "icons/Icon-512.png", "assets/AssetManifest.bin", "assets/NOTICES", "assets/AssetManifest.bin.json", "assets/FontManifest.json", "assets/shaders/ink_sparkle.frag", "assets/shaders/stretch_effect.frag", "assets/assets/dictionary.sqlite3", "assets/fonts/MaterialIcons-Regular.otf", "assets/fonts/fallback/Roboto-Regular.ttf", "assets/assets/fonts/DejaVuSans.ttf"];
 self.addEventListener('install',event=>event.waitUntil((async()=>{
- const cache=await caches.open(CACHE);await cache.addAll(FILES);
+ const cache=await caches.open(CACHE);
+ const requests=FILES.map(file=>new Request(new URL(file,self.registration.scope),{cache:'reload'}));
+ await cache.addAll(requests);
  if(!self.registration.active)await self.skipWaiting();
 })()));
 self.addEventListener('activate',event=>event.waitUntil((async()=>{
