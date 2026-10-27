@@ -88988,7 +88988,7 @@ case 8:d=b4
 a1=o.id.p(0,"default")
 a2=A.ev(J.cK(l,"default"))
 if(a2==null)a2=1
-if(!a1)d=!d||a2<2
+if(!a1)d=!d||a2<3
 else d=!1
 s=d?9:10
 break
@@ -88997,7 +88997,7 @@ return A.l($.Ij().kJ("assets/dictionary.sqlite3"),$async$hD)
 case 11:k=b4
 s=12
 return A.l(A.fV(m,J.ib(J.aBf(k),k.byteOffset,k.byteLength)),$async$hD)
-case 12:J.hw(l,"default",2)
+case 12:J.hw(l,"default",3)
 d=o.f
 d.toString
 s=13
@@ -89009,7 +89009,7 @@ b0="\u0422\u043e\u043b\u043a\u043e\u0432\u044b\u0439 \u0441\u043b\u043e\u0432\u0
 b1=d
 s=14
 return A.l(m.f0(),$async$hD)
-case 14:o.fx=a8.b([a9.ai(["id","default","name",b0,"path",b1,"count",39788,"installed",b4&&!o.id.p(0,"default"),"version",2],a,a0)],t.H7)
+case 14:o.fx=a8.b([a9.ai(["id","default","name",b0,"path",b1,"count",39768,"installed",b4&&!o.id.p(0,"default"),"version",3],a,a0)],t.H7)
 d=o.f.xb("dictionaries")
 if(d==null)d=A.b([],t.s)
 a1=d.length
@@ -89349,7 +89349,7 @@ s=p}for(;;)switch(s){case 0:if(m.p1.a!==0||m.w){s=1
 break}l=A.bm(a6.h(0,"id"))
 e=!1
 if(J.d(l,"default")){e=A.ev(a6.h(0,"version"))
-e=(e==null?1:e)<=2}s=e?3:4
+e=(e==null?1:e)<=3}s=e?3:4
 break
 case 3:s=5
 return A.l(m.hJ(a6),$async$cz)
@@ -89564,15 +89564,15 @@ return A.l(A.fV(f,J.ib(J.aBf(m),m.byteOffset,m.byteLength)),$async$hJ)
 case 10:k=n.f
 k=k==null?null:A.c1(k.a.h(0,"installedVersions"))
 l=A.jn(t.f.a(B.aK.n4(k==null?"{}":k,null)),t.N,t.z)
-J.hw(l,"default",2)
+J.hw(l,"default",3)
 k=n.f
 k=k==null?null:k.eG("String","installedVersions",B.aK.vC(l,null))
 j=t.X7
 i=t.Sg
 s=11
 return A.l(i.b(k)?k:A.bY(k,j),$async$hJ)
-case 11:a.m(0,"version",2)
-a.m(0,"count",39788)
+case 11:a.m(0,"version",3)
+a.m(0,"count",39768)
 a.m(0,"updateAvailable",!1)
 a.m(0,"installed",!0)
 n.id.D(0,"default")

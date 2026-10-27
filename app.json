@@ -1,20 +1,20 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.6.2",
-    "build": 8,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.2/lexicon-0.6.2-arm64.apk",
-    "sha256": "191ac0b473f0d13a1cd6ee1da0c114805345f4cf92250c71b68a3a28f82d7cb0",
-    "bytes": 22181503,
-    "notes": "755 исправлений написания и проверенные номера статей в 20 колонках. Обновление словаря без потери истории."
+    "version": "0.6.3",
+    "build": 9,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.3/lexicon-0.6.3-arm64.apk",
+    "sha256": "414f8c80f00d3a9b44405e591b4f186e4a13a254ff7b5e02c52102a39d5029bc",
+    "bytes": 22603095,
+    "notes": "Исправления словаря, восстановленные заголовки и пересчёт 16 дополнительных колонок. Устранены ложные одиночные буквы и поисковые дубли. История сохраняется."
   },
   "ios": null,
   "linux": {
-    "version": "0.6.2",
-    "build": 8,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.2/lexicon-0.6.2-linux-x64.tar.gz",
-    "sha256": "197e53e50e7996eae1c4c5575f2936878c67e296a4ea45ec7d48afe4ea724364",
-    "bytes": 12392959,
-    "notes": "Исправленный словарь. Распакуйте папку bundle целиком; настройки и история хранятся отдельно."
+    "version": "0.6.3",
+    "build": 9,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.3/lexicon-0.6.3-linux-x64.tar.gz",
+    "sha256": "eb327a7c85b3a4b0520e18fe21386b6088c9d424cec157698f9a68a7f96f314c",
+    "bytes": 12817478,
+    "notes": "Исправления словаря и номеров статей в 36 проверенных колонках. Поисковые дубли в одной колонке объединены."
   }
 }

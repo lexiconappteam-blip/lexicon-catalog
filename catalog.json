@@ -4,11 +4,11 @@
     {
       "id": "default",
       "name": "Толковый словарь",
-      "version": 2,
-      "count": 39788,
-      "bytes": 3178496,
-      "sha256": "35e5d43c40f318d43a0ea455c00329c77fe27db7f34a8c19b600d4655393739c",
-      "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/dictionary-v2/dictionary-v2.sqlite3"
+      "version": 3,
+      "count": 39768,
+      "bytes": 4489216,
+      "sha256": "5f5c8bc9e457738f328ab4bc75d6372e297ecf40c8002f992143f8422b662e3e",
+      "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/dictionary-v3/dictionary-v3.sqlite3"
     }
   ]
 }
