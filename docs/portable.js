@@ -3,7 +3,7 @@
  if(window.LexiconAndroid?.legacyPreferences){try{const old=JSON.parse(window.LexiconAndroid.legacyPreferences());for(const name of ['history','historyOn','language'])if(localStorage.getItem('lexicon.web.'+name)===null&&old[name]!==undefined)localStorage.setItem('lexicon.web.'+name,JSON.stringify(old[name]))}catch{}}
  const config=window.LEXICON_PORTABLE,network=window.fetch.bind(window);let pending;
  const normalize=s=>String(s).normalize('NFC').toUpperCase().replaceAll('Ё','Е').replace(/[\u0300\u0301]/g,'').trim();
- async function dictionary(){if(!pending)pending=network(new URL('dictionary.json',document.baseURI)).then(r=>{if(!r.ok)throw Error('Dictionary unavailable');return r.json()}).then(x=>{const groups=new Map();for(const [word,pdf,col,pos] of x.rows){const k=normalize(word);if(!groups.has(k))groups.set(k,[]);groups.get(k).push({word,page:pdf+10,page_pdf:pdf,column:col,position:pos})}return {...x,groups,keys:[...groups.keys()].sort()}}).catch(e=>{pending=null;throw e});return pending}
+ async function dictionary(){if(!pending)pending=network(new URL('dictionary.json?v='+encodeURIComponent(config.dictionaryRevision||config.version),document.baseURI)).then(r=>{if(!r.ok)throw Error('Dictionary unavailable');return r.json()}).then(x=>{const groups=new Map();for(const [word,pdf,col,pos] of x.rows){const k=normalize(word);if(!groups.has(k))groups.set(k,[]);groups.get(k).push({word,page:pdf+10,page_pdf:pdf,column:col,position:pos})}return {...x,groups,keys:[...groups.keys()].sort()}}).catch(e=>{pending=null;throw e});return pending}
  // Keep approximate matching away from the typing/UI thread.
  let searchWorker,workerId=0,workerUnavailable=false;const jobs=new Map();
  async function searchDictionary(data,q,limit,signal){

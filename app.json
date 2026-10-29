@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.8.7",
-    "build": 20,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.7/lexicon-0.8.7-arm64.apk",
-    "sha256": "038e7e9c83fffde93d38bd1454dbbec670d90b25a4040cc644985120e19738d8",
-    "bytes": 20241997,
-    "notes": "В результатах отдельно указаны страница PDF и номер в книге. Номера можно выбирать отдельно для копирования."
+    "version": "0.8.8",
+    "build": 21,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.8/lexicon-0.8.8-arm64.apk",
+    "sha256": "93e392aedf20d25d68b879c424a5a5d86bd99f2de1050e44fd982520a6db7d57",
+    "bytes": 20242985,
+    "notes": "Исправлены пропуск ТЮРЬМА и номера статей на странице книги 655: ТЮТЕЛЬКА — колонка 2, статья 3."
   },
   "ios": null,
   "linux": {

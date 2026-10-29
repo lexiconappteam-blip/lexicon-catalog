@@ -1,1 +1,1 @@
-window.LEXICON_PORTABLE={"version": "0.8.7", "injectUrl": "https://11z.co/_w/{id}/selection", "injectField": "value"};
+window.LEXICON_PORTABLE={"version": "0.8.8", "dictionaryRevision": "75b720bcd292361b", "injectUrl": "https://11z.co/_w/{id}/selection", "injectField": "value"};
