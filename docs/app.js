@@ -53,12 +53,33 @@ function stopInject(){injectRunning=false;pauseInject();if($('inject-toggle'))re
 function resumeInject(){if(!injectRunning||!injectMode||document.hidden||currentView!=='search')return;pauseInject();const generation=injectSerial;$('inject-status').textContent=t('injectWaiting');pollInject(generation)}
 async function pollInject(generation){
  if(!injectRunning||generation!==injectSerial||document.hidden||currentView!=='search')return;
- injectController=new AbortController();
- try{const response=await fetch('/api/inject/latest?'+new URLSearchParams({id:$('inject-id').value.trim()}),{signal:injectController.signal});const body=await response.json();if(generation!==injectSerial||!injectRunning)return;if(!response.ok){const error=Error(body.error||t('offline'));error.permanent=response.status===400;throw error}injectFailures=0;
- $('inject-status').textContent=t(body.word?'injectReceived':'injectWaiting');
- if(body.word&&body.event!==lastInjectEvent){$('query').value=body.word;const found=await search();if(found!==false)lastInjectEvent=body.event}
- injectTimer=setTimeout(()=>pollInject(generation),5000);
- }catch(error){if(error.name==='AbortError'||generation!==injectSerial)return;if(error.permanent){stopInject();$('inject-status').textContent=error.message;return}injectFailures++;$('inject-status').textContent=t('injectRetry');injectTimer=setTimeout(()=>pollInject(generation),Math.min(30000,5000*Math.pow(2,injectFailures-1)))}
+ const requestController=new AbortController();injectController=requestController;
+ let deadline;let delay=5000;
+ try{
+  const request=async()=>{const response=await fetch('/api/inject/latest?'+new URLSearchParams({id:$('inject-id').value.trim()}),{signal:requestController.signal});return {response,body:await response.json()}};
+  const {response,body}=await Promise.race([request(),new Promise((_,reject)=>{deadline=setTimeout(()=>{reject(Error('Inject timeout'));requestController.abort()},15000)})]);
+  if(generation!==injectSerial||!injectRunning)return;
+  if(!response.ok){const error=Error(body.error||t('offline'));error.permanent=response.status===400;throw error}
+  injectFailures=0;
+  const checked=new Date().toLocaleTimeString(lang,{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  $('inject-status').textContent=t(body.word?'injectReceived':'injectWaiting')+' · '+checked;
+  if(!body.word)lastInjectEvent=null;
+  else if(body.event!==lastInjectEvent||key($('query').value)!==key(body.word)){
+   $('query').value=body.word;
+   const found=await search();
+   if(generation===injectSerial&&injectRunning&&found!==false)lastInjectEvent=body.event;
+  }
+ }catch(error){
+  if(generation!==injectSerial||!injectRunning)return;
+  if(error.permanent){stopInject();$('inject-status').textContent=error.message;return}
+  injectFailures++;$('inject-status').textContent=t('injectRetry');delay=Math.min(30000,5000*Math.pow(2,injectFailures-1));
+ }finally{
+  clearTimeout(deadline);
+  if(injectController===requestController)injectController=null;
+  if(injectRunning&&generation===injectSerial&&!document.hidden&&currentView==='search'){
+   clearTimeout(injectTimer);injectTimer=setTimeout(()=>pollInject(generation),delay);
+  }
+ }
 }
 async function startInject(){
  if(injectRunning){stopInject();$('inject-status').textContent=t('injectPaused');return}
@@ -76,6 +97,6 @@ function initInject(){
  fetch('/api/inject/status').then(r=>{if(!r.ok)throw Error();return r.json()}).then(x=>{injectConfigured=x.configured;$('inject-config-status').textContent=t(injectConfigured?'injectReady':'injectMissing');refreshInjectUI()}).catch(()=>{$('inject-config-status').textContent=t('offline')});refreshInjectUI();
 }
 
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.7.0';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.7.1';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{const status=$('update-status');status.textContent=t('checkingUpdates');$('download-update').hidden=true;try{const response=await fetch('https://raw.githubusercontent.com/lexiconappteam-blip/lexicon-catalog/main/app.json',{cache:'no-store'});if(!response.ok)throw Error();const manifest=await response.json();const remote=manifest.android?.version||installedVersion;const newer=remote.split('.').map(Number).reduce((result,v,i)=>result||Math.sign(v-(Number(installedVersion.split('.')[i])||0)),0)>0;status.textContent=newer?t('updateAvailable')+' '+remote:t('noUpdates');if(newer&&window.LexiconAndroid){const url=new URL(manifest.android.url);if(url.protocol==='https:'&&url.hostname==='github.com'){$('download-update').href=url.href;$('download-update').hidden=false}}else if(newer){navigator.serviceWorker?.getRegistration().then(r=>r?.update());status.textContent+=' — '+(lang==='ru'?'обновите страницу.':'reload this page.')}}catch{status.textContent=t('offline')}};
 language();loadBooks();initInject();
