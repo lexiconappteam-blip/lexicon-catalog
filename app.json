@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.8.1",
-    "build": 14,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.1/lexicon-0.8.1-arm64.apk",
-    "sha256": "76dbc05ff2b9fec21f21174aaf3b8196009a6611b8d7df68719bc1d4810dd5dc",
-    "bytes": 20237374,
-    "notes": "Подсказки скрываются при точном совпадении. Упрощено подключение Inject, исправлены наложения, добавлены значки истории."
+    "version": "0.8.2",
+    "build": 15,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.2/lexicon-0.8.2-arm64.apk",
+    "sha256": "bda2b149a02ca380ea40ddc4607ddb1480b51b5bd7c387b617efefef66697763",
+    "bytes": 20239108,
+    "notes": "Светлая, тёмная и системная темы с сохранением выбора. История перенесена в правый верхний угол поиска, отдельный пункт меню убран."
   },
   "ios": null,
   "linux": {
