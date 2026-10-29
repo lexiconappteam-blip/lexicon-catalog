@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.6.4",
-    "build": 10,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.6.4/lexicon-0.6.4-arm64.apk",
-    "sha256": "162fd8b16be1a6b4efc80769437d5f4b5be3cdba5c6a2cb34127d3d35da3fe1a",
-    "bytes": 22603095,
-    "notes": "Исправлены номера страниц: показаны страницы книги (22–736), включая копирование и отправку результатов. История сохраняется."
+    "version": "0.7.0",
+    "build": 11,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.7.0/lexicon-0.7.0-arm64.apk",
+    "sha256": "c9b6d8b131fa71534d358e66ba9c2fc6e1e11ef18cf661e83739b8f0841289c9",
+    "bytes": 20232146,
+    "notes": "Новый интерфейс книг и поиска. Inject возобновляет приём после возврата в приложение и временных ошибок сети. Автокопирование удалено; копируемые поля выбираются в настройках."
   },
   "ios": null,
   "linux": {
