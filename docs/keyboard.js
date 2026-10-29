@@ -24,6 +24,7 @@
   root.classList.toggle('keyboard-open',active==='search');root.classList.toggle('catalog-keyboard-open',active==='books');
   document.getElementById('keyboard-done').hidden=!(hideNavigation&&field===query);
   document.getElementById('catalog-keyboard-done').hidden=!(hideNavigation&&field===catalog);
+  if(opened==='search'&&!active&&!keyboard&&field===query)query.dispatchEvent(new Event('lexicon:search-finished'));
   if(opened&&!active&&!views[opened].hidden)window.scrollTo(0,scrollBefore);
   opened=active;
  }
