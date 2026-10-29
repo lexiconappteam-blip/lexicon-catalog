@@ -12,3 +12,7 @@
 @media(max-width:700px){.header-actions{flex-direction:row;justify-content:flex-start}}
 
 .inject-instructions{padding-left:19px;font-size:12px;color:#65775c;line-height:1.9;margin:15px 0}
+
+.search-combobox{position:relative;z-index:15}.search-combobox .word-search{margin-bottom:0}.search-dropdown{position:absolute;top:calc(100% + 5px);left:0;right:0;background:#fdfefb;border:1px solid #d6dfce;border-radius:14px;box-shadow:0 14px 35px #283d2826;max-height:min(360px,45dvh);overflow:auto;padding:6px;overscroll-behavior:contain}.search-option{display:flex;align-items:center;gap:12px;text-align:left;width:100%;min-height:48px;border-radius:8px;padding:11px 13px;color:#35482c;font-size:15px}.search-option svg{width:17px;height:17px;flex-shrink:0;color:#829375}.search-option:hover,.search-option[aria-selected="true"]{background:#eaf0e2}.option-word{overflow-wrap:anywhere}.option-note{margin-left:auto;font-size:10px;color:#78876c;text-align:right}.search-meta{margin-top:12px}@media(max-width:700px){.search-option{font-size:14px;padding:10px;gap:9px}.option-note{max-width:85px;font-size:9px}}
+
+@media(max-width:700px){.search-dropdown{max-height:min(320px,35dvh)}}

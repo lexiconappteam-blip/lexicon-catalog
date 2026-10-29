@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.7.1",
-    "build": 12,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.7.1/lexicon-0.7.1-arm64.apk",
-    "sha256": "5ecc3ed5e51196ebeee692c5bf04d096ebb21b859fa264e830902615aa445457",
-    "bytes": 20233574,
-    "notes": "Исправлен повторный приём Inject после прерванного или зависшего запроса. Добавлено время последней успешной проверки связи."
+    "version": "0.8.0",
+    "build": 13,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.0/lexicon-0.8.0-arm64.apk",
+    "sha256": "465507b21f19d4cad065bc18a55980e6b16dec0c8dd923f7640021c11f92a723",
+    "bytes": 20236590,
+    "notes": "Подсказки во время ввода, обработка опечаток, перестановок букв и пробелов. Выбор подходящего слова из строки Inject без автоматической подмены."
   },
   "ios": null,
   "linux": {
