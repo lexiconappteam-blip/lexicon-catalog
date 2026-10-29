@@ -68,11 +68,15 @@ $('query').addEventListener('keydown',e=>{
   $('query').setAttribute('aria-activedescendant',options[activeSuggestion].id);options[activeSuggestion].scrollIntoView({block:'nearest'});
  }else if(e.key==='Enter'&&activeSuggestion>=0){e.preventDefault();options[activeSuggestion].click()}
 });
-function finishManualInput(){if(injectMode||$('query').readOnly)return;manualInputFinished=true;$('query').value='';closeSuggestions()}
+function finishManualInput(){if(injectMode||$('query').readOnly)return;manualInputFinished=true;closeSuggestions()}
+function clearManualInput(){if(injectMode||$('query').readOnly)return;manualInputFinished=false;$('query').value='';closeSuggestions()}
 $('query').addEventListener('blur',finishManualInput);
 $('query').addEventListener('lexicon:search-finished',finishManualInput);
+document.querySelector('.word-search').addEventListener('pointerdown',e=>{if(e.target.closest('button')||injectMode||$('query').readOnly)return;clearManualInput();if(e.target!==$('query'))$('query').focus({preventScroll:true})});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)finishManualInput()});
+window.addEventListener('pagehide',finishManualInput);
 $('query').addEventListener('focus',()=>{
- if(!injectMode&&(manualInputFinished||data?.matches.length&&key($('query').value)===data.normalized))finishManualInput();
+ if(!injectMode&&(manualInputFinished||data?.matches.length&&key($('query').value)===data.normalized))clearManualInput();
  if(!$('query').value.trim()){closeSuggestions();return}
  suggestionsDismissed=false;if(data)renderSuggestions(data)
 });
@@ -86,7 +90,7 @@ function restoreRoute(){const params=new URLSearchParams(location.search);const 
 $('history-enabled').checked=historyOn;
 $('history-enabled').onchange=()=>{historyOn=$('history-enabled').checked;save('historyOn',historyOn);if(!historyOn)clearTimeout(historyTimer)};
 
-$('clear-history').onclick=()=>{recent=[];save('history',recent);renderHistory()};$('book-query').oninput=renderBooks;$('query').oninput=()=>{manualInputFinished=false;suggestionsDismissed=false;search()};$('query').addEventListener('search',()=>{if(!manualInputFinished||$('query').value.trim())search()});$('back-books').onclick=()=>navigate('books');$('language').onchange=()=>{lang=$('language').value;save('language',lang);language()};document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>navigate(b.dataset.view));document.querySelector('.brand').onclick=e=>{e.preventDefault();navigate('books')};window.addEventListener('popstate',restoreRoute);
+$('clear-history').onclick=()=>{recent=[];save('history',recent);renderHistory()};$('book-query').oninput=renderBooks;$('query').oninput=()=>{manualInputFinished=false;suggestionsDismissed=false;search()};$('query').addEventListener('search',()=>{if(!manualInputFinished)search()});$('back-books').onclick=()=>navigate('books');$('language').onchange=()=>{lang=$('language').value;save('language',lang);language()};document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>navigate(b.dataset.view));document.querySelector('.brand').onclick=e=>{e.preventDefault();navigate('books')};window.addEventListener('popstate',restoreRoute);
 document.addEventListener('keydown',e=>{if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();(()=>{if(currentView!=='search')navigate('books');(currentView==='search'?$('query'):$('book-query')).focus()})()}});
 let injectMode=false,injectRunning=false,injectConfigured=false,injectTimer=null,injectSerial=0,injectController=null,lastInjectEvent=null,injectFailures=0;
 function refreshInjectUI(){
@@ -150,6 +154,6 @@ function initInject(){
  fetch('/api/inject/status').then(r=>{if(!r.ok)throw Error();return r.json()}).then(x=>{injectConfigured=x.configured;$('inject-config-status').textContent=injectConfigured?'':t('injectMissing');refreshInjectUI()}).catch(()=>{$('inject-config-status').textContent=t('offline')});refreshInjectUI();
 }
 
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.5';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.6';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{const status=$('update-status');status.textContent=t('checkingUpdates');$('download-update').hidden=true;try{const response=await fetch('https://raw.githubusercontent.com/lexiconappteam-blip/lexicon-catalog/main/app.json',{cache:'no-store'});if(!response.ok)throw Error();const manifest=await response.json();const remote=manifest.android?.version||installedVersion;const newer=remote.split('.').map(Number).reduce((result,v,i)=>result||Math.sign(v-(Number(installedVersion.split('.')[i])||0)),0)>0;status.textContent=newer?t('updateAvailable')+' '+remote:t('noUpdates');if(newer&&window.LexiconAndroid){const url=new URL(manifest.android.url);if(url.protocol==='https:'&&url.hostname==='github.com'){$('download-update').href=url.href;$('download-update').hidden=false}}else if(newer){navigator.serviceWorker?.getRegistration().then(r=>r?.update());status.textContent+=' — '+(lang==='ru'?'обновите страницу.':'reload this page.')}}catch{status.textContent=t('offline')}};
 language();loadBooks();initInject();
