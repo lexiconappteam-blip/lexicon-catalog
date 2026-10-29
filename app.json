@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.8.5",
-    "build": 18,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.5/lexicon-0.8.5-arm64.apk",
-    "sha256": "0c8ef6d33047846e69162e9fcbda3d60da42433eff5c34ad6a2e5b3960eb57a1",
-    "bytes": 20241473,
-    "notes": "После завершения ввода поле очищается, найденное слово и координаты остаются на экране. Следующий запрос начинается с нуля."
+    "version": "0.8.6",
+    "build": 19,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.6/lexicon-0.8.6-arm64.apk",
+    "sha256": "afea0dc53ab718c6f722a89acbe56f8d61bb96d60358b59c8a5b032f813654e1",
+    "bytes": 20241533,
+    "notes": "Поле очищается при следующем нажатии на строку поиска. Найденное слово и координаты остаются на экране."
   },
   "ios": null,
   "linux": {
