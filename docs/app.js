@@ -6,8 +6,8 @@ Object.assign(strings.ru,{injectRetry:'Связь прервалась. Повт
 Object.assign(strings.ru,{checkUpdates:'Проверить обновления',downloadUpdate:'Скачать обновление',noUpdates:'Установлена актуальная версия.',updateAvailable:'Доступна новая версия',checkingUpdates:'Проверяем обновления…'});Object.assign(strings.en,{checkUpdates:'Check for updates',downloadUpdate:'Download update',noUpdates:'You have the latest version.',updateAvailable:'A new version is available',checkingUpdates:'Checking for updates…'});
 Object.assign(strings.ru,{injectId:'Integration ID',checkConnection:'Подключить',injectSetupHint:'Подключите Inject, чтобы получать слова автоматически.',injectConnected:'Подключено. В поиске выберите «Через Inject».',injectSettings:'Настроить Inject →',injectChecking:'Подключаем…'});
 Object.assign(strings.en,{injectId:'Integration ID',checkConnection:'Connect',injectSetupHint:'Connect Inject to receive words automatically.',injectConnected:'Connected. Choose Via Inject in Search.',injectSettings:'Inject settings →',injectChecking:'Connecting…'});
-Object.assign(strings.ru,{themeLabel:'Тема оформления',themeSystem:'Как на устройстве',themeLight:'Светлая',themeDark:'Тёмная'});
-Object.assign(strings.en,{themeLabel:'Appearance',themeSystem:'Device setting',themeLight:'Light',themeDark:'Dark'});
+Object.assign(strings.ru,{keyboardDone:'Готово',themeLabel:'Тема оформления',themeSystem:'Как на устройстве',themeLight:'Светлая',themeDark:'Тёмная'});
+Object.assign(strings.en,{keyboardDone:'Done',themeLabel:'Appearance',themeSystem:'Device setting',themeLight:'Light',themeDark:'Dark'});
 $('theme').value=window.LexiconTheme.get();$('theme').onchange=()=>window.LexiconTheme.set($('theme').value);
 function read(name,fallback){try{return JSON.parse(localStorage.getItem('lexicon.web.'+name))??fallback}catch{return fallback}}
 function save(name,value){try{localStorage.setItem('lexicon.web.'+name,JSON.stringify(value));return true}catch{toast(t('storageFail'));return false}}
@@ -55,7 +55,7 @@ function renderSuggestions(result){
  for(const [i,item] of options.entries()){
   const button=el('button','search-option');button.type='button';button.id='suggestion-'+i;button.setAttribute('role','option');button.setAttribute('aria-selected','false');button.append(icon('search'),el('span','option-word',item.word));
   if(item.typo)button.append(el('small','option-note',lang==='ru'?'Возможный вариант':'Possible match'));
-  button.onmousedown=e=>e.preventDefault();button.onclick=()=>{closeSuggestions();$('query').value=item.word;search()};list.append(button);
+  button.onmousedown=e=>e.preventDefault();button.onclick=()=>{closeSuggestions();$('query').value=item.word;search();if(document.documentElement.classList.contains('keyboard-open'))$('query').blur()};list.append(button);
  }
  list.hidden=suggestionsDismissed||!options.length;$('query').setAttribute('aria-expanded',String(!list.hidden));
 }
@@ -142,6 +142,6 @@ function initInject(){
  fetch('/api/inject/status').then(r=>{if(!r.ok)throw Error();return r.json()}).then(x=>{injectConfigured=x.configured;$('inject-config-status').textContent=injectConfigured?'':t('injectMissing');refreshInjectUI()}).catch(()=>{$('inject-config-status').textContent=t('offline')});refreshInjectUI();
 }
 
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.2';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.3';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{const status=$('update-status');status.textContent=t('checkingUpdates');$('download-update').hidden=true;try{const response=await fetch('https://raw.githubusercontent.com/lexiconappteam-blip/lexicon-catalog/main/app.json',{cache:'no-store'});if(!response.ok)throw Error();const manifest=await response.json();const remote=manifest.android?.version||installedVersion;const newer=remote.split('.').map(Number).reduce((result,v,i)=>result||Math.sign(v-(Number(installedVersion.split('.')[i])||0)),0)>0;status.textContent=newer?t('updateAvailable')+' '+remote:t('noUpdates');if(newer&&window.LexiconAndroid){const url=new URL(manifest.android.url);if(url.protocol==='https:'&&url.hostname==='github.com'){$('download-update').href=url.href;$('download-update').hidden=false}}else if(newer){navigator.serviceWorker?.getRegistration().then(r=>r?.update());status.textContent+=' — '+(lang==='ru'?'обновите страницу.':'reload this page.')}}catch{status.textContent=t('offline')}};
 language();loadBooks();initInject();
