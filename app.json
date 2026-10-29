@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.8.4",
-    "build": 17,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.4/lexicon-0.8.4-arm64.apk",
-    "sha256": "6aa5c6ee5dcc58a847222d92257cbbdd3109ab81c27e1829ca8440ab51147bfd",
-    "bytes": 20241257,
-    "notes": "Исправлен размер мобильных полей. Меню скрывается при вводе в каталоге, поиске и настройках. Закреплён поиск книг над клавиатурой."
+    "version": "0.8.5",
+    "build": 18,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.5/lexicon-0.8.5-arm64.apk",
+    "sha256": "0c8ef6d33047846e69162e9fcbda3d60da42433eff5c34ad6a2e5b3960eb57a1",
+    "bytes": 20241473,
+    "notes": "После завершения ввода поле очищается, найденное слово и координаты остаются на экране. Следующий запрос начинается с нуля."
   },
   "ios": null,
   "linux": {
