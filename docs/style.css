@@ -34,3 +34,5 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}html.mobile-editing nav
 .location dt{min-height:2.8em;line-height:1.35}.book-page-reference{display:block;font-size:10px;line-height:1.4;margin-top:6px;color:#6e7c64;overflow-wrap:anywhere}html[data-theme=dark] .book-page-reference{color:#b1bfa7}
 
 #relay-read-url{display:block;width:100%;min-width:0;font-size:16px;padding:10px;border:1px solid #899b8050;border-radius:8px;color:inherit;background:transparent}#relay-watch label{display:block;margin-top:15px}#relay-connect{margin:10px 0}
+
+.appearance-panel,.language-panel{flex-wrap:wrap}.appearance-panel select,#language{width:230px;max-width:100%;min-height:44px;font-size:16px}.result-labels{margin-top:18px}.settings-caption{margin:28px 0 0;color:#7b8975;font-size:12px}.muted:empty{display:none}#relay-read-url{font-size:16px}#impaler-settings{scroll-margin-top:24px}

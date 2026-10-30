@@ -9,12 +9,12 @@
  const supported=()=>!!native()?.showResultNotification||(ios()?window.LexiconRelay?.canPush():isSecureContext&&'Notification' in window);
  function permission(){try{return native()?.resultNotificationPermission?.()||(supported()?Notification.permission:'denied')}catch{return 'denied'}}
  function persist(value){enabled=value;try{localStorage.setItem(storage,JSON.stringify(value))}catch{}}
- const text=row=>row.word+' · '+row.page+' · '+row.column+' · '+row.position;
+ const text=row=>window.LexiconFormat.format(row,window.LexiconResultFormat());
  function refresh(message){
   const toggle=$('result-notifications');if(!toggle)return;
   const allowed=supported();toggle.disabled=!allowed;toggle.checked=enabled&&permission()==='granted';
-  $('test-result-notification').disabled=!toggle.checked;
-  $('result-notification-status').textContent=message||t(!allowed?'notificationUnavailable':enabled&&permission()!=='granted'?'notificationDenied':toggle.checked?'notificationOn':'notificationOff');
+  $('test-result-notification').disabled=!toggle.checked||!window.LexiconResultFormat().fields.length;
+  const messageText=message||(!allowed?t('notificationUnavailable'):enabled&&permission()!=='granted'?t('notificationDenied'):'');$('result-notification-status').textContent=messageText;$('result-notification-status').hidden=!messageText;
  }
  async function requestPermission(){
   if(native()?.requestResultNotifications){
@@ -26,8 +26,8 @@
  async function show(row,test=false,rows=[row]){
   if(!enabled||permission()!=='granted')return false;
   if(ios())return window.LexiconRelay.publish(rows,{test});
-  const title=(test?'Lexicon · ':'')+row.word;
-  const body=rows.map(row=>(document.documentElement.lang==='en'?'Page ':'Страница ')+row.page+' · '+(document.documentElement.lang==='en'?'column ':'колонка ')+row.column+' · '+(document.documentElement.lang==='en'?'entry ':'статья ')+row.position).join('\n');
+  const title='Lexicon';
+  const body=rows.map(text).join('\n');if(!body)return false;
   if(native()?.showResultNotification)return native().showResultNotification(title,body)===true;
   const registration=await navigator.serviceWorker?.getRegistration();
   if(!enabled)return false;
@@ -43,8 +43,8 @@
     try{persist(await requestPermission()==='granted');refresh(enabled?undefined:t('notificationDenied'))}catch{persist(false);refresh(t('notificationFailed'))}
    };
    $('test-result-notification').onclick=async()=>{try{refresh(t(await show({word:'ТЮТЕЛЬКА',page:655,column:2,position:3},true)?'notificationTestSent':'notificationDenied'))}catch{refresh(t('notificationFailed'))}};
-   window.addEventListener('focus',()=>refresh());window.addEventListener('lexicon:relay-disabled',()=>{if(ios()){persist(false);last=null;refresh()}});
+   window.addEventListener('focus',()=>refresh());window.addEventListener('lexicon:format-changed',()=>refresh());window.addEventListener('lexicon:relay-disabled',()=>{if(ios()){persist(false);last=null;refresh()}});
   },
-  async notify(rows,book){if(!rows.length)return;await window.LexiconRelay?.publish(rows);if(!enabled||ios())return;const signature=JSON.stringify([book,rows.map(row=>[row.word,row.page,row.column,row.position])]);if(last===signature)return;try{if(await show(rows[0],false,rows))last=signature;else refresh(t('notificationDenied'))}catch{refresh(t('notificationFailed'))}}
+  async notify(rows,book){if(!rows.length)return;void window.LexiconRelay?.publish(rows);if(!enabled||ios())return;const signature=JSON.stringify([book,rows.map(text)]);if(last===signature)return;try{if(await show(rows[0],false,rows))last=signature;else refresh(t('notificationDenied'))}catch{refresh(t('notificationFailed'))}}
  };
 })();

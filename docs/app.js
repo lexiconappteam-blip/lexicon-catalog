@@ -1,17 +1,234 @@
 const $=id=>document.getElementById(id);
-const strings={ru:{workspace:'ВАША БИБЛИОТЕКА',edition:'Личная библиотека для вашего выступления',contactShort:'Связаться с нами ↗',library:'Библиотека',collection:'ВАША КОЛЛЕКЦИЯ',books:'Книги',chooseBook:'Выберите книгу, в которой хотите найти слово.',favorites:'Избранное',quickAccess:'Быстрый доступ',catalog:'Каталог книг',findBook:'Найти книгу в каталоге',newBooks:'Библиотека будет расти',requestNote:'Хотите добавить книгу? Напишите нам.',suggestBook:'Предложить книгу ↗',allBooks:'Все книги',wordSearch:'ПОИСК В КНИГЕ',draft:'База проходит сверку',wordPlaceholder:'Начните вводить слово',equal:'Е и Ё равнозначны при поиске',startTyping:'Начните с первых букв',searchHint:'Выберите подсказку или введите слово целиком.',recent:'НЕДАВНИЕ ЗАПРОСЫ',history:'История',historyNote:'Найденные слова сохраняются на этом устройстве.',clear:'Очистить',personal:'ПОД ВАШ СЦЕНАРИЙ',settings:'Настройки',settingsNote:'Настройте результат так, как удобно вам.',copySettings:'Копирование результата',copyFieldsNote:'Выберите, какие данные попадут в буфер обмена.',preview:'ПРИМЕР РЕЗУЛЬТАТА',pickField:'Выберите хотя бы одно поле.',keepHistory:'История поиска',localHistory:'Сохранять найденные слова на этом устройстве',browserNote:'Некоторые браузеры разрешают копирование только по нажатию кнопки.',dataNote:'База ещё проходит сверку. В написании слов и координатах возможны ошибки.',footerText:'Ваша личная библиотека',open:'Открыть книгу',favoriteEmpty:'Добавьте книгу в избранное по звёздочке — она появится здесь.',noBooks:'Книги с таким названием не найдены.',category:'СПРАВОЧНОЕ ИЗДАНИЕ',entries:'слов',favoriteAdd:'Добавить книгу в избранное',favoriteRemove:'Убрать книгу из избранного',page:'Страница',column:'Колонка',position:'Статья',word:'Слово',copy:'Копировать',share:'Поделиться',copied:'Скопировано',copyFail:'Скопируйте выделенный текст: браузер ограничил буфер обмена.',notFound:'Точное совпадение не найдено',try:'Возможно, вы ищете:',prefix:'Выберите слово из подсказок',noHistory:'История пока пуста. Найдите первое слово в книге.',offline:'Нет связи. Проверьте подключение и повторите запрос.',online:'Книга подключена',storageFail:'Браузер не разрешает сохранять настройки.',loadingBooks:'Загружаем книги…',retry:'Повторить',found:'СЛОВО НАЙДЕНО',search:'Поиск',oneBook:'книга',manyBooks:'книг'},en:{workspace:'YOUR LIBRARY',edition:'Your library for your performance',contactShort:'Contact us ↗',library:'Library',collection:'YOUR COLLECTION',books:'Books',chooseBook:'Choose a book to find a word in.',favorites:'Favorites',quickAccess:'Quick access',catalog:'Book catalog',findBook:'Find a book in the catalog',newBooks:'More books to come',requestNote:'Have a book in mind? Get in touch.',suggestBook:'Suggest a book ↗',allBooks:'All books',wordSearch:'SEARCH THIS BOOK',draft:'Data under review',wordPlaceholder:'Start typing a word',equal:'Е and Ё are equivalent in search',startTyping:'Start with a few letters',searchHint:'Choose a suggestion or type a complete word.',recent:'RECENT SEARCHES',history:'History',historyNote:'Found words are saved on this device.',clear:'Clear',personal:'MAKE IT YOURS',settings:'Settings',settingsNote:'Choose the result format that works for you.',copySettings:'Copy preferences',copyFieldsNote:'Choose which fields are copied to your clipboard.',preview:'EXAMPLE RESULT',pickField:'Select at least one field.',keepHistory:'Search history',localHistory:'Save found words on this device',browserNote:'Some browsers require a button click to access the clipboard.',dataNote:'The database is still under review. Words and locations may contain errors.',footerText:'Your personal library',open:'Open book',favoriteEmpty:'Tap the star on a book to keep it here.',noBooks:'No books match this title.',category:'REFERENCE BOOK',entries:'words',favoriteAdd:'Add book to favorites',favoriteRemove:'Remove book from favorites',page:'Page',column:'Column',position:'Entry',word:'Word',copy:'Copy',share:'Share',copied:'Copied',copyFail:'Copy the selected text: your browser restricted clipboard access.',notFound:'No exact match',try:'Did you mean:',prefix:'Choose a word from the suggestions',noHistory:'No searches yet. Find your first word in a book.',offline:'Cannot connect. Check your connection and try again.',online:'Book connected',storageFail:'Your browser cannot save preferences.',loadingBooks:'Loading books…',retry:'Retry',found:'WORD FOUND',search:'Search',oneBook:'book',manyBooks:'books'}};
-Object.assign(strings.ru,{languageLabel:'Язык интерфейса',manualMode:'По слову',injectMode:'Через Inject',injectHelp:'Укажите свой ID для получения слова из Inject.',injectId:'Ваш ID в Inject',checkConnection:'Подключить Inject',startReceive:'Начать приём',stopReceive:'Остановить',injectReady:'Откройте книгу и нажмите «Через Inject».',injectMissing:'Для подключения нужен адрес API Inject. Он пока не указан.',injectWaiting:'Ожидаем слово из Inject…',injectNeedId:'Укажите свой ID Inject в настройках.',injectReceived:'Слово получено из Inject',injectPaused:'Приём остановлен.'});
-Object.assign(strings.en,{languageLabel:'Interface language',manualMode:'Manual',injectMode:'Via Inject',injectHelp:'Enter your ID to receive a word from Inject.',injectId:'Your Inject ID',checkConnection:'Connect Inject',startReceive:'Start receiving',stopReceive:'Stop',injectReady:'Open a book and tap Via Inject.',injectMissing:'The Inject API address has not been configured yet.',injectWaiting:'Waiting for a word from Inject…',injectNeedId:'Enter your Inject ID in Settings.',injectReceived:'Word received from Inject',injectPaused:'Receiving stopped.'});
-Object.assign(strings.ru,{injectRetry:'Связь прервалась. Повторяем автоматически…',injectResumeHint:'Приём продолжится, когда вернётесь в приложение.'});Object.assign(strings.en,{injectRetry:'Connection interrupted. Retrying automatically…',injectResumeHint:'Receiving will resume when you return to the app.'});
-Object.assign(strings.ru,{checkUpdates:'Проверить обновления',downloadUpdate:'Скачать обновление',noUpdates:'Установлена актуальная версия.',updateAvailable:'Доступна новая версия',checkingUpdates:'Проверяем обновления…'});Object.assign(strings.en,{checkUpdates:'Check for updates',downloadUpdate:'Download update',noUpdates:'You have the latest version.',updateAvailable:'A new version is available',checkingUpdates:'Checking for updates…'});
-Object.assign(strings.ru,{injectId:'Integration ID',checkConnection:'Подключить',injectSetupHint:'Подключите Inject, чтобы получать слова автоматически.',injectConnected:'Подключено. В поиске выберите «Через Inject».',injectSettings:'Настроить Inject →',injectChecking:'Подключаем…'});
-Object.assign(strings.en,{injectId:'Integration ID',checkConnection:'Connect',injectSetupHint:'Connect Inject to receive words automatically.',injectConnected:'Connected. Choose Via Inject in Search.',injectSettings:'Inject settings →',injectChecking:'Connecting…'});
-Object.assign(strings.ru,{keyboardDone:'Готово',themeLabel:'Тема оформления',themeSystem:'Как на устройстве',themeLight:'Светлая',themeDark:'Тёмная'});
-Object.assign(strings.en,{keyboardDone:'Done',themeLabel:'Appearance',themeSystem:'Device setting',themeLight:'Light',themeDark:'Dark'});
-Object.assign(strings.ru,{resultNotifications:'Уведомления о найденном слове',resultNotificationsHint:'Слово, страница книги, колонка и статья. Можно отключить на время выступления.',watchInstructions:'MysterSmith → External Displays → Apple Watch. Кнопка «На часы» передаёт результат в MysterSmith. Нужно установленное приложение и настроенные часы. Автоматический приём по URL требует отдельного API-сервиса.',sendToWatch:'На часы',watchTransferHint:'Открыть MysterSmith и передать результат',notificationTest:'Проверить уведомление',notificationOn:'Включены. Приём Inject работает, пока приложение открыто.',notificationOff:'Выключены',notificationDenied:'Разрешите уведомления для Lexicon в настройках устройства или браузера.',notificationUnavailable:'На iPhone нужен отдельный сервис Web Push. В этой версии уведомления здесь пока недоступны.',notificationFailed:'Не удалось показать уведомление.',notificationTestSent:'Тестовое уведомление отправлено.'});
-Object.assign(strings.en,{resultNotifications:'Found word notifications',resultNotificationsHint:'Word, book page, column and entry. Turn off during a performance if needed.',watchInstructions:'MysterSmith → External Displays → Apple Watch. To watch opens MysterSmith with this result. Install and configure the companion app and watch first. Automatic URL polling requires a separate API service.',sendToWatch:'To watch',watchTransferHint:'Open MysterSmith with this result',notificationTest:'Test notification',notificationOn:'Enabled. Inject receives while the app is open.',notificationOff:'Off',notificationDenied:'Allow notifications for Lexicon in your device or browser settings.',notificationUnavailable:'iPhone requires a separate Web Push service. Notifications are not available here yet.',notificationFailed:'Could not show a notification.',notificationTestSent:'Test notification sent.'});
-Object.assign(strings.ru,{relayHint:'Передавайте результаты в личный канал Cloudflare. Данные хранятся до суток; ключ подключения — только на этом устройстве.',relayConnect:'Подключить устройство',relayEnable:'Передавать результаты',relayOn:'Передача включена',relayPaused:'Передача приостановлена',relayOff:'Устройство ещё не подключено',relayFailed:'Не удалось связаться с сервисом. Повторите подключение.',relayLimit:'Лимит новых подключений на сегодня. Попробуйте завтра.',relayLink:'Личная ссылка для часов',relayCopy:'Скопировать ссылку',relayCopied:'Ссылка скопирована. В приложении часов укажите Field: text.',relayCopyManually:'Скопируйте выделенную ссылку вручную.',relayWatchHint:'MysterSmith → Custom data source: URL — эта ссылка, Field — text. Ссылка даёт доступ к последнему результату; передавайте её только своему приложению часов.',notificationUnavailable:'На iPhone откройте Lexicon через значок на главном экране: Safari → Поделиться → На экран «Домой». В этом браузере уведомления недоступны.'});
-Object.assign(strings.en,{relayHint:'Send results to your private Cloudflare channel. Results expire after one day; the connection key stays on this device.',relayConnect:'Connect device',relayEnable:'Send results',relayOn:'Sending enabled',relayPaused:'Sending paused',relayOff:'Device not connected',relayFailed:'Cannot reach the service. Try connecting again.',relayLimit:'New connection limit reached. Try tomorrow.',relayLink:'Private watch URL',relayCopy:'Copy URL',relayCopied:'URL copied. Set Field to text in the watch app.',relayCopyManually:'Copy the selected URL manually.',relayWatchHint:'MysterSmith → Custom data source: paste this URL, set Field to text. The URL gives access to your latest result; share it only with your watch companion.',notificationUnavailable:'On iPhone, open Lexicon from its Home Screen icon: Safari → Share → Add to Home Screen. Notifications are unavailable in this browser.'});
+const strings={
+  "ru": {
+    "workspace": "ВАША БИБЛИОТЕКА",
+    "edition": "Личная библиотека для вашего выступления",
+    "contactShort": "Связаться с нами ↗",
+    "library": "Библиотека",
+    "collection": "ВАША КОЛЛЕКЦИЯ",
+    "books": "Книги",
+    "chooseBook": "Выберите книгу, в которой хотите найти слово.",
+    "favorites": "Избранное",
+    "quickAccess": "Быстрый доступ",
+    "catalog": "Каталог книг",
+    "findBook": "Найти книгу в каталоге",
+    "newBooks": "Библиотека будет расти",
+    "requestNote": "Хотите добавить книгу? Напишите нам.",
+    "suggestBook": "Предложить книгу ↗",
+    "allBooks": "Все книги",
+    "wordSearch": "ПОИСК В КНИГЕ",
+    "draft": "База проходит сверку",
+    "wordPlaceholder": "Начните вводить слово",
+    "equal": "Е и Ё равнозначны при поиске",
+    "startTyping": "Начните с первых букв",
+    "searchHint": "Выберите подсказку или введите слово целиком.",
+    "recent": "НЕДАВНИЕ ЗАПРОСЫ",
+    "history": "История",
+    "historyNote": "Найденные слова сохраняются на этом устройстве.",
+    "clear": "Очистить",
+    "personal": "Под ваш сценарий",
+    "settings": "Настройки",
+    "copySettings": "Формат результата",
+    "copyFieldsNote": "Копирование, уведомления и Impaler.",
+    "preview": "Пример",
+    "pickField": "Выберите хотя бы одно поле.",
+    "keepHistory": "История поиска",
+    "localHistory": "Сохранять найденные слова на этом устройстве",
+    "dataNote": "База ещё проходит сверку. В написании слов и координатах возможны ошибки.",
+    "footerText": "Ваша личная библиотека",
+    "open": "Открыть книгу",
+    "favoriteEmpty": "Добавьте книгу в избранное по звёздочке — она появится здесь.",
+    "noBooks": "Книги с таким названием не найдены.",
+    "category": "СПРАВОЧНОЕ ИЗДАНИЕ",
+    "entries": "слов",
+    "favoriteAdd": "Добавить книгу в избранное",
+    "favoriteRemove": "Убрать книгу из избранного",
+    "page": "Страница",
+    "column": "Колонка",
+    "position": "Статья",
+    "word": "Слово",
+    "copy": "Копировать",
+    "share": "Поделиться",
+    "copied": "Скопировано",
+    "copyFail": "Скопируйте выделенный текст: браузер ограничил буфер обмена.",
+    "notFound": "Точное совпадение не найдено",
+    "try": "Возможно, вы ищете:",
+    "prefix": "Выберите слово из подсказок",
+    "noHistory": "История пока пуста. Найдите первое слово в книге.",
+    "offline": "Нет связи. Проверьте подключение и повторите запрос.",
+    "online": "Книга подключена",
+    "storageFail": "Браузер не разрешает сохранять настройки.",
+    "loadingBooks": "Загружаем книги…",
+    "retry": "Повторить",
+    "found": "СЛОВО НАЙДЕНО",
+    "search": "Поиск",
+    "oneBook": "книга",
+    "manyBooks": "книг",
+    "languageLabel": "Язык",
+    "manualMode": "По слову",
+    "injectMode": "Через Inject",
+    "injectHelp": "Укажите свой ID для получения слова из Inject.",
+    "injectId": "Integration ID",
+    "checkConnection": "Подключить",
+    "startReceive": "Начать приём",
+    "stopReceive": "Остановить",
+    "injectReady": "Откройте книгу и нажмите «Через Inject».",
+    "injectMissing": "Для подключения нужен адрес API Inject. Он пока не указан.",
+    "injectWaiting": "Ожидаем слово из Inject…",
+    "injectNeedId": "Укажите свой ID Inject в настройках.",
+    "injectReceived": "Слово получено из Inject",
+    "injectPaused": "Приём остановлен.",
+    "injectRetry": "Связь прервалась. Повторяем автоматически…",
+    "injectResumeHint": "Приём продолжится, когда вернётесь в приложение.",
+    "checkUpdates": "Проверить обновления",
+    "downloadUpdate": "Скачать обновление",
+    "noUpdates": "Установлена актуальная версия.",
+    "updateAvailable": "Доступна новая версия",
+    "checkingUpdates": "Проверяем обновления…",
+    "injectSetupHint": "Подключите Inject, чтобы получать слова автоматически.",
+    "injectConnected": "Подключено. В поиске выберите «Через Inject».",
+    "injectSettings": "Настроить Inject →",
+    "injectChecking": "Подключаем…",
+    "keyboardDone": "Готово",
+    "themeLabel": "Тема",
+    "themeSystem": "Системная тема",
+    "themeLight": "Светлая тема",
+    "themeDark": "Тёмная тема",
+    "resultNotifications": "Уведомления",
+    "sendToWatch": "Impaler",
+    "notificationTest": "Проверить",
+    "notificationDenied": "Разрешите уведомления для Lexicon в настройках устройства или браузера.",
+    "notificationUnavailable": "На iPhone откройте Lexicon через значок на главном экране: Safari → Поделиться → На экран «Домой». В этом браузере уведомления недоступны.",
+    "notificationFailed": "Не удалось показать уведомление.",
+    "notificationTestSent": "Тестовое уведомление отправлено.",
+    "relayConnect": "Получить ссылку",
+    "relayEnable": "Передавать результат",
+    "relayFailed": "Не удалось связаться с сервисом. Повторите подключение.",
+    "relayLimit": "Лимит новых подключений на сегодня. Попробуйте завтра.",
+    "relayLink": "Ссылка для Impaler",
+    "relayCopy": "Скопировать ссылку",
+    "relayCopied": "Ссылка скопирована",
+    "relayCopyManually": "Скопируйте выделенную ссылку вручную.",
+    "relayWatchHint": "Вставьте ссылку в Custom URL в Impaler. Для выбора данных попробуйте поле text.",
+    "relayPlaceholder": "Появится после подключения",
+    "fieldLabels": "Подписи полей",
+    "sentToWatch": "Результат доступен по ссылке"
+  },
+  "en": {
+    "workspace": "YOUR LIBRARY",
+    "edition": "Your library for your performance",
+    "contactShort": "Contact us ↗",
+    "library": "Library",
+    "collection": "YOUR COLLECTION",
+    "books": "Books",
+    "chooseBook": "Choose a book to find a word in.",
+    "favorites": "Favorites",
+    "quickAccess": "Quick access",
+    "catalog": "Book catalog",
+    "findBook": "Find a book in the catalog",
+    "newBooks": "More books to come",
+    "requestNote": "Have a book in mind? Get in touch.",
+    "suggestBook": "Suggest a book ↗",
+    "allBooks": "All books",
+    "wordSearch": "SEARCH THIS BOOK",
+    "draft": "Data under review",
+    "wordPlaceholder": "Start typing a word",
+    "equal": "Е and Ё are equivalent in search",
+    "startTyping": "Start with a few letters",
+    "searchHint": "Choose a suggestion or type a complete word.",
+    "recent": "RECENT SEARCHES",
+    "history": "History",
+    "historyNote": "Found words are saved on this device.",
+    "clear": "Clear",
+    "personal": "Make it yours",
+    "settings": "Settings",
+    "copySettings": "Result format",
+    "copyFieldsNote": "Copying, notifications and Impaler.",
+    "preview": "Preview",
+    "pickField": "Select at least one field.",
+    "keepHistory": "Search history",
+    "localHistory": "Save found words on this device",
+    "dataNote": "The database is still under review. Words and locations may contain errors.",
+    "footerText": "Your personal library",
+    "open": "Open book",
+    "favoriteEmpty": "Tap the star on a book to keep it here.",
+    "noBooks": "No books match this title.",
+    "category": "REFERENCE BOOK",
+    "entries": "words",
+    "favoriteAdd": "Add book to favorites",
+    "favoriteRemove": "Remove book from favorites",
+    "page": "Page",
+    "column": "Column",
+    "position": "Entry",
+    "word": "Word",
+    "copy": "Copy",
+    "share": "Share",
+    "copied": "Copied",
+    "copyFail": "Copy the selected text: your browser restricted clipboard access.",
+    "notFound": "No exact match",
+    "try": "Did you mean:",
+    "prefix": "Choose a word from the suggestions",
+    "noHistory": "No searches yet. Find your first word in a book.",
+    "offline": "Cannot connect. Check your connection and try again.",
+    "online": "Book connected",
+    "storageFail": "Your browser cannot save preferences.",
+    "loadingBooks": "Loading books…",
+    "retry": "Retry",
+    "found": "WORD FOUND",
+    "search": "Search",
+    "oneBook": "book",
+    "manyBooks": "books",
+    "languageLabel": "Language",
+    "manualMode": "Manual",
+    "injectMode": "Via Inject",
+    "injectHelp": "Enter your ID to receive a word from Inject.",
+    "injectId": "Integration ID",
+    "checkConnection": "Connect",
+    "startReceive": "Start receiving",
+    "stopReceive": "Stop",
+    "injectReady": "Open a book and tap Via Inject.",
+    "injectMissing": "The Inject API address has not been configured yet.",
+    "injectWaiting": "Waiting for a word from Inject…",
+    "injectNeedId": "Enter your Inject ID in Settings.",
+    "injectReceived": "Word received from Inject",
+    "injectPaused": "Receiving stopped.",
+    "injectRetry": "Connection interrupted. Retrying automatically…",
+    "injectResumeHint": "Receiving will resume when you return to the app.",
+    "checkUpdates": "Check for updates",
+    "downloadUpdate": "Download update",
+    "noUpdates": "You have the latest version.",
+    "updateAvailable": "A new version is available",
+    "checkingUpdates": "Checking for updates…",
+    "injectSetupHint": "Connect Inject to receive words automatically.",
+    "injectConnected": "Connected. Choose Via Inject in Search.",
+    "injectSettings": "Inject settings →",
+    "injectChecking": "Connecting…",
+    "keyboardDone": "Done",
+    "themeLabel": "Theme",
+    "themeSystem": "System theme",
+    "themeLight": "Light theme",
+    "themeDark": "Dark theme",
+    "resultNotifications": "Notifications",
+    "sendToWatch": "Impaler",
+    "notificationTest": "Test",
+    "notificationDenied": "Allow notifications for Lexicon in your device or browser settings.",
+    "notificationUnavailable": "On iPhone, open Lexicon from its Home Screen icon: Safari → Share → Add to Home Screen. Notifications are unavailable in this browser.",
+    "notificationFailed": "Could not show a notification.",
+    "notificationTestSent": "Test notification sent.",
+    "relayConnect": "Get URL",
+    "relayEnable": "Send result",
+    "relayFailed": "Cannot reach the service. Try connecting again.",
+    "relayLimit": "New connection limit reached. Try tomorrow.",
+    "relayLink": "Impaler URL",
+    "relayCopy": "Copy URL",
+    "relayCopied": "URL copied",
+    "relayCopyManually": "Copy the selected URL manually.",
+    "relayWatchHint": "Paste this URL into Custom URL in Impaler. Try text as the data field.",
+    "relayPlaceholder": "Available after connecting",
+    "fieldLabels": "Field labels",
+    "sentToWatch": "Result available at your URL"
+  }
+};
 $('theme').value=window.LexiconTheme.get();$('theme').onchange=()=>window.LexiconTheme.set($('theme').value);
 Object.assign(strings.ru,{page:'Страница',page_pdf:'Страница PDF',bookPageShort:'В книге'});
 Object.assign(strings.en,{page:'Page',page_pdf:'PDF page',bookPageShort:'In book'});
@@ -23,6 +240,8 @@ let recent=read('history',[]);if(!Array.isArray(recent))recent=[];
 recent=recent.map(x=>typeof x==='string'?{word:x,book:'default'}:x).filter(x=>x&&typeof x.word==='string'&&typeof x.book==='string').slice(0,100);
 let favorites=read('favoriteBooks',[]);if(!Array.isArray(favorites))favorites=[];
 let copyFields=read('copyFields',['word','page','column','position']);if(!Array.isArray(copyFields))copyFields=['word','page','column','position'];copyFields=[...new Set(copyFields.map(x=>x==='page_pdf'?'page':x))].filter(x=>['word','page','column','position'].includes(x));save('copyFields',copyFields);
+let resultLabels=read('resultLabels',true)!==false;
+window.LexiconResultFormat=()=>window.LexiconFormat.normalize({fields:copyFields,labels:resultLabels,lang});
 let historyOn=read('historyOn',true),books=[],selected=null,data=null,controller=null,serial=0,historyTimer,toastTimer,currentView='books';
 function icon(name){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');const u=document.createElementNS(s.namespaceURI,'use');u.setAttribute('href','#i-'+name);s.append(u);s.setAttribute('aria-hidden','true');return s}
 function el(tag,cls,text){const node=document.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node}
@@ -39,9 +258,11 @@ function renderSelected(){if(!selected)return;$('selected-title').textContent=se
 function openBook(id,{query='',push=true}={}){stopInject();injectMode=false;refreshInjectUI();if(query&&!injectMode)manualInputFinished=true;pauseInject();lastInjectEvent=null;suggestionsDismissed=false;const book=books.find(b=>b.id===id);if(!book){toast(t('offline'));return}if(controller)controller.abort();serial++;clearTimeout(historyTimer);selected=book;data=null;$('query').value=query;$('error').hidden=true;$('result-area').replaceChildren();$('suggestions').replaceChildren();$('welcome').hidden=!!query;renderSelected();navigate('search',{push});if(query)search()}
 function remember(word,book){if(!historyOn)return;recent=recent.filter(x=>x.book!==book||key(x.word)!==key(word));recent.unshift({word,book});recent=recent.slice(0,100);save('history',recent);renderHistory()}
 function renderHistory(){const list=$('history-list');list.replaceChildren();if(!recent.filter(x=>!selected||x.book===selected.id).length)list.append(el('p','empty',t('noHistory')));for(const item of recent.filter(x=>!selected||x.book===selected.id).slice(0,8)){const b=el('button','history-item');const mark=el('span','history-icon');mark.append(icon('history'));const details=el('span','history-details');details.append(el('strong','',item.word),el('small','',bookName(item.book)));b.append(mark,details,icon('arrow'));b.onclick=()=>openBook(item.book,{query:item.word});list.append(b)}}
-function formatted(row){const parts=[];if(copyFields.includes('word'))parts.push(row.word);for(const f of ['page','column','position'])if(copyFields.includes(f))parts.push((f==='page_pdf'?(lang==='ru'?'страница PDF':'PDF page'):t(f).toLowerCase())+' '+row[f]);return parts.join(' · ')}
-function renderCopySettings(){const fields=$('copy-fields');fields.replaceChildren();for(const field of ['word','page','column','position']){const label=el('label','copy-option');const input=el('input');input.type='checkbox';input.checked=copyFields.includes(field);input.name=field;input.onchange=()=>{copyFields=input.checked?[...copyFields,field]:copyFields.filter(x=>x!==field);save('copyFields',copyFields);updateCopyPreview();if(data)render(data)};label.append(el('span','',t(field)),input);fields.append(label)}updateCopyPreview()}
-function updateCopyPreview(){$('copy-preview').textContent=formatted({word:'ДОМ',page_pdf:141,page:151,column:3,position:14})||'—';$('copy-warning').hidden=!!copyFields.length}
+function formatted(row){return window.LexiconFormat.format(row,window.LexiconResultFormat())}
+function formatChanged(){updateCopyPreview();if(data)render(data);window.dispatchEvent(new Event('lexicon:format-changed'))}
+function renderCopySettings(){const fields=$('copy-fields');fields.replaceChildren();for(const field of ['word','page','column','position']){const label=el('label','copy-option');const input=el('input');input.type='checkbox';input.checked=copyFields.includes(field);input.name=field;input.onchange=()=>{copyFields=input.checked?[...copyFields,field]:copyFields.filter(x=>x!==field);save('copyFields',copyFields);formatChanged()};label.append(el('span','',t(field)),input);fields.append(label)}$('result-labels').checked=resultLabels;updateCopyPreview()}
+$('result-labels').onchange=()=>{resultLabels=$('result-labels').checked;save('resultLabels',resultLabels);formatChanged()};
+function updateCopyPreview(){$('copy-preview').textContent=formatted({word:'ДОМ',page_pdf:113,page:123,column:2,position:2})||'—';$('copy-warning').hidden=!!copyFields.length}
 async function copy(row){if(!copyFields.length){toast(t('pickField'));return}try{if(window.LexiconAndroid)window.LexiconAndroid.copyText(formatted(row));else{if(!navigator.clipboard)throw Error();await navigator.clipboard.writeText(formatted(row))}toast(t('copied'))}catch{document.querySelector('.manual-copy')?.remove();const text=el('textarea','manual-copy');text.readOnly=true;text.value=formatted(row);text.setAttribute('aria-label',t('copy'));$('result-area').append(text);text.focus();text.select();toast(t('copyFail'))}}
 function chip(word){const button=el('button','chip',word);button.onclick=()=>{openBook(selected.id,{query:word});$('query').focus({preventScroll:true})};return button}
 let suggestionsDismissed=false,activeSuggestion=-1,manualInputFinished=false;
@@ -88,7 +309,7 @@ $('query').addEventListener('focus',()=>{
 });
 $('query').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.defaultPrevented&&!injectMode&&data?.matches.length&&$('suggestions').hidden){e.preventDefault();$('query').blur()}});
 document.addEventListener('pointerdown',e=>{if(!e.target.closest('.search-combobox'))closeSuggestions()});
-function render(result){$('welcome').hidden=!!result.normalized;renderSuggestions(result);const area=$('result-area');area.replaceChildren();if(!result.normalized)return;for(const row of result.matches){const card=el('article','result');card.append(el('div','result-label',t('found')),el('h2','',row.word),el('div','dict',selected?.name||''));const dl=el('dl','location');for(const f of ['page','column','position']){const cell=el('div');cell.append(el('dt','',t(f)),el('dd','',row[f]));dl.append(cell)}const footer=el('div','result-footer');const button=el('button','copy-button');button.append(icon('copy'),el('span','',t('copy')));button.disabled=!copyFields.length;button.onclick=()=>copy(row);const share=el('button','share-button',t('share'));share.disabled=!copyFields.length;share.onclick=async()=>{try{if(window.LexiconAndroid)window.LexiconAndroid.shareText(formatted(row));else if(navigator.share)await navigator.share({title:'Lexicon',text:formatted(row)});else await copy(row)}catch(e){if(e.name!=='AbortError')toast(t('copyFail'))}};const watch=el('a','share-button',t('sendToWatch'));watch.href='mystersmith://?text='+encodeURIComponent(window.LexiconResults.text(row));watch.title=t('watchTransferHint');footer.append(button,share,watch);card.append(dl,footer);area.append(card)}if(!result.matches.length){const empty=el('div','empty');empty.append(el('strong','',t(result.mode==='prefix'?'prefix':'notFound')));if(result.corrections.length)empty.append(el('p','',lang==='ru'?'Выберите подходящее слово из списка под строкой поиска.':'Choose a word from the list below the search field.'));area.append(empty)}}
+function render(result){$('welcome').hidden=!!result.normalized;renderSuggestions(result);const area=$('result-area');area.replaceChildren();if(!result.normalized)return;for(const row of result.matches){const card=el('article','result');card.append(el('div','result-label',t('found')),el('h2','',row.word),el('div','dict',selected?.name||''));const dl=el('dl','location');for(const f of ['page','column','position']){const cell=el('div');cell.append(el('dt','',t(f)),el('dd','',row[f]));dl.append(cell)}const footer=el('div','result-footer');const button=el('button','copy-button');button.append(icon('copy'),el('span','',t('copy')));button.disabled=!copyFields.length;button.onclick=()=>copy(row);const share=el('button','share-button',t('share'));share.disabled=!copyFields.length;share.onclick=async()=>{try{if(window.LexiconAndroid)window.LexiconAndroid.shareText(formatted(row));else if(navigator.share)await navigator.share({title:'Lexicon',text:formatted(row)});else await copy(row)}catch(e){if(e.name!=='AbortError')toast(t('copyFail'))}};const watch=el('button','share-button',t('sendToWatch'));watch.disabled=!copyFields.length;watch.onclick=async()=>{if(await window.LexiconRelay.publish([row]))toast(t('sentToWatch'));else{navigate('settings');requestAnimationFrame(()=>$('impaler-settings').scrollIntoView({block:'start'}))}};footer.append(button,share,watch);card.append(dl,footer);area.append(card)}if(!result.matches.length){const empty=el('div','empty');empty.append(el('strong','',t(result.mode==='prefix'?'prefix':'notFound')));if(result.corrections.length)empty.append(el('p','',lang==='ru'?'Выберите подходящее слово из списка под строкой поиска.':'Choose a word from the list below the search field.'));area.append(empty)}}
 async function search(){if(!selected)return false;clearTimeout(historyTimer);const q=$('query').value;const request=++serial;const book=selected;controller?.abort();controller=new AbortController();data=null;$('error').hidden=true;$('result-area').replaceChildren();$('suggestions').replaceChildren();$('suggestions').hidden=true;$('query').setAttribute('aria-expanded','false');$('query').removeAttribute('aria-activedescendant');$('welcome').hidden=!!q.trim();window.history.replaceState(null,'',route());if(!q.trim())return;try{const response=await fetch('/api/search?'+new URLSearchParams({q,dictionary:book.id}),{signal:controller.signal});const body=await response.json();if(!response.ok)throw Error();if(request!==serial||book.id!==selected?.id)return;data=body;render(body);$('connection').textContent=t('online');if(body.matches.length)historyTimer=setTimeout(()=>{if(request!==serial||currentView!=='search')return;remember(body.matches[0].word,book.id);window.LexiconResults.notify(body.matches,book.id);},450)}catch(e){if(e.name==='AbortError'||request!==serial)return;$('error').textContent=t('offline');$('error').hidden=false;$('connection').textContent='';return false}}
 function language(){document.documentElement.lang=lang;$('language').value=lang;document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));document.querySelectorAll('[data-placeholder]').forEach(e=>e.placeholder=t(e.dataset.placeholder));$('query').ariaLabel=t('search');$('book-query').ariaLabel=t('findBook');$('search-history').ariaLabel=t('history');$('search-history').title=t('history');renderBooks();renderSelected();renderHistory();renderCopySettings();if(typeof refreshInjectUI==='function')refreshInjectUI();window.LexiconResults?.refresh?.();window.LexiconRelay?.refresh?.();if(data)render(data);$('breadcrumb').textContent=currentView==='search'?t('books')+' / '+bookName(selected?.id):t(currentView==='books'?'library':currentView)}
 async function loadBooks(){const error=$('catalog-error');error.hidden=true;$('book-count').textContent='…';try{const response=await fetch('/api/dictionaries');if(!response.ok)throw Error();const body=await response.json();books=body.dictionaries;renderBooks();renderHistory();restoreRoute()}catch{error.replaceChildren(el('span','',t('offline')));const retry=el('button','quiet-button',t('retry'));retry.onclick=loadBooks;error.append(retry);error.hidden=false;$('book-count').textContent='—'}}
@@ -96,7 +317,7 @@ function restoreRoute(){const params=new URLSearchParams(location.search);const 
 $('history-enabled').checked=historyOn;
 $('history-enabled').onchange=()=>{historyOn=$('history-enabled').checked;save('historyOn',historyOn);if(!historyOn)clearTimeout(historyTimer)};
 
-$('clear-history').onclick=()=>{recent=[];save('history',recent);renderHistory()};$('book-query').oninput=renderBooks;$('query').oninput=()=>{manualInputFinished=false;suggestionsDismissed=false;search()};$('query').addEventListener('search',()=>{if(!manualInputFinished)search()});$('back-books').onclick=()=>navigate('books');$('language').onchange=()=>{lang=$('language').value;save('language',lang);language()};document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>navigate(b.dataset.view));document.querySelector('.brand').onclick=e=>{e.preventDefault();navigate('books')};window.addEventListener('popstate',restoreRoute);
+$('clear-history').onclick=()=>{recent=[];save('history',recent);renderHistory()};$('book-query').oninput=renderBooks;$('query').oninput=()=>{manualInputFinished=false;suggestionsDismissed=false;search()};$('query').addEventListener('search',()=>{if(!manualInputFinished)search()});$('back-books').onclick=()=>navigate('books');$('language').onchange=()=>{lang=$('language').value;save('language',lang);language();window.dispatchEvent(new Event('lexicon:format-changed'))};document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>navigate(b.dataset.view));document.querySelector('.brand').onclick=e=>{e.preventDefault();navigate('books')};window.addEventListener('popstate',restoreRoute);
 document.addEventListener('keydown',e=>{if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();(()=>{if(currentView!=='search')navigate('books');(currentView==='search'?$('query'):$('book-query')).focus()})()}});
 let injectMode=false,injectRunning=false,injectConfigured=false,injectTimer=null,injectSerial=0,injectController=null,lastInjectEvent=null,injectFailures=0;
 function refreshInjectUI(){
@@ -160,6 +381,6 @@ function initInject(){
  fetch('/api/inject/status').then(r=>{if(!r.ok)throw Error();return r.json()}).then(x=>{injectConfigured=x.configured;$('inject-config-status').textContent=injectConfigured?'':t('injectMissing');refreshInjectUI()}).catch(()=>{$('inject-config-status').textContent=t('offline')});refreshInjectUI();
 }
 
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.10';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.11';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{const status=$('update-status');status.textContent=t('checkingUpdates');$('download-update').hidden=true;try{const response=await fetch('https://raw.githubusercontent.com/lexiconappteam-blip/lexicon-catalog/main/app.json',{cache:'no-store'});if(!response.ok)throw Error();const manifest=await response.json();const remote=manifest.android?.version||installedVersion;const newer=remote.split('.').map(Number).reduce((result,v,i)=>result||Math.sign(v-(Number(installedVersion.split('.')[i])||0)),0)>0;status.textContent=newer?t('updateAvailable')+' '+remote:t('noUpdates');if(newer&&window.LexiconAndroid){const url=new URL(manifest.android.url);if(url.protocol==='https:'&&url.hostname==='github.com'){$('download-update').href=url.href;$('download-update').hidden=false}}else if(newer){navigator.serviceWorker?.getRegistration().then(r=>r?.update());status.textContent+=' — '+(lang==='ru'?'обновите страницу.':'reload this page.')}}catch{status.textContent=t('offline')}};
 language();window.LexiconRelay.init(t,()=>data?.matches||[]);window.LexiconResults.init(t);loadBooks();initInject();
