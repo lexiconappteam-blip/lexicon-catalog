@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.8.11",
-    "build": 24,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.11/lexicon-0.8.11-arm64.apk",
-    "sha256": "5181841bb4339a4f16c8c658df63ac1b49cb48accded56d1b305cc72ff3a34b0",
-    "bytes": 20250917,
-    "notes": "Упрощены настройки. Общий формат для копирования, уведомлений и Impaler: выбор полей и отключение подписей. Видимая ссылка для Impaler."
+    "version": "0.8.12",
+    "build": 25,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.12/lexicon-0.8.12-arm64.apk",
+    "sha256": "76a06a00af619cb482a2832677d2b0fb012ab99625bb01282eb3b4a8d77232d3",
+    "bytes": 20250837,
+    "notes": "Передача результатов в Impaler автоматически по переключателю настроек. Связка Inject → поиск → Impaler независимо от истории. Убрана кнопка Impaler из поиска."
   },
   "ios": null,
   "linux": {
