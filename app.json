@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.8.9",
-    "build": 22,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.9/lexicon-0.8.9-arm64.apk",
-    "sha256": "5c06bd14b764eea92cb572b8fb6ccd942718d0bbda2ca3d926f2ec584ffe79dc",
-    "bytes": 20246970,
-    "notes": "Поиск без автоматического вызова клавиатуры, страницы книги, включаемые уведомления с координатами. Исправлены шесть номеров статей на странице книги 127."
+    "version": "0.8.10",
+    "build": 23,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.10/lexicon-0.8.10-arm64.apk",
+    "sha256": "116dd0ccd0b6122f632e8f90bdea80bf49d320e12253ed5a6e5c8e4bc8b63638",
+    "bytes": 20251119,
+    "notes": "Личный канал для Apple Watch и Web Push для установленного на главный экран веб-приложения iPhone. База v5 без изменений."
   },
   "ios": null,
   "linux": {
