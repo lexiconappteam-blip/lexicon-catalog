@@ -29,7 +29,7 @@ const strings={
     "personal": "Под ваш сценарий",
     "settings": "Настройки",
     "copySettings": "Формат результата",
-    "copyFieldsNote": "Порядок данных: слово → страница книги → колонка → номер статьи в колонке. Выберите нужные поля для каждого способа.",
+    "copyFieldsNote": "Порядок данных: слово → страница книги → колонка → строчка. Координаты берутся из выбранной базы.",
     "unknownWatchNote": "Если слово не найдено, на часы отправится исходный ввод без цифр — даже в формате «только цифры».",
     "speechTitle": "Озвучивание в наушник",
     "speechEnable": "Озвучивать результат",
@@ -51,6 +51,9 @@ const strings={
     "speechReady": "Наушники подключены. Перед воспроизведением приложение проверит маршрут звука.",
     "speechStop": "Остановить",
     "formatSpeech": "Озвучивания",
+    "speechLabelMode": "Формат озвучивания",
+    "speechPlain": "Только слово и числа",
+    "speechExplained": "С названиями: страница, колонка, строчка",
     "formatFor": "Настроить для",
     "formatCopy": "Копирования",
     "formatNotification": "Уведомлений",
@@ -72,7 +75,7 @@ const strings={
     "favoriteRemove": "Убрать книгу из избранного",
     "page": "Страница",
     "column": "Колонка",
-    "position": "Статья",
+    "position": "Строчка",
     "word": "Слово",
     "copy": "Копировать",
     "share": "Поделиться",
@@ -168,7 +171,7 @@ const strings={
     "personal": "Make it yours",
     "settings": "Settings",
     "copySettings": "Result format",
-    "copyFieldsNote": "Choose fields for each output. Order: word → book page → column → entry number within the column.",
+    "copyFieldsNote": "Order: word → book page → column → line. Coordinates come from the selected database.",
     "unknownWatchNote": "When no word matches, the watch receives the original input without coordinates, even in numbers-only mode.",
     "speechTitle": "Private headphone speech",
     "speechEnable": "Speak results",
@@ -190,6 +193,9 @@ const strings={
     "speechReady": "Headphones connected. The audio route is checked before playback.",
     "speechStop": "Stop",
     "formatSpeech": "Speech",
+    "speechLabelMode": "Speech format",
+    "speechPlain": "Word and numbers only",
+    "speechExplained": "With page, column and line labels",
     "formatFor": "Format for",
     "formatCopy": "Copying",
     "formatNotification": "Notifications",
@@ -211,7 +217,7 @@ const strings={
     "favoriteRemove": "Remove book from favorites",
     "page": "Page",
     "column": "Column",
-    "position": "Entry",
+    "position": "Line",
     "word": "Word",
     "copy": "Copy",
     "share": "Share",
@@ -292,9 +298,9 @@ let favorites=read('favoriteBooks',[]);if(!Array.isArray(favorites))favorites=[]
 let copyFields=read('copyFields',['word','page','column','position']);if(!Array.isArray(copyFields))copyFields=['word','page','column','position'];copyFields=[...new Set(copyFields.map(x=>x==='page_pdf'?'page':x))].filter(x=>['word','page','column','position'].includes(x));save('copyFields',copyFields);
 const resultLabels=false;
 let resultFormats=read('resultFormats',{});if(!resultFormats||typeof resultFormats!=='object'||Array.isArray(resultFormats))resultFormats={};
-for(const target of ['copy','notification','impaler','speech'])resultFormats[target]=window.LexiconFormat.normalize(resultFormats[target]||{fields:copyFields,labels:resultLabels});
+for(const target of ['copy','notification','impaler','speech']){const saved=resultFormats[target];resultFormats[target]={...window.LexiconFormat.normalize(saved||{fields:copyFields,labels:resultLabels}),...(target==='speech'?{spokenLabels:saved?.spokenLabels===true}: {})}}
 let formatTarget='copy';
-window.LexiconResultFormat=(target='copy')=>window.LexiconFormat.normalize({...resultFormats[target],labels:false,lang,...(target==='speech'?{separator:' '}: {})});
+window.LexiconResultFormat=(target='copy')=>window.LexiconFormat.normalize({...resultFormats[target],labels:target==='speech'&&resultFormats.speech.spokenLabels===true,lang,...(target==='speech'?{separator:' ',labelOrder:'after'}: {})});
 let historyOn=read('historyOn',true),books=[],selected=null,data=null,controller=null,serial=0,resultTimer,toastTimer,currentView='books';
 function icon(name){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');const u=document.createElementNS(s.namespaceURI,'use');u.setAttribute('href','#i-'+name);s.append(u);s.setAttribute('aria-hidden','true');return s}
 function el(tag,cls,text){const node=document.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node}
@@ -314,7 +320,8 @@ function remember(word,book){if(!historyOn)return;recent=recent.filter(x=>x.book
 function renderHistory(){const list=$('history-list');list.replaceChildren();if(!recent.filter(x=>!selected||x.book===selected.id).length)list.append(el('p','empty',t('noHistory')));for(const item of recent.filter(x=>!selected||x.book===selected.id).slice(0,8)){const b=el('button','history-item');const mark=el('span','history-icon');mark.append(icon('history'));const details=el('span','history-details');details.append(el('strong','',item.word),el('small','',bookName(item.book)));b.append(mark,details,icon('arrow'));b.onclick=()=>openBook(item.book,{query:item.word});list.append(b)}}
 function formatted(row){return window.LexiconFormat.format(row,window.LexiconResultFormat())}
 function formatChanged(target=formatTarget){save('resultFormats',resultFormats);updateCopyPreview();if(data)render(data);window.dispatchEvent(new CustomEvent('lexicon:format-changed',{detail:{target}}))}
-function renderCopySettings(){const options=window.LexiconResultFormat(formatTarget),fields=$('copy-fields');$('format-target').value=formatTarget;$('separator-settings').hidden=formatTarget==='speech';fields.replaceChildren();for(const field of ['word','page','column','position']){const label=el('label','copy-option');const input=el('input');input.type='checkbox';input.checked=options.fields.includes(field);input.name=field;input.onchange=()=>{const current=resultFormats[formatTarget];current.fields=input.checked?[...current.fields,field]:current.fields.filter(x=>x!==field);formatChanged()};label.append(el('span','',t(field)),input);fields.append(label)}$('result-separator').value=options.separator;updateCopyPreview()}
+function renderCopySettings(){const options=window.LexiconResultFormat(formatTarget),fields=$('copy-fields');$('format-target').value=formatTarget;$('separator-settings').hidden=formatTarget==='speech';$('speech-format-settings').hidden=formatTarget!=='speech';$('speech-label-mode').value=resultFormats.speech.spokenLabels===true?'explained':'plain';fields.replaceChildren();for(const field of ['word','page','column','position']){const label=el('label','copy-option');const input=el('input');input.type='checkbox';input.checked=options.fields.includes(field);input.name=field;input.onchange=()=>{const current=resultFormats[formatTarget];current.fields=input.checked?[...current.fields,field]:current.fields.filter(x=>x!==field);formatChanged()};label.append(el('span','',t(field)),input);fields.append(label)}$('result-separator').value=options.separator;updateCopyPreview()}
+$('speech-label-mode').onchange=()=>{resultFormats.speech.spokenLabels=$('speech-label-mode').value==='explained';formatChanged('speech')};
 $('format-target').onchange=()=>{formatTarget=$('format-target').value;renderCopySettings()};
 $('result-separator').oninput=()=>{resultFormats[formatTarget].separator=$('result-separator').value;formatChanged()};
 document.querySelectorAll('[data-separator]').forEach(button=>button.onclick=()=>{$('result-separator').value=button.dataset.separator;resultFormats[formatTarget].separator=button.dataset.separator;formatChanged()});
@@ -437,7 +444,7 @@ function initInject(){
  fetch('/api/inject/status').then(r=>{if(!r.ok)throw Error();return r.json()}).then(x=>{injectConfigured=x.configured;$('inject-config-status').textContent=injectConfigured?'':t('injectMissing');refreshInjectUI()}).catch(()=>{$('inject-config-status').textContent=t('offline')});refreshInjectUI();
 }
 
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.15';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.16';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{const status=$('update-status');status.textContent=t('checkingUpdates');$('download-update').hidden=true;try{const response=await fetch('https://raw.githubusercontent.com/lexiconappteam-blip/lexicon-catalog/main/app.json',{cache:'no-store'});if(!response.ok)throw Error();const manifest=await response.json();const remote=manifest.android?.version||installedVersion;const newer=remote.split('.').map(Number).reduce((result,v,i)=>result||Math.sign(v-(Number(installedVersion.split('.')[i])||0)),0)>0;status.textContent=newer?t('updateAvailable')+' '+remote:t('noUpdates');if(newer&&window.LexiconAndroid){const url=new URL(manifest.android.url);if(url.protocol==='https:'&&url.hostname==='github.com'){$('download-update').href=url.href;$('download-update').hidden=false}}else if(newer){navigator.serviceWorker?.getRegistration().then(r=>r?.update());status.textContent+=' — '+(lang==='ru'?'обновите страницу.':'reload this page.')}}catch{status.textContent=t('offline')}};
 window.LexiconCurrentResults=()=>data?.matches||[];
 language();window.LexiconRelay.init(t,()=>data?.matches||[],()=>data?.normalized&&!data.matches.length?data.query:'');window.LexiconResults.init(t);window.LexiconSpeech.init(t);loadBooks();initInject();
