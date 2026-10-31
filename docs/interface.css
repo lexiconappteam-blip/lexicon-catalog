@@ -1,0 +1,238 @@
+/* Lexicon interface: shared surfaces, type, navigation and touch geometry. */
+:root {
+  --ui-bg:#f6f7f9; --ui-surface:#fff; --ui-inset:#f0f3f6;
+  --ui-text:#202c3a; --ui-muted:#788595; --ui-line:#e6eaf0;
+  --ui-accent:#485f79; --ui-selected:#eaf0f6; --ui-shadow:0 8px 32px #24364d07;
+}
+html[data-theme=dark] {
+  --ui-bg:#191d23; --ui-surface:#212730; --ui-inset:#282f39;
+  --ui-text:#e5ebf3; --ui-muted:#95a2b3; --ui-line:#323b47;
+  --ui-accent:#b3c6dd; --ui-selected:#303d4e; --ui-shadow:none;
+}
+body {background:var(--ui-bg);color:var(--ui-text);font-size:15px;letter-spacing:-.15px}
+button,input,select,textarea {font-family:inherit}
+button:focus-visible,a:focus-visible,summary:focus-visible {outline:2px solid var(--ui-accent);outline-offset:4px}
+.sidebar {width:208px;padding:32px 20px;background:var(--ui-surface);border-color:var(--ui-line)}
+.sidebar .brand {gap:10px;font-size:26px;letter-spacing:-1px}
+.sidebar .brand img {width:31px;height:31px}
+.sidebar-label {margin:48px 12px 14px;font-size:9px;letter-spacing:1.6px;color:var(--ui-muted)}
+.sidebar nav {gap:6px}
+.sidebar nav button {min-height:48px;border-radius:11px;padding:12px 15px;gap:13px;color:var(--ui-muted);font-size:14px}
+.sidebar nav button.active {background:var(--ui-selected);color:var(--ui-text);font-weight:600}
+.sidebar nav button svg {width:19px;height:19px}
+.sidebar-bottom {left:28px;right:24px;color:var(--ui-muted)}
+.sidebar-bottom .edition {display:none}
+.sidebar-bottom p {font-size:11px;line-height:1.8}
+.workspace {margin-left:208px}
+header {height:76px;padding:0 48px;border-bottom:0;background:transparent;color:var(--ui-muted);font-size:12px}
+main {max-width:1120px;padding:24px 48px 70px;margin:0 auto;min-height:calc(100dvh - 76px)}
+.page-heading {margin:0 0 30px;align-items:center}
+h1,#settings-view h1 {font-size:34px;font-weight:600;letter-spacing:-1.3px;line-height:1.2}
+.page-heading p {font-size:13px;color:var(--ui-muted);line-height:1.7;margin-top:10px}
+.eyebrow {font-size:9px;letter-spacing:1.6px;color:var(--ui-muted)}
+.count-badge {border:1px solid var(--ui-line);background:var(--ui-surface);color:var(--ui-muted);padding:7px 11px;border-radius:8px;font-size:11px}
+.section-line {margin:28px 0 16px}
+.section-line h2 {font-size:16px;font-weight:550;color:var(--ui-text)}
+.section-line .subtle,.subtle {color:var(--ui-muted);font-size:11px}
+.search-box {border:1px solid var(--ui-line);background:var(--ui-surface);border-radius:14px;box-shadow:none}
+.search-box svg {color:var(--ui-muted)}
+.search-box:focus-within {border-color:#a5b6c9;box-shadow:0 0 0 3px #8ca7c016}
+.search-box input {color:var(--ui-text)}
+.search-box input::placeholder {color:var(--ui-muted);opacity:.85}
+.catalog-search {padding:15px 18px;margin:0 0 24px}
+.catalog-search input {font-size:15px}
+.book-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.book-card {border:1px solid var(--ui-line);border-radius:18px;box-shadow:var(--ui-shadow);background:var(--ui-surface);overflow:hidden}
+.book-art {background:#e8edf3;min-height:210px}
+.book-art .cover {transform:rotate(-5deg);box-shadow:6px 10px 18px #233b5c22}
+.book-art .cover,.favorite-card .cover {background:linear-gradient(145deg,#4e6683,#263b54);border-color:#7890a7;color:#f4f6fb}
+.book-art .star-button {background:#ffffffa6;backdrop-filter:blur(8px);border-radius:50%;width:36px;height:36px;right:13px;top:13px;color:#55687e}
+.book-info {padding:24px}
+.book-info .category {font-size:9px;letter-spacing:1.5px;color:var(--ui-muted)}
+.book-info h3 {font-size:23px;font-weight:550;letter-spacing:-.7px;margin:10px 0}
+.book-title {color:var(--ui-text);text-align:left}
+.book-meta {font-size:12px;color:var(--ui-muted)}
+.card-bottom {border-color:var(--ui-line);margin-top:23px;padding-top:17px}
+.data-note {font-size:10px;color:var(--ui-muted)}
+.open-book,.connect-button {background:var(--ui-selected);color:var(--ui-text);border:0;border-radius:9px;min-height:40px;padding:10px 14px}
+.favorite-card {border:1px solid var(--ui-line);background:var(--ui-surface);border-radius:16px;padding:22px;box-shadow:none}
+.favorite-info .kicker {font-size:8px;color:var(--ui-muted);letter-spacing:1px}
+.favorite-info h3 {font-size:22px;letter-spacing:-.7px}
+.favorite-info p {font-size:12px;color:var(--ui-muted)}
+.catalog-footer {margin-top:36px;padding-top:22px;border-color:var(--ui-line);color:var(--ui-muted)}
+.catalog-footer .footer-monogram {display:none}
+.catalog-footer strong {font-size:13px;color:var(--ui-text);font-weight:500}
+.catalog-footer p,.catalog-footer a {font-size:12px}
+.workspace-footer {display:none}
+/* The search field and the coordinates are the two visual anchors. */
+.search-topbar {margin-bottom:24px}
+.back-button {margin:0;font-size:12px;color:var(--ui-muted)}
+.search-history-button {width:42px;height:42px;margin:0;color:var(--ui-muted)}
+.search-book-heading {gap:17px;margin-bottom:26px;align-items:center}
+.search-book-heading .eyebrow,.search-book-heading .data-note {display:none}
+.search-book-heading h1 {font-size:30px;letter-spacing:-1px;margin:0}
+.mini-cover {width:48px;height:62px;border-radius:5px 8px 8px 5px;background:#334b67;color:#f4f7fb;box-shadow:3px 4px 10px #253c5b14;font-size:27px}
+.mini-cover span {font-size:15px}
+.star-button {width:42px;height:42px;color:var(--ui-muted)}
+.star-button svg {width:23px;height:23px}
+.search-mode {display:flex;gap:20px;border:0;border-bottom:1px solid var(--ui-line);background:transparent;border-radius:0;padding:0;margin-bottom:22px}
+.search-mode button {flex:0 1 auto;background:transparent;border-radius:0;border-bottom:2px solid transparent;min-height:44px;padding:10px 0 14px;color:var(--ui-muted);font-size:13px;box-shadow:none}
+.search-mode button.active {background:transparent;border-bottom-color:var(--ui-accent);color:var(--ui-text);font-weight:600}
+.word-search {min-height:64px;padding:16px 20px;border-radius:14px}
+.word-search input {font-size:19px;letter-spacing:-.3px}
+.search-meta {margin:12px 2px 20px;font-size:11px;color:var(--ui-muted)}
+.search-dropdown {border:1px solid var(--ui-line);background:var(--ui-surface);border-radius:12px;box-shadow:none;margin-top:8px;max-height:280px}
+.search-option {min-height:46px;padding:12px 16px;font-size:14px;color:var(--ui-text);border-color:var(--ui-line)}
+.search-option:hover,.search-option[aria-selected=true] {background:var(--ui-selected)}
+.search-option small {color:var(--ui-muted)}
+.result {border:1px solid var(--ui-line);border-radius:18px;padding:30px;margin:0 0 16px;background:var(--ui-surface);box-shadow:var(--ui-shadow)}
+.result-label {font-size:9px;letter-spacing:1.5px;color:var(--ui-muted);font-weight:500}
+.result h2 {font-size:35px;font-weight:600;letter-spacing:-1px;margin:9px 0 6px;color:var(--ui-text)}
+.result .dict {font-size:12px;color:var(--ui-muted)}
+.location {margin:28px 0 25px;gap:20px;padding:22px 0;border-top:1px solid var(--ui-line);border-bottom:1px solid var(--ui-line)}
+.location>div {display:flex;flex-direction:column-reverse;gap:4px}
+.location>div+div {border-color:var(--ui-line);padding-left:24px}
+.location dd {font-size:44px;line-height:1.1;font-weight:550;letter-spacing:-1px;color:var(--ui-text)}
+.location dt {font-size:11px;line-height:1.5;min-height:0;color:var(--ui-muted)}
+.result-footer {gap:12px;align-items:center;margin:0}
+.copy-button {background:var(--ui-selected);color:var(--ui-text);border:0;border-radius:9px;min-height:42px;padding:11px 16px;font-size:12px}
+.share-button {background:transparent;border:0;color:var(--ui-muted);padding:10px;min-height:42px;font-size:12px}
+.welcome {text-align:center;margin:55px 0 45px;padding:15px}
+.search-empty-icon {width:52px;height:52px;margin:0 auto 20px;border-radius:16px;display:grid;place-items:center;background:var(--ui-selected);color:var(--ui-accent)}
+.search-empty-icon svg {width:24px;height:24px}
+.welcome h2 {font-size:18px;font-weight:500;color:var(--ui-text);letter-spacing:-.4px;margin:0 0 8px}
+.welcome p {font-size:13px;line-height:1.8;color:var(--ui-muted);max-width:320px;margin:0 auto}
+.empty {padding:22px 4px;color:var(--ui-muted);font-size:13px;line-height:1.8}
+.empty strong {font-weight:500;color:var(--ui-text)}
+#inline-history {margin-top:35px}
+.history-item {border:0;border-bottom:1px solid var(--ui-line);border-radius:0;padding:16px 0;background:transparent;box-shadow:none}
+.history-item strong {font-size:15px;font-weight:500;color:var(--ui-text)}
+.history-details small {font-size:11px;color:var(--ui-muted)}
+.inject-bar {padding:18px;border:1px solid var(--ui-line);border-radius:12px;background:var(--ui-surface);margin-bottom:18px}
+.inject-bar strong {font-size:13px;font-weight:550;color:var(--ui-text)}
+.inject-bar p {font-size:12px;color:var(--ui-muted);line-height:1.7}
+.inject-settings-link {font-size:12px;color:var(--ui-accent);text-decoration:none}
+/* Settings: one navigation level and one editor, rather than nested cards. */
+#settings-view {max-width:none;display:grid;grid-template-columns:156px minmax(0,1fr);column-gap:36px;align-items:start}
+#settings-view[hidden] {display:none}
+#settings-view>.page-heading {grid-column:1/-1;margin-bottom:34px}
+#settings-view .settings-caption {font-size:13px;color:var(--ui-muted);margin-top:8px}
+#settings-tabs {grid-column:1;display:flex;flex-direction:column;gap:5px;border:0;margin:0;padding:0;background:transparent}
+#settings-tabs button {width:100%;text-align:left;min-height:44px;padding:12px 14px;border:0;border-radius:10px;margin:0;font-size:13px;color:var(--ui-muted);font-weight:400}
+#settings-tabs button[aria-selected=true] {background:var(--ui-selected);color:var(--ui-text);border:0;font-weight:600}
+#settings-view>.settings-subpanel {grid-column:2;grid-row:2;min-width:0}
+#settings-panel-general {border:1px solid var(--ui-line);background:var(--ui-surface);border-radius:16px;overflow:hidden}
+#settings-panel-general>.panel {padding:21px 23px;background:transparent;border:0;border-bottom:1px solid var(--ui-line);border-radius:0}
+#settings-panel-general>.panel:last-child {border-bottom:0}
+#settings-panel-general label,#settings-panel-general .toggle-row strong {color:var(--ui-text);font-size:13px;font-weight:450}
+#settings-panel-general #language,#settings-panel-general #theme {background:transparent;border:0;color:var(--ui-text);font-size:14px;text-align:right;text-align-last:right;padding-right:12px;width:230px;max-width:65%;min-height:44px}
+#settings-panel-general .about .eyebrow {font-size:13px;color:var(--ui-text);font-weight:550;letter-spacing:.7px}
+#settings-panel-general .about p {font-size:12px;color:var(--ui-muted)}
+#settings-view .muted,#settings-view .toggle-row small {color:var(--ui-muted);font-size:11px;line-height:1.8}
+#settings-view .quiet-button {color:var(--ui-accent);font-size:12px;min-height:38px;padding:8px 0;text-align:left}
+#settings-view .toggle-row {font-size:13px;color:var(--ui-text);line-height:1.6}
+#settings-view .toggle-row input {background:#d5dce4}
+#settings-view .toggle-row input:checked {background:#60758c}
+#settings-panel-result {display:block}
+#settings-panel-result>.panel {padding:0;background:transparent;border:0}
+.format-destination-label {font-size:11px;color:var(--ui-muted);margin:0 0 12px}
+#settings-view #format-target {display:flex;gap:7px;flex-wrap:wrap;padding:0 0 23px;margin:0;border:0;border-bottom:1px solid var(--ui-line);border-radius:0;background:transparent}
+#settings-view #format-target button {font-size:12px;min-height:40px;padding:10px 13px;border:1px solid transparent;border-radius:9px;color:var(--ui-muted);background:transparent;flex:0 1 auto;box-shadow:none}
+#settings-view #format-target button[aria-selected=true] {background:var(--ui-surface);border-color:var(--ui-line);color:var(--ui-text);box-shadow:var(--ui-shadow);font-weight:550}
+.settings-section-title {font-size:15px;color:var(--ui-text);font-weight:550;margin:25px 0 12px;letter-spacing:-.2px}
+#settings-view .copy-fields {display:grid;grid-template-columns:1fr 1fr;gap:0 22px;margin:0}
+#settings-view .copy-option,#settings-view .copy-option:has(input:checked) {border:0;border-bottom:1px solid var(--ui-line);border-radius:0;padding:13px 0;color:var(--ui-text);background:transparent;font-size:12px;min-height:46px}
+#settings-view .copy-option input {accent-color:#667f9a;width:16px;height:16px}
+#settings-view #separator-settings {margin-top:22px;grid-template-columns:100px minmax(0,1fr)}
+#settings-view #result-separator,#settings-view #speech-repeats,#settings-view #speech-gap {background:var(--ui-surface);border:1px solid var(--ui-line);border-radius:9px;color:var(--ui-text);font-size:16px;min-height:44px;box-shadow:none}
+#settings-view .separator-presets button {border:0;background:var(--ui-inset);color:var(--ui-muted);min-width:33px;min-height:33px;border-radius:6px}
+#settings-view .copy-preview {margin:23px 0;padding:14px 17px;border:0;border-radius:10px;background:var(--ui-selected);box-shadow:none}
+#settings-view .copy-preview>span {font-size:10px;color:var(--ui-muted);letter-spacing:.3px}
+#settings-view .copy-preview output {color:var(--ui-text);font-size:14px;line-height:1.7;margin-top:6px}
+.unmatched-section {border-color:var(--ui-line);margin-top:25px}
+.unmatched-section .toggle-row+.toggle-row {border-color:var(--ui-line)}
+#speech-format-settings #speech-settings {background:transparent;border-color:var(--ui-line);padding-top:20px}
+#speech-settings h2 {font-size:14px;font-weight:500;color:var(--ui-text)}
+#speech-settings label:not(.toggle-row) {font-size:12px;color:var(--ui-muted)}
+#settings-panel-integrations {display:block}
+#settings-panel-integrations>.panel {border:0;border-bottom:1px solid var(--ui-line);border-radius:0;padding:0 0 26px;margin:0 0 25px;background:transparent}
+#settings-panel-integrations h2,#settings-panel-integrations h3 {font-size:16px;font-weight:550;color:var(--ui-text)}
+#settings-panel-integrations input:not([type=checkbox]),#settings-panel-integrations textarea,#api-source {background:var(--ui-surface);border:1px solid var(--ui-line);border-radius:9px;color:var(--ui-text);padding:11px 12px;font-size:16px}
+#settings-panel-integrations input[readonly] {color:var(--ui-muted);background:var(--ui-inset)}
+.api-summary {font-size:16px;color:var(--ui-text);font-weight:550}
+.api-connection {border:1px solid var(--ui-line);border-radius:13px;background:var(--ui-surface);padding:19px;box-shadow:none}
+.api-panel .method-switch {background:var(--ui-inset);border:0;border-radius:9px;padding:4px}
+.api-panel .method-switch button {color:var(--ui-muted);font-size:12px;min-height:38px}
+.api-panel .method-switch button[aria-pressed=true] {background:var(--ui-surface);color:var(--ui-text);box-shadow:0 1px 4px #10243b10}
+.api-panel .api-section-heading {border-color:var(--ui-line)}
+html[data-theme=dark] body,html[data-theme=dark] .sidebar {background:var(--ui-bg);color:var(--ui-text)}
+html[data-theme=dark] .search-box,html[data-theme=dark] .result,html[data-theme=dark] .search-dropdown,html[data-theme=dark] .book-card,html[data-theme=dark] .favorite-card,html[data-theme=dark] .inject-bar,html[data-theme=dark] #settings-panel-general {background:var(--ui-surface);border-color:var(--ui-line)}
+html[data-theme=dark] .book-art {background:#293341}
+html[data-theme=dark] .sidebar nav button.active {background:var(--ui-selected);color:var(--ui-text)}
+html[data-theme=dark] #settings-tabs button[aria-selected=true] {color:var(--ui-text);background:var(--ui-selected);border:0}
+html[data-theme=dark] #settings-view #format-target {background:transparent;border-color:var(--ui-line)}
+html[data-theme=dark] #settings-view #format-target button[aria-selected=true] {background:var(--ui-selected);border-color:var(--ui-line);color:var(--ui-text)}
+html[data-theme=dark] #settings-panel-general>.panel,html[data-theme=dark] .unmatched-section,html[data-theme=dark] .unmatched-section .toggle-row+.toggle-row {border-color:var(--ui-line)}
+html[data-theme=dark] #settings-view .copy-preview {background:var(--ui-selected)}
+html[data-theme=dark] select,html[data-theme=dark] select option {background:#212730;color:var(--ui-text);color-scheme:dark}
+@media(min-width:1500px) {main{padding-top:24px}.book-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:1100px) and (min-width:701px) {
+ .sidebar{width:176px;padding:28px 15px}.workspace{margin-left:176px}main{padding:22px 30px 60px}header{padding:0 30px}
+ #settings-view{grid-template-columns:130px minmax(0,1fr);gap:24px}
+}
+@media(max-width:700px) {
+ .sidebar{position:static;width:auto;padding:0;background:transparent;border:0}.workspace{margin-left:0}
+ header{height:66px;padding:0 22px;border-bottom:1px solid var(--ui-line);background:var(--ui-surface)}
+ .brand-mobile{font-size:25px;font-weight:650;letter-spacing:-1.1px;color:var(--ui-text)}
+ main{padding:27px 22px calc(92px + env(safe-area-inset-bottom));min-height:calc(100dvh - 66px)}
+ .page-heading{margin-bottom:25px;align-items:flex-start}.page-heading h1,#settings-view h1{font-size:30px;letter-spacing:-1px}
+ .page-heading p{font-size:12px;line-height:1.7;max-width:265px}.page-heading .eyebrow{display:none}
+ .count-badge{font-size:10px;padding:6px 9px;margin-top:6px}
+ .sidebar nav{position:fixed;left:0;right:0;bottom:0;gap:0;padding:8px 14px calc(8px + env(safe-area-inset-bottom));border:0;border-top:1px solid var(--ui-line);border-radius:0;background:var(--ui-surface);box-shadow:none;backdrop-filter:blur(16px);z-index:30;flex-direction:row}
+ .sidebar nav button{flex:1;min-height:49px;padding:8px 6px;gap:4px;font-size:10px;flex-direction:column;border-radius:10px}
+ .sidebar nav button svg{width:21px;height:21px}.sidebar nav button.active{background:var(--ui-selected);color:var(--ui-text)}
+ .section-line{margin-top:23px}.section-line h2{font-size:15px}.catalog-title{margin-top:25px}
+ .book-grid{grid-template-columns:1fr;gap:16px}.book-card{grid-template-columns:107px minmax(0,1fr);border-radius:15px}
+ .book-art{min-height:177px}.book-art .cover{width:66px;height:98px}.book-art .cover-letter{font-size:36px}.book-art .cover-label{font-size:5px}
+ .book-art .star-button{width:28px;height:28px;right:6px;top:7px}.book-art .star-button svg{width:17px;height:17px}
+ .book-info{padding:20px 16px}.book-info h3{font-size:20px;line-height:1.25}.book-info .category{font-size:8px}.book-meta{font-size:11px}
+ .card-bottom{margin-top:17px;padding-top:12px}.card-bottom .data-note{font-size:9px}.open-book{min-height:35px;padding:8px 10px}
+ .catalog-search{padding:13px 15px;border-radius:12px}.catalog-search input{font-size:16px}
+ .favorite-card{padding:18px;gap:16px;border-radius:14px}.favorite-info h3{font-size:20px}.favorite-card .cover{width:67px;height:96px}
+ .search-topbar{margin-bottom:20px}.search-book-heading{gap:13px;margin-bottom:22px}.search-book-heading h1{font-size:24px;line-height:1.2;letter-spacing:-.8px}
+ .search-book-heading .mini-cover{width:40px;height:54px;flex-shrink:0;font-size:23px}.search-book-heading .mini-cover span{font-size:13px}
+ .search-book-heading .star-button{width:35px;height:35px;flex-shrink:0}.search-mode{gap:22px;margin-bottom:19px}.search-mode button{font-size:12px;min-height:42px}
+ .word-search{padding:14px 16px;min-height:58px;border-radius:12px}.word-search input{font-size:17px}.search-meta{font-size:10px;margin-bottom:18px}
+ .result{padding:23px 20px;border-radius:15px}.result h2{font-size:29px;letter-spacing:-.7px}.result .dict{font-size:11px}
+ .location{gap:12px;margin:22px 0 20px;padding:20px 0}.location>div+div{padding-left:16px}.location dd{font-size:37px}.location dt{font-size:10px;white-space:normal;line-height:1.5}
+ .result-footer{gap:8px}.copy-button{font-size:11px;padding:10px 13px;min-height:40px}.share-button{font-size:11px;padding:10px 6px}
+ .welcome{margin-top:39px;margin-bottom:32px}.search-empty-icon{width:46px;height:46px;border-radius:14px;margin-bottom:16px}.welcome h2{font-size:17px}.welcome p{font-size:12px;max-width:270px}
+ .inject-bar{padding:15px;gap:10px}.inject-bar p{font-size:11px}.inject-bar .quiet-button{font-size:11px}.inject-settings-link{font-size:11px}
+ #inline-history{margin-top:28px}.history-item{padding:15px 0}
+ #settings-view{display:block}#settings-view>.page-heading{margin-bottom:22px}
+ #settings-tabs{flex-direction:row;gap:24px;border-bottom:1px solid var(--ui-line);margin-bottom:24px;flex-wrap:nowrap}
+ #settings-tabs button{width:auto;flex:0 1 auto;text-align:center;padding:11px 0 13px;min-height:43px;border:0;border-bottom:2px solid transparent;border-radius:0;font-size:12px;white-space:nowrap}
+ #settings-tabs button[aria-selected=true],html[data-theme=dark] #settings-tabs button[aria-selected=true]{background:transparent;border-bottom:2px solid var(--ui-accent);color:var(--ui-text)}
+ #settings-panel-general>.panel{padding:18px 17px}#settings-panel-general #language,#settings-panel-general #theme{max-width:65%;font-size:16px;width:200px;min-height:40px}
+ #settings-panel-general .about p{font-size:11px}#settings-view .toggle-row small{font-size:10px}
+ #settings-view #format-target{gap:6px;padding-bottom:20px}#settings-view #format-target button{padding:8px 11px;font-size:11px;min-height:38px}
+ #settings-view .copy-fields{gap:0 20px}#settings-view .copy-option{font-size:12px}.settings-section-title{font-size:15px;margin-top:23px}
+ #settings-view #separator-settings{grid-template-columns:82px minmax(0,1fr);gap:9px 10px}
+ #settings-view .copy-preview{padding:13px 15px;margin:20px 0}#settings-view .copy-preview output{font-size:13px}
+ .unmatched-section .toggle-row{font-size:12px;min-height:47px;gap:16px}.unmatched-section{margin-top:23px}
+ #settings-panel-integrations>.panel{padding-bottom:22px;margin-bottom:22px}.api-connection{padding:16px;border-radius:11px}
+ .api-panel .method-switch button{font-size:11px}.api-panel .api-actions{gap:12px}
+ #toast{bottom:calc(83px + env(safe-area-inset-bottom));font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+/* Resolve legacy theme rules at the same specificity as their original selectors. */
+html[data-theme=dark] .search-mode {background:transparent;border-color:var(--ui-line)}
+html[data-theme=dark] .search-mode button.active {background:transparent;color:var(--ui-text);border-bottom-color:var(--ui-accent);box-shadow:none}
+html[data-theme=dark] .location dd {color:var(--ui-text)}
+html[data-theme=dark] .copy-button,html[data-theme=dark] .connect-button {background:var(--ui-selected);border-color:transparent;color:var(--ui-text)}
+.card-bottom .open-book {border-radius:9px;background:var(--ui-selected);color:var(--ui-text);padding:9px;min-height:36px;min-width:36px}
+html[data-theme=dark] .card-bottom .open-book {background:var(--ui-selected);color:var(--ui-text)}
+#inline-history {border-color:var(--ui-line);padding-top:18px}
+#inline-history>.section-line {margin-top:0;margin-bottom:8px}
+#inline-history .history-item {padding:15px 0;border-color:var(--ui-line);background:transparent}
+html[data-theme=dark] #inline-history .history-item {background:transparent;border-color:var(--ui-line)}
