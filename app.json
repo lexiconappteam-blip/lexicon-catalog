@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "android": {
-    "version": "0.8.13",
-    "build": 26,
-    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.13/lexicon-0.8.13-arm64.apk",
-    "sha256": "eeca079025b5538653320980094d1b6ea289048587a0fd7e253a809e3ce9ac11",
-    "bytes": 20271504,
-    "notes": "Раздельные форматы без подписей, свой разделитель. Ненайденный ввод передаётся на часы без координат. Android: озвучивание только с проверкой наушников, 1–5 повторов, пауза 1–30 секунд; требуется проверка на реальной гарнитуре."
+    "version": "0.8.14",
+    "build": 27,
+    "url": "https://github.com/lexiconappteam-blip/lexicon-catalog/releases/download/app-v0.8.14/lexicon-0.8.14-arm64.apk",
+    "sha256": "e6070a9edfa198901d89703565955e4e41eabaf663218e12e596c2e12a22d1dd",
+    "bytes": 20272660,
+    "notes": "Маленькое серое «Скопировано» снизу. Контрастные настройки формата и озвучивания. Веб-озвучивание включается вручную для сеанса; системный аудиовыход/наушники проверяются пользователем."
   },
   "ios": null,
   "linux": {
