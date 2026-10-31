@@ -236,3 +236,4 @@ html[data-theme=dark] .card-bottom .open-book {background:var(--ui-selected);col
 #inline-history>.section-line {margin-top:0;margin-bottom:8px}
 #inline-history .history-item {padding:15px 0;border-color:var(--ui-line);background:transparent}
 html[data-theme=dark] #inline-history .history-item {background:transparent;border-color:var(--ui-line)}
+.uncertain-result .result-label{color:var(--ui-accent);letter-spacing:.6px}.approximate-input{font-size:12px;line-height:1.7;margin:15px 0 0;color:var(--ui-muted)}.mandatory-marker{font-size:11px;color:var(--ui-muted);line-height:1.7;margin:15px 0 0}
