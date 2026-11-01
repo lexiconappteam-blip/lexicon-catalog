@@ -1,9 +1,13 @@
 /* Static/mobile transport: local dictionary, direct read-only Inject API. */
 (()=>{
  if(window.LexiconAndroid?.legacyPreferences){try{const old=JSON.parse(window.LexiconAndroid.legacyPreferences());for(const name of ['history','historyOn','language'])if(localStorage.getItem('lexicon.web.'+name)===null&&old[name]!==undefined)localStorage.setItem('lexicon.web.'+name,JSON.stringify(old[name]))}catch{}}
- const config=window.LEXICON_PORTABLE,network=window.fetch.bind(window);let pending;
+ const config=window.LEXICON_PORTABLE,network=window.fetch.bind(window);const pending=new Map();
  const normalize=s=>String(s).normalize('NFC').toUpperCase().replaceAll('Ё','Е').replace(/[\u0300\u0301]/g,'').trim();
- async function dictionary(){if(!pending)pending=network(new URL('dictionary.json?v='+encodeURIComponent(config.dictionaryRevision||config.version),document.baseURI)).then(r=>{if(!r.ok)throw Error('Dictionary unavailable');return r.json()}).then(x=>{const groups=new Map();for(const [word,pdf,col,pos] of x.rows){const k=normalize(word);if(!groups.has(k))groups.set(k,[]);groups.get(k).push({word,page:pdf+10,page_pdf:pdf,column:col,position:pos})}return {...x,groups,keys:[...groups.keys()].sort()}}).catch(e=>{pending=null;throw e});return pending}
+ async function dictionary(id='default'){
+  if(!['default','test'].includes(id))throw Error('Unknown dictionary');
+  if(!pending.has(id))pending.set(id,network(new URL(id==='test'?'test-dictionary.json':'dictionary.json?v='+encodeURIComponent(config.dictionaryRevision||config.version),document.baseURI)).then(r=>{if(!r.ok)throw Error('Dictionary unavailable');return r.json()}).then(x=>{const groups=new Map();for(const [word,pdf,col,pos] of x.rows){const k=normalize(word);if(!groups.has(k))groups.set(k,[]);groups.get(k).push({word,page:pdf+(id==='test'?0:10),page_pdf:pdf,column:col,position:pos})}return {...x,groups,keys:[...groups.keys()].sort()}}).catch(e=>{pending.delete(id);throw e}));
+  return pending.get(id);
+ }
  // Keep approximate matching away from the typing/UI thread.
  let searchWorker,workerId=0,workerUnavailable=false;const jobs=new Map();
  async function searchDictionary(data,q,limit,signal){
@@ -34,9 +38,9 @@
   }
   const data=await dictionary();if(options.signal?.aborted)throw new DOMException('Aborted','AbortError');
   if(url.pathname==='/api/health')return json({status:'ok',revision:data.revision,entries:data.rows.length});
-  if(url.pathname==='/api/dictionaries')return json({dictionaries:[{id:'default',name:'Толковый словарь',entries:data.rows.length,revision:data.revision,data_status:'under_review',page_offset:10}]});
+  if(url.pathname==='/api/dictionaries')return json({dictionaries:[{id:'default',name:'Толковый словарь',entries:data.rows.length,revision:data.revision,data_status:'under_review',page_offset:10},{id:'test',name:'Тест',entries:3,revision:'test-1',data_status:'demo',page_offset:0}]});
   if(url.pathname==='/api/search'){
-   const q=url.searchParams.get('q')||'',limit=Number(url.searchParams.get('limit')||12);if(q.length>512||!Number.isInteger(limit)||limit<1||limit>30)return json({error:'Некорректный запрос'},400);if((url.searchParams.get('dictionary')||'default')!=='default')return json({error:'Книга не найдена'},404);
+   const q=url.searchParams.get('q')||'',limit=Number(url.searchParams.get('limit')||12);if(q.length>512||!Number.isInteger(limit)||limit<1||limit>30)return json({error:'Некорректный запрос'},400);const id=url.searchParams.get('dictionary')||'default';if(!['default','test'].includes(id))return json({error:'Книга не найдена'},404);if(id==='test')return json(window.LexiconSearch.search(await dictionary('test'),q,limit));
    return json(await searchDictionary(data,q,limit,options.signal));
   }
   return json({error:'Not found'},404);
