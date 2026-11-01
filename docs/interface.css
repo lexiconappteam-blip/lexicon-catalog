@@ -289,3 +289,68 @@ html[data-theme]{background:var(--ui-bg)}
  html.keyboard-open #search-view,html.catalog-keyboard-open #books-view{background:var(--ui-bg)}
 }
 @media(prefers-reduced-motion:reduce){:root[data-theme] *,:root[data-theme] *:before,:root[data-theme] *:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}:root[data-theme] button:active:not(:disabled){transform:none}}
+
+/* Reference A composition: screen title, restrained book strip, search, text rows.
+   Existing actions and data stay in place; no fabricated definitions or controls. */
+:root[data-theme] .search-screen-title{font:600 30px/1.15 Inter,sans-serif;letter-spacing:-1px;margin:0 0 18px}
+:root[data-theme] .search-topbar{margin-bottom:12px}
+:root[data-theme] .search-topbar .back-button{min-height:32px}
+:root[data-theme] .search-book-heading{padding:10px 12px;background:var(--ui-inset);border:1px solid var(--ui-line);border-radius:9px;margin:0 0 12px;gap:12px}
+:root[data-theme] .search-book-heading>div:not(.mini-cover){min-width:0;flex:1}
+:root[data-theme] #selected-title{font:500 14px/1.3 Inter,sans-serif;letter-spacing:-.2px;margin:0;color:var(--ui-text)}
+:root[data-theme] .search-book-heading .mini-cover{width:22px;height:28px;font-size:15px;border-radius:3px;background:var(--ui-selected)}
+:root[data-theme] .search-book-heading .mini-cover span{font-size:8px;margin-top:8px}
+:root[data-theme] .search-book-heading .star-button{width:28px;height:28px}
+:root[data-theme] .search-book-heading .star-button svg{width:19px;height:19px}
+:root[data-theme] .search-mode{background:transparent;border:0;border-radius:0;padding:0;margin-bottom:12px;gap:18px}
+:root[data-theme] .search-mode button{flex:0 1 auto;min-height:34px;padding:6px 0;background:transparent;border:0;border-radius:0;font-size:12px}
+:root[data-theme] .search-mode button.active{background:transparent;color:var(--ui-text);text-decoration:underline;text-decoration-color:var(--ui-muted);text-underline-offset:8px;text-decoration-thickness:1px}
+:root[data-theme] .word-search{min-height:54px;padding:13px 16px;border-radius:9px}
+:root[data-theme] .word-search input{font-size:20px;font-weight:500;line-height:1.3}
+:root[data-theme] .search-meta{padding-bottom:12px;margin:10px 0 0;border-bottom:1px solid var(--ui-line)}
+:root[data-theme] .result{padding:20px 48px 20px 0;position:relative}
+:root[data-theme] .result h2{font:700 25px/1.2 'PT Serif',serif;color:var(--ui-accent);margin:5px 0 6px;letter-spacing:-.4px}
+:root[data-theme] .result-label{font-size:11px;line-height:1.3;letter-spacing:0}
+:root[data-theme] .result .dict{font-size:12px;line-height:1.4}
+:root[data-theme] .result .location{gap:16px;margin:12px 0 0;line-height:1.3}
+:root[data-theme] .result .location>div{gap:6px}
+:root[data-theme] .result .location dd{font-size:16px}
+:root[data-theme] .result .location dt{font-size:11px}
+:root[data-theme] .result-footer{position:absolute;right:0;top:36px;display:block}
+:root[data-theme] .result-footer .copy-button{position:relative;width:40px;height:40px;min-height:40px;padding:10px;display:grid;place-items:center;border:0;background:transparent;color:var(--ui-muted);border-radius:8px}
+:root[data-theme] .result-footer .copy-button:hover{background:var(--ui-hover);color:var(--ui-text)}
+:root[data-theme] .result-footer .copy-button svg{width:20px;height:20px}
+:root[data-theme] .result-footer .copy-button span{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+:root[data-theme] .library-tabs{background:transparent;border:0;padding:0 0 12px;gap:8px;margin-bottom:12px}
+:root[data-theme] .library-tabs button{background:transparent}
+:root[data-theme] .library-tabs button[aria-selected=true]{background:var(--ui-selected)}
+:root[data-theme] .book-card{padding-top:18px;padding-bottom:18px;min-height:142px;align-items:center}
+:root[data-theme] .book-info{justify-content:flex-start}
+:root[data-theme] .book-info h3{font-size:21px;line-height:1.25}
+:root[data-theme] .card-bottom{margin-top:10px}
+:root[data-theme] .favorite-card{background:transparent;border-radius:0;border-bottom:1px solid var(--ui-line);padding:16px 0;position:relative}
+:root[data-theme] #settings-panel-general{max-width:620px}
+:root[data-theme] #settings-panel-result{max-width:660px}
+@media(max-width:700px){
+ :root[data-theme] main{padding-left:24px;padding-right:24px}
+ :root[data-theme] header{padding-left:24px;padding-right:24px}
+ :root[data-theme] .search-topbar{margin-bottom:14px}
+ :root[data-theme] .search-screen-title{font-size:30px;margin-bottom:16px}
+ :root[data-theme] .search-book-heading{padding:8px 10px;margin-bottom:8px}
+ :root[data-theme] .search-mode{margin-bottom:12px;gap:20px}
+ :root[data-theme] .search-meta{font-size:10px}
+ :root[data-theme] .result{padding-top:18px;padding-bottom:18px;padding-right:42px}
+ :root[data-theme] .result h2{font-size:24px}
+ :root[data-theme] .result .location{gap:13px;flex-wrap:wrap}
+ :root[data-theme] .result-footer{top:32px}
+ :root[data-theme] .result .location dd{font-size:15px}
+ :root[data-theme] .result .location dt{font-size:10px}
+ :root[data-theme] .book-card{grid-template-columns:72px minmax(0,1fr);gap:20px}
+ :root[data-theme] .book-info h3{font-size:20px}
+ :root[data-theme] .page-heading{margin-bottom:24px}
+ :root[data-theme] .sidebar nav{padding-top:10px;padding-bottom:calc(9px + env(safe-area-inset-bottom))}
+ :root[data-theme] .sidebar nav button{gap:5px}
+ html.keyboard-open .search-screen-title{display:none!important}
+ html.keyboard-open .result{padding:12px 44px 12px 0}
+ html.keyboard-open .result-footer{top:20px}
+}
