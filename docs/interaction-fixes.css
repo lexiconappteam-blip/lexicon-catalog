@@ -1,0 +1,28 @@
+/* Search book/source selection and compact settings interactions. */
+:root[data-theme] .search-book-heading>div:not(.mini-cover){flex:1;min-width:0}
+:root[data-theme] #search-book{display:block;width:100%;min-height:40px;padding:5px 22px 5px 0;border:0;background:transparent;color:var(--ui-text);font:500 16px/1.4 Inter,sans-serif;cursor:pointer}
+:root[data-theme] #search-book option{background:var(--ui-surface);color:var(--ui-text)}
+:root[data-theme] #api-source{display:block;width:100%;min-height:44px;font-size:16px;background:var(--ui-surface);color:var(--ui-text);border:1px solid var(--ui-line);border-radius:7px;padding:8px 12px}
+:root[data-theme] #settings-view .toggle-row input:checked,:root[data-theme] #settings-view .api-switch input:checked,:root[data-theme] #settings-view .api-connection-title input[role=switch]:checked{background:var(--ui-accent)}
+:root[data-theme] #settings-view #uncertain-settings{margin:14px 0 0;padding:0;border:0;border-top:1px solid var(--ui-line)}
+:root[data-theme] #uncertain-settings>summary{display:flex;align-items:center;justify-content:space-between;list-style:none;cursor:pointer;min-height:44px;margin:0;padding:10px 0;font:600 14px/1.4 Inter,sans-serif}
+:root[data-theme] #uncertain-settings>summary::-webkit-details-marker{display:none}
+:root[data-theme] #uncertain-settings>summary:after{content:'⌄';color:var(--ui-muted);font-size:19px}
+:root[data-theme] #uncertain-settings[open]>summary:after{content:'⌃'}
+:root[data-theme] #uncertain-settings .advanced-body{padding:2px 0 8px}
+:root[data-theme] #speech-format-settings #speech-settings{grid-template-areas:'title title' 'enable enable' 'headphones headphones' 'note note' 'rate-label rate-label' 'rate rate' 'repeat-label gap-label' 'repeat gap' 'actions actions' 'status status'}
+:root[data-theme] #speech-headphones-row{grid-area:headphones}
+:root[data-theme] #speech-status{overflow-wrap:anywhere}
+:root[data-theme] #settings-panel-integrations .api-connection{padding:0 12px;margin-top:10px;border:1px solid var(--ui-line);border-radius:8px;background:transparent}
+:root[data-theme] #settings-panel-integrations .api-connection>summary{min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:14px;cursor:pointer;list-style:none}
+:root[data-theme] .api-connection>summary::-webkit-details-marker{display:none}
+:root[data-theme] #settings-panel-integrations .api-connection-title h3{margin:0;min-width:0;overflow-wrap:anywhere}
+:root[data-theme] #settings-panel-integrations .api-connection>summary:after{content:'⌄';color:var(--ui-muted);font-size:18px}
+:root[data-theme] #settings-panel-integrations .api-connection[open]>summary:after{content:'⌃'}
+:root[data-theme] #settings-panel-integrations .api-connection-title input{margin-left:auto;flex-shrink:0}
+:root[data-theme] .api-connection>div,:root[data-theme] .api-connection>details{margin-bottom:12px}
+:root[data-theme] .api-connection .api-meta:empty{display:none}
+:root[data-theme] #settings-panel-general>.panel:has(#result-notifications){display:block;padding:8px 0}
+@media(max-width:700px){:root[data-theme] #search-book{min-height:36px;padding-block:4px}:root[data-theme] #settings-panel-integrations .api-connection{padding-inline:10px}}
+:root[data-theme] #api-bar>div{min-width:0;flex:1}
+:root[data-theme] #api-bar>.quiet-button{flex-shrink:0}

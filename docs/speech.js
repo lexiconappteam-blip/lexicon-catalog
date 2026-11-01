@@ -1,24 +1,25 @@
 /* Native headphones are verified by Android. Web output needs explicit session opt-in. */
 (()=>{
- const $=id=>document.getElementById(id),key='lexicon.web.speech';let prefs={enabled:false,repeats:1,gap:5,rate:1},last='',t=k=>k;
- let armed=false,primed=false,generation=0,timer,startTimer,current,statusOverride='';
+ const $=id=>document.getElementById(id),key='lexicon.web.speech';let prefs={enabled:false,repeats:1,gap:5,rate:1,headphonesOnly:true},last='',t=k=>k;
+ let armed=false,sessionConsent=false,primed=false,generation=0,timer,startTimer,current,statusOverride='';
  const repeatCount=value=>{const count=Number(value);return Number.isFinite(count)?Math.min(2147483647,Math.max(1,Math.trunc(count))):1};
- try{const saved=JSON.parse(localStorage.getItem(key));if(saved&&typeof saved==='object')prefs={enabled:saved.enabled===true,repeats:repeatCount(saved.repeats),gap:Math.round(Math.min(30,Math.max(1,Number(saved.gap)||5))),rate:Math.min(2,Math.max(.5,Number(saved.rate)||1))}}catch{}
+ try{const saved=JSON.parse(localStorage.getItem(key));if(saved&&typeof saved==='object')prefs={headphonesOnly:saved.headphonesOnly!==false,enabled:saved.enabled===true,repeats:repeatCount(saved.repeats),gap:Math.round(Math.min(30,Math.max(1,Number(saved.gap)||5))),rate:Math.min(2,Math.max(.5,Number(saved.rate)||1))}}catch{}
  const bridge=()=>window.LexiconAndroid,native=()=>!!bridge()?.speakPrivateResult&&!!bridge()?.privateSpeechStatus;
  const web=()=>!!window.speechSynthesis&&typeof window.SpeechSynthesisUtterance==='function';
- const supported=()=>native()||web(),enabled=()=>prefs.enabled&&(native()||armed);
+ const supported=()=>native()||web(),enabled=()=>prefs.enabled&&(native()||armed&&!prefs.headphonesOnly);
  const voice=()=>{const voices=(window.speechSynthesis?.getVoices()||[]).filter(v=>/^ru(?:[-_]|$)/i.test(v.lang));return voices.find(v=>v.localService)||voices.find(v=>v.default)||voices[0]};
- const code=()=>native()?bridge().privateSpeechStatus():!web()?'unavailable':statusOverride||(!armed?'web_idle':!primed?'web_tap':'web_ready');
+ const code=()=>native()?bridge().privateSpeechStatus():!web()?'unavailable':prefs.headphonesOnly?'web_headphones':statusOverride||(!armed?'web_idle':!primed?'web_tap':'web_ready');
  const save=()=>{try{localStorage.setItem(key,JSON.stringify(prefs))}catch{}};
  function refresh(status=code()){
-  $('speech-enabled').disabled=!supported();$('speech-enabled').checked=supported()&&enabled();
+  $('speech-headphones-only').checked=native()||prefs.headphonesOnly;$('speech-headphones-only').disabled=native();
+  $('speech-enabled').disabled=!supported()||(!native()&&prefs.headphonesOnly);$('speech-enabled').checked=supported()&&enabled();
   $('speech-rate').value=prefs.rate;$('speech-rate-value').textContent=prefs.rate+'×';$('speech-rate').disabled=native()&&!bridge()?.speakPrivateResultAtRate;$('speech-repeats').value=prefs.repeats;$('speech-gap').value=prefs.gap;
   $('speech-test').disabled=!supported()||!enabled();$('speech-stop').disabled=!supported();
-  $('speech-only-note').textContent=t(native()?'speechOnly':'speechWebNote');
-  $('speech-status').textContent=t({web_idle:'speechWebIdle',web_ready:'speechWebReady',web_voice_missing:'speechWebVoiceMissing',web_tap:'speechWebTap',web_paused:'speechWebPaused',loading:'speechLoading',voice_missing:'speechVoiceMissing',headphones_required:'speechHeadphones',route_unverified:'speechRoute',error:'speechError',unavailable:'speechUnavailable',ready:'speechReady'}[status]||'speechError');
+  $('speech-only-note').textContent=!native()&&prefs.headphonesOnly?'':t(native()?'speechOnly':'speechWebNote');
+  $('speech-status').textContent=t({web_headphones:'speechHeadphonesWeb',web_idle:'speechWebIdle',web_ready:'speechWebReady',web_voice_missing:'speechWebVoiceMissing',web_tap:'speechWebTap',web_paused:'speechWebPaused',loading:'speechLoading',voice_missing:'speechVoiceMissing',headphones_required:'speechHeadphones',route_unverified:'speechRoute',error:'speechError',unavailable:'speechUnavailable',ready:'speechReady'}[status]||'speechError');
  }
  function stop(){statusOverride='';generation++;clearTimeout(timer);clearTimeout(startTimer);timer=null;startTimer=null;last='';current=null;if(native())bridge().stopPrivateSpeech?.();else if(web())window.speechSynthesis.cancel()}
- function disarm(){stop();if(!native()){armed=false;primed=false;statusOverride=prefs.enabled?'web_paused':''}else statusOverride='';refresh()}
+ function disarm(){stop();if(!native()){armed=false;sessionConsent=false;primed=false;statusOverride=prefs.enabled?'web_paused':''}else statusOverride='';refresh()}
  function webSpeak(text,signature,test){
   const selected=voice();
   stop();const id=generation;let remaining=prefs.repeats;
@@ -47,8 +48,14 @@
  window.LexiconSpeech={receive:speak,receiveUnknown:(query,rows,book)=>speakText(window.LexiconFormat.approximate(query,rows,window.LexiconResultFormat('speech')),book),cancel:stop,refresh,init(translate){t=translate;
   $('speech-enabled').onchange=()=>{
    const wanted=$('speech-enabled').checked;stop();statusOverride='';
-   if(wanted&&!native())armed=window.confirm(t('speechWebConfirm'));else if(!wanted){armed=false;primed=false};
+   if(wanted&&!native())armed=!prefs.headphonesOnly&&(sessionConsent||window.confirm(t('speechWebConfirm')));else if(!wanted){armed=false;primed=false};
    prefs.enabled=wanted&&(native()||armed);save();refresh();
+  };
+  $('speech-headphones-only').onchange=()=>{
+   const wanted=$('speech-headphones-only').checked;
+   if(native()){refresh();return}
+   if(!wanted&&!window.confirm(t('speechHeadphonesOverride'))){refresh();return}
+   stop();prefs.headphonesOnly=wanted;armed=false;primed=false;sessionConsent=!wanted;save();refresh();
   };
   $('speech-rate').oninput=()=>{$('speech-rate-value').textContent=$('speech-rate').value+'×'};
   $('speech-rate').onchange=()=>{prefs.rate=Math.min(2,Math.max(.5,Number($('speech-rate').value)||1));stop();save();refresh()};

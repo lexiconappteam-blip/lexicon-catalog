@@ -13,7 +13,6 @@
  function refresh(message){
   const toggle=$('result-notifications');if(!toggle)return;
   const allowed=supported();toggle.disabled=!allowed;toggle.checked=enabled&&permission()==='granted';
-  $('test-result-notification').disabled=!toggle.checked||!window.LexiconResultFormat('notification').fields.length;
   const messageText=message||(!allowed?t(!isSecureContext?'notificationHttps':ios()?'notificationHomeScreen':'notificationUnavailable'):enabled&&permission()!=='granted'?t('notificationDenied'):'');$('result-notification-status').textContent=messageText;$('result-notification-status').hidden=!messageText;
  }
  async function requestPermission(){
@@ -43,7 +42,6 @@
     $('result-notifications').disabled=true;
     try{persist(await requestPermission()==='granted');refresh(enabled?undefined:t('notificationDenied'))}catch{persist(false);refresh(t('notificationFailed'))}
    };
-   $('test-result-notification').onclick=async()=>{try{refresh(t(await show({word:'ТЮТЕЛЬКА',page:655,column:2,position:3},true)?'notificationTestSent':'notificationFailed'))}catch{refresh(t('notificationFailed'))}};
    window.addEventListener('focus',()=>refresh());window.addEventListener('lexicon:format-changed',()=>refresh());const restore=()=>{refresh();if(ios()&&enabled&&permission()==='granted')window.LexiconRelay.subscribe({force:true}).catch(()=>refresh(t('notificationFailed')))};window.addEventListener('online',restore);window.addEventListener('pageshow',restore);window.addEventListener('focus',restore);if(ios()&&enabled&&permission()==='granted')restore();
   },
   async notify(rows,book){if(!rows.length)return;void window.LexiconRelay?.publish(rows);if(!enabled||ios())return;const signature=JSON.stringify([book,rows.map(text)]);if(last===signature)return;try{if(await show(rows[0],false,rows))last=signature;else refresh(t('notificationDenied'))}catch{refresh(t('notificationFailed'))}}
