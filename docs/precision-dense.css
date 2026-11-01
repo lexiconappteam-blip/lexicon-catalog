@@ -104,3 +104,26 @@
 /* Speech opens on playback controls; its existing format controls remain below. */
 :root[data-theme] #settings-view #format-editor[data-target=speech] #speech-format-settings{margin-bottom:20px}
 :root[data-theme] #settings-view #format-editor[data-target=speech] #speech-settings{margin-top:0;padding-top:0;border-top:0}
+
+/* Refinement: selection is independent of favorites and installed status. */
+:root[data-theme] .library-collection{border:0;border-radius:0;padding:0}
+:root[data-theme] #books-view .book-card,:root[data-theme] #books-view .favorite-card{grid-template-columns:64px minmax(0,1fr);gap:16px;padding:12px;min-height:114px;border:1px solid transparent;border-bottom-color:var(--ui-line)}
+:root[data-theme=dark] #books-view .book-card,:root[data-theme=dark] #books-view .favorite-card{border-bottom-color:rgba(255,255,255,.05)}
+:root[data-theme] #books-view .book-card.selected-book,:root[data-theme] #books-view .favorite-card.selected-book{border:1px solid var(--ui-accent);border-radius:9px;box-shadow:0 0 12px rgba(217,149,69,.10),0 0 24px rgba(217,149,69,.04)}
+:root[data-theme] #books-view .book-art .cover,:root[data-theme] #books-view .favorite-card .cover{width:64px;height:90px;min-height:90px}
+:root[data-theme] #books-view .book-info h3,:root[data-theme] #books-view .favorite-info h3{font-size:19px}
+:root[data-theme=dark] #books-view .catalog-search{background:#111115}
+:root[data-theme] #speech-settings>.speech-repeat-stepper{grid-area:repeat;justify-self:end;display:flex;align-items:center;width:136px;height:42px;border:1px solid var(--ui-line);border-radius:6px;overflow:hidden}
+:root[data-theme] #speech-settings .speech-repeat-stepper button{width:40px;min-width:40px;height:40px;padding:0;background:transparent;border:0;color:var(--ui-text);font-size:22px}
+:root[data-theme] #settings-view #speech-repeats{width:54px;min-width:0;padding:4px 0;border:0;text-align:center;background:transparent}
+:root[data-theme] #settings-view #speech-gap{width:84px;height:42px;text-align:center}
+:root[data-theme] #speech-settings input[type=number]{appearance:textfield;-moz-appearance:textfield}
+:root[data-theme] #speech-settings input[type=number]::-webkit-inner-spin-button,:root[data-theme] #speech-settings input[type=number]::-webkit-outer-spin-button{appearance:none;margin:0}
+:root[data-theme] #speech-settings>.speech-actions{gap:12px}
+:root[data-theme] #speech-settings #speech-test,:root[data-theme] #speech-settings #speech-stop{flex:1;min-height:46px;padding:10px 8px;border-radius:8px;font:600 13px/1.4 Inter,sans-serif}
+:root[data-theme] #speech-settings #speech-stop{border:1px solid var(--ui-line);background:transparent;color:var(--ui-text)}
+:root[data-theme] #settings-view #format-editor[data-target=speech] .preview-coordinates{color:var(--ui-muted);font-size:13px}
+:root[data-theme] #settings-view #format-editor[data-target=speech] .preview-number{color:var(--ui-accent)}
+:root[data-theme] #speech-status,:root[data-theme] #speech-only-note{color:var(--ui-muted);font-size:12px}
+
+:root[data-theme] #speech-headphones-row:has(input:disabled){opacity:.5}
