@@ -354,3 +354,8 @@ html[data-theme]{background:var(--ui-bg)}
  html.keyboard-open .result{padding:12px 44px 12px 0}
  html.keyboard-open .result-footer{top:20px}
 }
+
+/* The selected book already identifies the source; results focus on word/place. */
+:root[data-theme] .result-footer{top:18px}
+:root[data-theme] .uncertain-result .result-footer{top:34px}
+:root[data-theme] .sidebar-bottom{padding-top:20px}

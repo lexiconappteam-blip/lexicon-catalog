@@ -31,16 +31,16 @@ const strings={
     "copySettings": "Формат результата",
     "copyFieldsNote": "Слово → страница → колонка → строчка.",
     "unknownWatchNote": "При опечатке отправится ближайшее слово с координатами, знаком * и исходным вводом. Если варианта нет — исходный ввод с * без координат.",
-    "speechTitle": "Озвучивание в наушник",
+    "speechTitle": "Воспроизведение",
     "speechEnable": "Озвучивать результат",
     "speechRepeats": "Количество повторов",
     "speechGap": "Пауза между повторами, секунд",
     "speechOnly": "Только в наушниках. Новый запрос отменяет предыдущую озвучку.",
     "speechWebNote": "Звук идёт через системный аудиовыход. Наушники нужно проверить вручную.",
-    "speechWebIdle": "Включите озвучивание и нажмите «Проверить». После перезагрузки его нужно включить снова.",
-    "speechWebReady": "Озвучивание включено для текущего сеанса.",
-    "speechWebVoiceMissing": "Локальный русский голос ещё не доступен. Проверьте голоса синтеза речи в настройках устройства и нажмите «Проверить».",
-    "speechWebTap": "Нажмите «Проверить», чтобы разрешить воспроизведение в браузере.",
+    "speechWebIdle": "Включите озвучивание и нажмите «Прослушать».",
+    "speechWebReady": "Готово к озвучиванию.",
+    "speechWebVoiceMissing": "Русский голос недоступен. Проверьте синтез речи в настройках устройства.",
+    "speechWebTap": "Нажмите «Прослушать», чтобы запустить звук.",
     "speechWebConfirm": "Браузер не может гарантировать вывод только в наушники. Проверьте системный аудиовыход: при его переключении звук может пойти через динамик. Включить озвучивание для текущего сеанса?",
     "speechLoading": "Подготовка голоса…",
     "speechVoiceMissing": "Установите офлайн-голос русского языка в настройках синтеза речи Android.",
@@ -84,7 +84,7 @@ const strings={
     "notFound": "Точное совпадение не найдено",
     "try": "Возможно, вы ищете:",
     "prefix": "Выберите слово из подсказок",
-    "noHistory": "История пока пуста. Найдите первое слово в книге.",
+    "noHistory": "Пока пусто.",
     "offline": "Нет связи. Проверьте подключение и повторите запрос.",
     "online": "Книга подключена",
     "storageFail": "Браузер не разрешает сохранять настройки.",
@@ -173,16 +173,16 @@ const strings={
     "copySettings": "Result format",
     "copyFieldsNote": "Order: word → book page → column → line. Coordinates come from the selected database.",
     "unknownWatchNote": "A typo sends the closest word with coordinates, *, and original input. With no close match, only the original input with * is sent.",
-    "speechTitle": "Private headphone speech",
+    "speechTitle": "Playback",
     "speechEnable": "Speak results",
     "speechRepeats": "Repeats",
     "speechGap": "Pause between repeats, seconds",
     "speechOnly": "Headphones only. A new query cancels previous speech.",
     "speechWebNote": "Sound uses the system audio output. Check your headphones manually.",
-    "speechWebIdle": "Enable speech, then tap Test. Enable it again after reloading.",
+    "speechWebIdle": "Enable speech, then tap Listen.",
     "speechWebReady": "Speech is enabled for this session.",
-    "speechWebVoiceMissing": "A local Russian voice is not available yet. Check device voice settings and tap Test.",
-    "speechWebTap": "Tap Test to allow browser playback.",
+    "speechWebVoiceMissing": "Russian voice unavailable. Check device speech settings.",
+    "speechWebTap": "Tap Listen to start audio.",
     "speechWebConfirm": "The browser cannot guarantee headphones-only output. Check the system audio output: switching it may play sound through the speaker. Enable speech for this session?",
     "speechLoading": "Preparing voice…",
     "speechVoiceMissing": "Install an offline Russian voice in Android text-to-speech settings.",
@@ -226,7 +226,7 @@ const strings={
     "notFound": "No exact match",
     "try": "Did you mean:",
     "prefix": "Choose a word from the suggestions",
-    "noHistory": "No searches yet. Find your first word in a book.",
+    "noHistory": "No searches yet.",
     "offline": "Cannot connect. Check your connection and try again.",
     "online": "Book connected",
     "storageFail": "Your browser cannot save preferences.",
@@ -354,7 +354,7 @@ function renderBooks(){
   if(favorites.length>1){const order=el('div','favorite-order');for(const [step,glyph,label] of [[-1,'↑','moveUp'],[1,'↓','moveDown']]){const button=el('button','order-button',glyph);button.type='button';button.dataset.moveId=book.id;button.dataset.moveStep=step;button.setAttribute('aria-label',t(label)+': '+book.name);button.disabled=favorites.indexOf(book.id)+step<0||favorites.indexOf(book.id)+step>=favorites.length;button.onclick=()=>moveFavorite(book.id,step);order.append(button)}info.append(order)}card.append(cover(book),info,favoriteButton(book));enableFavoriteDrag(card,book.id);list.append(card)}
  $('favorites-section').hidden=!fav.length;
  const available=libraryTab==='mine'?mine:books,filtered=available.filter(matches).filter(b=>libraryTab!=='mine'||!favorites.includes(b.id));$('book-count').textContent=available.length+' '+t(available.length===1?'oneBook':'manyBooks');$('catalog-count').textContent=available.filter(matches).length+' / '+available.length;
- const heading=document.querySelector('.catalog-title h2');heading.dataset.i18n=libraryTab==='mine'?'myBooks':'catalog';heading.textContent=t(heading.dataset.i18n);document.querySelector('.catalog-title').hidden=!filtered.length&&!!fav.length;
+ const heading=document.querySelector('.catalog-title h2');heading.dataset.i18n=libraryTab==='mine'?'myBooks':'catalog';heading.textContent=t(heading.dataset.i18n);document.querySelector('.catalog-title').hidden=(!filtered.length&&!!fav.length)||(!fav.length&&!query);
  const catalog=$('catalog-list');catalog.replaceChildren();for(const book of filtered){const card=el('article','book-card'),art=el('div','book-art'),coverButton=el('button','cover-button');coverButton.setAttribute('aria-label',t('open')+': '+book.name);coverButton.append(cover(book));coverButton.onclick=()=>openBook(book.id);art.append(coverButton,favoriteButton(book));
   const info=el('div','book-info'),title=el('h3'),titleButton=el('button','book-title',book.name);titleButton.onclick=()=>openBook(book.id);title.append(titleButton);const bottom=el('div','card-bottom');
   if(libraryTab==='catalog'){const add=el('button','library-add',t((myBooks||[]).includes(book.id)?'bookAdded':'addBook'));add.disabled=(myBooks||[]).includes(book.id);add.onclick=()=>{myBooks.push(book.id);save('myBooks',myBooks);renderBooks()};bottom.append(add)}else bottom.append(el('span','data-note',t('draft')));
@@ -430,7 +430,7 @@ function render(result){
  $('welcome').hidden=!!result.normalized;renderSuggestions(result);const area=$('result-area');area.replaceChildren();if(!result.normalized)return;
  const uncertain=!result.matches.length&&!!result.approximate?.length,rows=uncertain?result.approximate:result.matches;
  for(const row of rows){
-  const card=el('article','result'+(uncertain?' uncertain-result':''));card.append(el('div','result-label',t(uncertain?'approximateMatch':'found')),el('h2','',row.word+(uncertain?'#':'')),el('div','dict',selected?.name||''));
+  const card=el('article','result'+(uncertain?' uncertain-result':''));if(uncertain)card.append(el('div','result-label',t('approximateMatch')));card.append(el('h2','',row.word+(uncertain?'#':'')));
   if(uncertain)card.append(el('p','approximate-input',t('approximateInput')+': «'+result.query+'». '+(lang==='ru'?'Проверьте выбранный вариант.':'Check the suggested word.')));
   const dl=el('dl','location');for(const f of ['page','column','position']){const cell=el('div');cell.append(el('dt','',t(f)),el('dd','',row[f]));dl.append(cell)}card.append(dl);
   const footer=el('div','result-footer'),button=el('button','copy-button');button.append(icon('copy'),el('span','',t('copy')));button.disabled=!window.LexiconResultFormat('copy').fields.length;button.onclick=()=>copy(row,uncertain?result.query:undefined,button);
@@ -525,11 +525,13 @@ $('api-source').onchange=()=>{if(apiMode)window.LexiconApi.start($('api-source')
 $('api-toggle').onclick=()=>{if(window.LexiconApi.isRunning())window.LexiconApi.stop();else if(!$('api-source').value)showApiSettings();else window.LexiconApi.start($('api-source').value)};
 window.addEventListener('lexicon:api-config',()=>{renderCopySettings();refreshApiUI()});
 window.addEventListener('lexicon:api-format',event=>{formatTarget=event.detail.target;navigate('settings');selectSettingsTab('result');renderCopySettings();requestAnimationFrame(()=>$('format-target').scrollIntoView({block:'center'}))});
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.25';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.26';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{const status=$('update-status');status.textContent=t('checkingUpdates');$('download-update').hidden=true;try{const response=await fetch('https://raw.githubusercontent.com/lexiconappteam-blip/lexicon-catalog/main/app.json',{cache:'no-store'});if(!response.ok)throw Error();const manifest=await response.json();const remote=manifest.android?.version||installedVersion;const newer=remote.split('.').map(Number).reduce((result,v,i)=>result||Math.sign(v-(Number(installedVersion.split('.')[i])||0)),0)>0;status.textContent=newer?t('updateAvailable')+' '+remote:t('noUpdates');if(newer&&window.LexiconAndroid){const url=new URL(manifest.android.url);if(url.protocol==='https:'&&url.hostname==='github.com'){$('download-update').href=url.href;$('download-update').hidden=false}}else if(newer){navigator.serviceWorker?.getRegistration().then(r=>r?.update());status.textContent+=' — '+(lang==='ru'?'обновите страницу.':'reload this page.')}}catch{status.textContent=t('offline')}};
 window.LexiconCurrentResults=()=>data?.matches||[];window.LexiconApproximateResults=()=>data?.approximate||[];
-Object.assign(strings.ru,{libraryCatalog:'Каталог',myBooks:'Мои книги',myBooksEmpty:'Здесь появятся добавленные книги.',addBook:'Добавить',bookAdded:'Добавлена',browseCatalog:'Открыть каталог',moveUp:'Поднять',moveDown:'Опустить',settingsResultTab:'Результат',contactDeveloper:'Связаться с разработчиком',outputDestination:'Куда отправляем',exactMatchTitle:'Точное совпадение',uncertainTitle:'Если слово не найдено',useSuggestionLabel:'Использовать ближайшее слово',suggestionCoordinatesLabel:'Передавать его координаты',includeOriginalLabel:'Добавлять исходный ввод',markUncertainLabel:'Помечать неточное совпадение #',approximateMatch:'Неточное совпадение',approximateInput:'Исходный ввод',previewTypo:'Пример: введено «папаа»',speechCoordinatesLabel:'Называть наименование перед значением',speechCoordinatesHelp:'Говорить слова: страница, колонка, строчка.',speechRate:'Скорость речи',notificationHomeScreen:'На iPhone добавьте сайт на экран «Домой» через меню «Поделиться» и откройте приложение с его иконки. Затем разрешите уведомления.',notificationHttps:'Для уведомлений откройте приложение по HTTPS.',markerOffWarning:'Без отметки # вы не узнаете, ввёл человек именно это слово или приложение подобрало ближайший вариант. Отключить отметку?',apiSettingsTitle:'Настройки API',settingsGeneral:'Общие',settingsIntegrations:'Интеграции'});
-Object.assign(strings.en,{libraryCatalog:'Catalog',myBooks:'My books',myBooksEmpty:'Books you add will appear here.',addBook:'Add',bookAdded:'Added',browseCatalog:'Browse catalog',moveUp:'Move up',moveDown:'Move down',settingsResultTab:'Result',contactDeveloper:'Contact developer',outputDestination:'Output',exactMatchTitle:'Exact match',uncertainTitle:'If the word is not found',useSuggestionLabel:'Use the closest word',suggestionCoordinatesLabel:'Include its coordinates',includeOriginalLabel:'Include original input',markUncertainLabel:'Mark approximate matches with #',approximateMatch:'Approximate match',approximateInput:'Original input',previewTypo:'Example: input «папаа»',speechCoordinatesLabel:'Say the label before its value',speechCoordinatesHelp:'Say: page, column and line.',speechRate:'Speech speed',notificationHomeScreen:'On iPhone, add the site to your Home Screen from Share, then open its icon and enable notifications.',notificationHttps:'Open the app over HTTPS to enable notifications.',markerOffWarning:'Without # you cannot tell an exact word from an automatically suggested one. Turn the marker off?',apiSettingsTitle:'API settings',settingsGeneral:'General',settingsIntegrations:'Integrations'});
+Object.assign(strings.ru,{libraryCatalog:'Каталог',myBooks:'Мои книги',myBooksEmpty:'Здесь появятся добавленные книги.',addBook:'Добавить',bookAdded:'Добавлена',browseCatalog:'Открыть каталог',moveUp:'Поднять',moveDown:'Опустить',settingsResultTab:'Вывод',contactDeveloper:'Связаться с разработчиком',outputDestination:'Способ вывода',exactMatchTitle:'Точное совпадение',uncertainTitle:'Если слово не найдено',useSuggestionLabel:'Использовать ближайшее слово',suggestionCoordinatesLabel:'Передавать его координаты',includeOriginalLabel:'Добавлять исходный ввод',markUncertainLabel:'Помечать неточное совпадение #',approximateMatch:'Неточное совпадение',approximateInput:'Исходный ввод',previewTypo:'Пример: введено «папаа»',speechCoordinatesLabel:'Называть наименование перед значением',speechCoordinatesHelp:'Говорить слова: страница, колонка, строчка.',speechRate:'Скорость речи',notificationHomeScreen:'На iPhone добавьте сайт на экран «Домой» через меню «Поделиться» и откройте приложение с его иконки. Затем разрешите уведомления.',notificationHttps:'Для уведомлений откройте приложение по HTTPS.',markerOffWarning:'Без отметки # вы не узнаете, ввёл человек именно это слово или приложение подобрало ближайший вариант. Отключить отметку?',apiSettingsTitle:'API',settingsGeneral:'Общие',settingsIntegrations:'Подключения'});
+Object.assign(strings.en,{libraryCatalog:'Catalog',myBooks:'My books',myBooksEmpty:'Books you add will appear here.',addBook:'Add',bookAdded:'Added',browseCatalog:'Browse catalog',moveUp:'Move up',moveDown:'Move down',settingsResultTab:'Output',contactDeveloper:'Contact developer',outputDestination:'Output',exactMatchTitle:'Exact match',uncertainTitle:'If the word is not found',useSuggestionLabel:'Use the closest word',suggestionCoordinatesLabel:'Include its coordinates',includeOriginalLabel:'Include original input',markUncertainLabel:'Mark approximate matches with #',approximateMatch:'Approximate match',approximateInput:'Original input',previewTypo:'Example: input «папаа»',speechCoordinatesLabel:'Say the label before its value',speechCoordinatesHelp:'Say: page, column and line.',speechRate:'Speech speed',notificationHomeScreen:'On iPhone, add the site to your Home Screen from Share, then open its icon and enable notifications.',notificationHttps:'Open the app over HTTPS to enable notifications.',markerOffWarning:'Without # you cannot tell an exact word from an automatically suggested one. Turn the marker off?',apiSettingsTitle:'API',settingsGeneral:'General',settingsIntegrations:'Connections'});
+Object.assign(strings.ru,{speechTest:'Прослушать',speechWebPaused:'Озвучивание приостановлено. После возврата включите его снова.'});
+Object.assign(strings.en,{speechTest:'Listen',speechWebPaused:'Speech paused. Enable it again after returning.'});
 function selectSettingsTab(key,{focus=false}={}){
  if(!['general','result','integrations'].includes(key))key='general';
  document.querySelectorAll('[data-settings-tab]').forEach(button=>{const active=button.dataset.settingsTab===key;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;if(active&&focus)button.focus()});
