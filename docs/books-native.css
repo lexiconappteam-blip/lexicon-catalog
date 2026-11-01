@@ -1,0 +1,68 @@
+/* Library rows share the native search/settings rhythm without repainting covers. */
+:root[data-theme] #books-view{max-width:920px;margin-inline:auto}
+:root[data-theme] #books-view>.page-heading{margin-bottom:20px;align-items:flex-start;gap:16px}
+:root[data-theme] #books-view h1{font:600 26px/1.2 Inter,sans-serif;letter-spacing:-.7px}
+:root[data-theme] #books-view>.page-heading p{font-size:13px;line-height:1.45;max-width:360px;margin-top:6px}
+:root[data-theme] #books-view .count-badge{margin-top:7px;font:11px/1.5 'JetBrains Mono',monospace;color:var(--ui-muted);white-space:nowrap}
+:root[data-theme] #books-view .library-tabs{display:flex;max-width:none;gap:24px;padding:0;margin:0 0 16px;border:0;border-bottom:1px solid var(--ui-line);border-radius:0;background:transparent}
+:root[data-theme] #books-view .library-tabs button{flex:0 1 auto;min-height:42px;padding:10px 0;border:0;border-bottom:1px solid transparent;border-radius:0;background:transparent;color:var(--ui-muted);font-size:13px;line-height:1.4}
+:root[data-theme] #books-view .library-tabs button[aria-selected=true]{background:transparent;color:var(--ui-accent);border-bottom-color:var(--ui-accent);font-weight:600}
+:root[data-theme] #books-view .catalog-search{min-height:48px;border-radius:8px;padding:12px 14px;margin-bottom:20px;background:var(--ui-surface);border-color:var(--ui-line);box-shadow:none}
+:root[data-theme] #books-view .catalog-search input{font:400 16px/1.4 Inter,sans-serif}
+:root[data-theme] #books-view .section-line{margin:22px 0 6px;align-items:baseline}
+:root[data-theme] #books-view .section-line h2{font:600 14px/1.4 Inter,sans-serif;letter-spacing:-.1px}
+:root[data-theme] #books-view .section-line .subtle{font:11px/1.4 'JetBrains Mono',monospace}
+:root[data-theme] #books-view .book-grid{grid-template-columns:minmax(0,1fr);gap:0}
+:root[data-theme] #books-view .book-card{position:relative;display:grid;grid-template-columns:76px minmax(0,1fr);align-items:center;gap:20px;min-height:140px;padding:18px 0;border:0;border-bottom:1px solid var(--ui-line);border-radius:0;background:transparent;box-shadow:none;transform:none}
+:root[data-theme] #books-view .book-card:last-child{border-bottom:0}
+:root[data-theme] #books-view .book-art{position:static;min-height:104px;background:transparent;justify-content:flex-start}
+:root[data-theme] #books-view .book-art .cover{width:72px;height:104px;transform:none;box-shadow:none}
+:root[data-theme] #books-view .book-art>.star-button{position:absolute;top:17px;right:0;width:44px;height:44px;margin:0;padding:11px;background:transparent;border:0;border-radius:8px}
+:root[data-theme] #books-view .star-button svg{width:22px;height:22px}
+:root[data-theme] #books-view .book-info{min-width:0;align-self:center;display:flex;flex-direction:column;justify-content:center;padding:0 48px 0 0}
+:root[data-theme] #books-view .book-info h3{font:700 21px/1.25 'PT Serif',serif;letter-spacing:-.35px;margin:0 0 7px}
+:root[data-theme] #books-view .book-info .book-title{padding:0;overflow-wrap:anywhere}
+:root[data-theme] #books-view .book-meta{font:12px/1.5 Inter,sans-serif;margin:0;color:var(--ui-muted)}
+:root[data-theme] #books-view .card-bottom{display:flex;align-items:center;gap:12px;margin:9px 0 0;padding:0;border:0}
+:root[data-theme] #books-view .data-note{font:11px/1.4 Inter,sans-serif}
+:root[data-theme] #books-view .card-bottom .open-book{position:absolute;bottom:18px;right:0;display:grid;place-items:center;width:44px;height:44px;min-height:44px;padding:12px;border:0;border-radius:8px;background:transparent;color:var(--ui-muted)}
+:root[data-theme] #books-view .card-bottom .open-book svg{width:20px;height:20px}
+:root[data-theme] #books-view .library-add{font-size:12px;line-height:1.4;padding:7px 0;min-height:32px;color:var(--ui-accent)}
+:root[data-theme] #books-view .library-add:disabled{color:var(--ui-muted)}
+:root[data-theme] #books-view .star-button:hover,:root[data-theme] #books-view .open-book:hover{background:var(--ui-hover);color:var(--ui-text)}
+:root[data-theme] #books-view .star-button[aria-pressed=true]{color:var(--ui-accent)}
+:root[data-theme] #books-view .star-button[aria-pressed=true] svg{fill:var(--ui-accent);stroke:var(--ui-accent)}
+:root[data-theme] #books-view .favorite-grid{grid-template-columns:minmax(0,1fr);gap:0}
+:root[data-theme] #books-view .favorite-card{display:grid;grid-template-columns:76px minmax(0,1fr);position:relative;align-items:center;gap:20px;padding:18px 0;min-height:140px;background:transparent;border:0;border-bottom:1px solid var(--ui-line);border-radius:0;box-shadow:none}
+:root[data-theme] #books-view .favorite-card .cover{width:72px;height:104px;box-shadow:none}
+:root[data-theme] #books-view .favorite-info{min-width:0;padding:0 48px 0 0}
+:root[data-theme] #books-view .favorite-info h3{font:700 21px/1.25 'PT Serif',serif;letter-spacing:-.35px;margin:0 0 7px}
+:root[data-theme] #books-view .favorite-info p{font-size:12px;line-height:1.5;margin:0 0 6px}
+:root[data-theme] #books-view .favorite-card>.star-button{position:absolute;right:0;top:17px;width:44px;height:44px;padding:11px;border-radius:8px;background:transparent}
+:root[data-theme] #books-view .favorite-info .open-book{display:inline-flex;gap:8px;min-height:34px;padding:6px 0;font-size:12px;background:transparent;color:var(--ui-text)}
+:root[data-theme] #books-view .favorite-order{margin-top:8px;gap:8px}
+:root[data-theme] #books-view .order-button{width:36px;height:36px;border:1px solid var(--ui-line);border-radius:6px;background:transparent;color:var(--ui-muted)}
+:root[data-theme] #books-view .order-button:hover:not(:disabled){background:var(--ui-hover);color:var(--ui-text)}
+:root[data-theme] #books-view .favorite-dragging{opacity:.5}
+:root[data-theme] #books-view .favorite-drop-target{outline:1px solid var(--ui-accent);outline-offset:2px}
+:root[data-theme] #books-view .catalog-footer{margin-top:24px;padding-top:0;border:0;gap:12px;align-items:baseline;flex-wrap:wrap}
+:root[data-theme] #books-view .catalog-footer strong{font:500 13px/1.45 Inter,sans-serif}
+:root[data-theme] #books-view .catalog-footer p{font:12px/1.5 Inter,sans-serif;max-width:340px}
+:root[data-theme] #books-view .catalog-footer a{font:12px/1.5 Inter,sans-serif;margin-left:0;color:var(--ui-muted)}
+@media(min-width:1101px){:root[data-theme] #books-view .book-grid,:root[data-theme] #books-view .favorite-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:32px}}
+@media(max-width:700px){
+ :root[data-theme] #books-view h1{font-size:25px}
+ :root[data-theme] #books-view>.page-heading{margin-bottom:18px}
+ :root[data-theme] #books-view>.page-heading p{max-width:250px}
+ :root[data-theme] #books-view .library-tabs{gap:28px;margin-bottom:14px}
+ :root[data-theme] #books-view .catalog-search{margin-bottom:18px;min-height:46px}
+ :root[data-theme] #books-view .book-card,:root[data-theme] #books-view .favorite-card{grid-template-columns:68px minmax(0,1fr);gap:18px;padding:16px 0;min-height:132px}
+ :root[data-theme] #books-view .book-art{min-height:100px}
+ :root[data-theme] #books-view .book-art .cover,:root[data-theme] #books-view .favorite-card .cover{width:68px;height:98px}
+ :root[data-theme] #books-view .book-info,:root[data-theme] #books-view .favorite-info{padding-right:42px}
+ :root[data-theme] #books-view .book-info h3,:root[data-theme] #books-view .favorite-info h3{font-size:20px}
+ :root[data-theme] #books-view .book-art>.star-button,:root[data-theme] #books-view .favorite-card>.star-button{top:11px;right:-4px}
+ :root[data-theme] #books-view .card-bottom .open-book{bottom:12px;right:-4px}
+ :root[data-theme] #books-view .catalog-footer{margin-top:20px;display:block}
+ :root[data-theme] #books-view .catalog-footer .text-link{display:inline-flex;min-height:40px;align-items:center;margin:4px 0 0}
+}
