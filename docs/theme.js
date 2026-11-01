@@ -6,7 +6,7 @@
  function apply(){
   const dark=choice==='dark'||choice==='system'&&media.matches;
   document.documentElement.dataset.theme=dark?'dark':'light';document.documentElement.style.colorScheme=dark?'dark':'light';
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content',dark?'#191d23':'#f6f7f9');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content',dark?'#0B0B0F':'#F4F1EB');
   try{window.LexiconAndroid?.applyTheme?.(dark)}catch{}
  }
  window.LexiconTheme={get:()=>choice,set:value=>{if(!['system','light','dark'].includes(value))return;choice=value;try{localStorage.setItem(storageKey,JSON.stringify(choice))}catch{}apply()}};
