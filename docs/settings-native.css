@@ -107,8 +107,8 @@
 /* Amber identifies active choices; the surrounding surfaces remain neutral. */
 :root[data-theme] #settings-tabs button[aria-selected=true]{color:var(--ui-accent);border-left-color:var(--ui-accent)}
 :root[data-theme] #settings-view #format-target button[aria-selected=true],:root[data-theme] #settings-panel-integrations .method-switch button[aria-pressed=true]{color:var(--ui-accent);border-bottom-color:var(--ui-accent)}
-:root[data-theme] #settings-view .toggle-row input:checked,:root[data-theme] #settings-view .api-switch input:checked,:root[data-theme] #settings-view .api-connection-title input[role=switch]:checked{background:var(--ui-accent)}
-:root[data-theme] #settings-view .copy-option input,:root[data-theme] #settings-view input[type=range]{accent-color:var(--ui-accent)}
+:root[data-theme] #settings-view .toggle-row input:checked,:root[data-theme] #settings-view .api-switch input:checked,:root[data-theme] #settings-view .api-connection-title input[role=switch]:checked{background:var(--ui-text)}
+:root[data-theme] #settings-view .copy-option input,:root[data-theme] #settings-view input[type=range]{accent-color:var(--ui-text)}
 :root[data-theme] #settings-view :focus-visible{outline-color:var(--ui-accent)}
 :root[data-theme] body:has(#settings-view:not([hidden])) .sidebar nav button.active{color:var(--ui-accent)}
 @media(max-width:700px){:root[data-theme] #settings-tabs button[aria-selected=true]{border-left:0;border-bottom-color:var(--ui-accent)}}
