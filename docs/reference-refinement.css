@@ -44,3 +44,5 @@
 }
 :root[data-theme] #speech-settings>.speech-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 :root[data-theme] #speech-settings #speech-test,:root[data-theme] #speech-settings #speech-stop{width:100%;min-width:0;box-sizing:border-box}
+
+:root[data-theme] .result h2 .result-word{display:inline-block;padding:0;min-height:44px;border:0;border-radius:0;background:transparent;color:inherit;font:inherit;letter-spacing:inherit;text-align:left;cursor:pointer}

@@ -21,7 +21,7 @@
   if(!transportEnabled())return false;if(pushWanted())try{await subscribe()}catch{refresh(t('relayFailed'));return false}if(!connection)return false;const signature=JSON.stringify(payload);
   outgoing=outgoing.catch(()=>false).then(async()=>{
    if(!transportEnabled())return false;if(!payload.test&&last===signature)return true;
-   try{const actual={...payload,watch_enabled:payload.watch_enabled&&active,notifications_enabled:payload.notifications_enabled&&pushWanted()};const response=await api(path('result'),{method:'POST',body:JSON.stringify(actual)});if(payload.test&&actual.notifications_enabled&&!(response.push_delivered>0))throw Error('push');if(!payload.test)last=signature;refresh();return true}catch{refresh(t('relayFailed'));return false}
+   try{const actual={...payload,watch_enabled:payload.watch_enabled&&active,notifications_enabled:payload.notifications_enabled&&pushWanted()};const response=await api(path('result'),{method:'POST',body:JSON.stringify(actual)});if(actual.notifications_enabled&&(actual.test||!actual.silent)&&!response.duplicate&&!(response.push_delivered>0)){pushReady=false;window.LexiconResults?.refresh(t('notificationFailed'));throw Error('push')}if(actual.notifications_enabled&&response.push_delivered>0)window.LexiconResults?.refresh();if(!payload.test)last=signature;refresh();return true}catch{refresh(t('relayFailed'));return false}
   });return outgoing;
  }
  async function publish(rows,{test=false,silent=false}={}){

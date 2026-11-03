@@ -38,8 +38,8 @@
  }newConnection='';}
  const sample=c=>window.LexiconFormat.format({word:'ПАПА',page:402,column:3,position:1},window.LexiconResultFormat('api:'+c.id));
  function publish(rows,unknown,approximate=[]){for(const c of cfg.connections.filter(c=>c.enabled&&c.direction==='send')){
-  const options=window.LexiconResultFormat('api:'+c.id);if(!options.fields.length)continue;
-  const value=unknown!==undefined?window.LexiconFormat.approximate(unknown,approximate,options):rows.map(row=>window.LexiconFormat.format(row,options)).join('\n'),version=versions.get(c.id)||0;
+  const options=window.LexiconResultFormat('api:'+c.id);if(!options.fields.length&&!(unknown!==undefined&&!approximate.length))continue;
+  const value=unknown!==undefined?window.LexiconFormat.approximate(unknown,approximate,options):window.LexiconFormat.formatRows(rows,options),version=versions.get(c.id)||0;
   const task=(queues.get(c.id)||Promise.resolve()).catch(()=>false).then(async()=>{if(!c.enabled||!cfg.connections.includes(c)||(versions.get(c.id)||0)!==version||sent.get(c.id)===value)return false;const controller=new AbortController();controllers.set(c.id,controller);try{await request(c,{value,receive:false,signal:controller.signal});sent.set(c.id,value);status(c.id,t('apiSent'));return true}catch(e){if(!controller.signal.aborted)status(c.id,message(e));return false}finally{if(controllers.get(c.id)===controller)controllers.delete(c.id)}});queues.set(c.id,task);
  }}
  function pause(){generation++;clearTimeout(timer);timer=null;receiveController?.abort();receiveController=null}

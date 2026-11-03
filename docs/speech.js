@@ -3,7 +3,7 @@
  const $=id=>document.getElementById(id),key='lexicon.web.speech';let prefs={enabled:false,repeats:1,gap:5,rate:1,headphonesOnly:true},last='',t=k=>k;
  let armed=false,sessionConsent=false,primed=false,generation=0,timer,startTimer,current,statusOverride='';
  const repeatCount=value=>{const count=Number(value);return Number.isFinite(count)?Math.min(2147483647,Math.max(1,Math.trunc(count))):1};
- try{const saved=JSON.parse(localStorage.getItem(key));if(saved&&typeof saved==='object')prefs={headphonesOnly:saved.headphonesOnly!==false,enabled:saved.enabled===true,repeats:repeatCount(saved.repeats),gap:Math.round(Math.min(30,Math.max(1,Number(saved.gap)||5))),rate:Math.min(2,Math.max(.5,Number(saved.rate)||1))}}catch{}
+ try{const saved=JSON.parse(localStorage.getItem(key));if(saved&&typeof saved==='object')prefs={headphonesOnly:saved.headphonesOnly!==false,enabled:saved.enabled===true,repeats:repeatCount(saved.repeats),gap:Math.round(Math.min(30,Math.max(1,Number(saved.gap)||5))),rate:Math.min(1.5,Math.max(.25,Number(saved.rate)||1))}}catch{}
  const bridge=()=>window.LexiconAndroid,native=()=>!!bridge()?.speakPrivateResult&&!!bridge()?.privateSpeechStatus;
  const web=()=>!!window.speechSynthesis&&typeof window.SpeechSynthesisUtterance==='function';
  const supported=()=>native()||web(),requested=()=>prefs.enabled&&(native()||armed),enabled=()=>requested()&&(native()||!prefs.headphonesOnly);
@@ -35,11 +35,11 @@
  }
  function speak(rows,book,test=false){
   if(!supported()||!enabled()||!rows.length)return false;
-  const text=rows.map(row=>window.LexiconFormat.format(row,window.LexiconResultFormat('speech'))).filter(Boolean).join('. ');
+  const text=window.LexiconFormat.formatRows(rows,window.LexiconResultFormat('speech'));
   return speakText(text,book,test);
  }
  function speakText(text,book,test=false){
-  if(!supported()||!enabled()||!text)return false;const signature=JSON.stringify([book,text]);if(!test&&last===signature)return true;
+  if(!supported()||!enabled()||!text)return false;text=window.LexiconFormat.spoken(text,window.LexiconResultFormat('speech').lang);const signature=JSON.stringify([book,text]);if(!test&&last===signature)return true;
   if(!native())return webSpeak(text,signature,test);
   if(code()!=='ready'){refresh();return false}
   const accepted=(bridge().speakPrivateResultAtRate?bridge().speakPrivateResultAtRate(text,prefs.repeats,prefs.gap,prefs.rate):bridge().speakPrivateResult(text,prefs.repeats,prefs.gap))===true;
@@ -58,7 +58,7 @@
    stop();prefs.headphonesOnly=wanted;primed=false;sessionConsent=!wanted;save();refresh();
   };
   $('speech-rate').oninput=()=>{$('speech-rate-value').textContent=$('speech-rate').value+'×'};
-  $('speech-rate').onchange=()=>{prefs.rate=Math.min(2,Math.max(.5,Number($('speech-rate').value)||1));stop();save();refresh()};
+  $('speech-rate').onchange=()=>{prefs.rate=Math.min(1.5,Math.max(.25,Number($('speech-rate').value)||1));stop();save();refresh()};
   $('speech-repeats').onchange=()=>{prefs.repeats=repeatCount($('speech-repeats').value);stop();save();refresh()};
   for(const [id,step] of [['speech-repeat-less',-1],['speech-repeat-more',1]])$(id).onclick=()=>{$('speech-repeats').value=repeatCount(prefs.repeats+step);$('speech-repeats').dispatchEvent(new Event('change'))};
   $('speech-gap').onchange=()=>{prefs.gap=Math.round(Math.min(30,Math.max(1,Number($('speech-gap').value)||5)));stop();save();refresh()};
