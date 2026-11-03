@@ -62,7 +62,7 @@
   $('speech-repeats').onchange=()=>{prefs.repeats=repeatCount($('speech-repeats').value);stop();save();refresh()};
   for(const [id,step] of [['speech-repeat-less',-1],['speech-repeat-more',1]])$(id).onclick=()=>{$('speech-repeats').value=repeatCount(prefs.repeats+step);$('speech-repeats').dispatchEvent(new Event('change'))};
   $('speech-gap').onchange=()=>{prefs.gap=Math.round(Math.min(30,Math.max(1,Number($('speech-gap').value)||5)));stop();save();refresh()};
-  $('speech-test').onclick=()=>{statusOverride='';speak([{word:'ПАПА',page:402,column:3,position:1}],'test',true)};
+  $('speech-test').onclick=()=>{statusOverride='';speakText(window.LexiconOutputPreview('speech'),'test',true)};
   $('speech-stop').onclick=()=>{stop();refresh()};window.addEventListener('lexicon:speech-status',event=>{if(event.detail!=='ready')stop();refresh(event.detail)});
   window.addEventListener('lexicon:format-changed',()=>{stop();refresh()});window.addEventListener('pagehide',disarm);document.addEventListener('visibilitychange',()=>{if(document.hidden)disarm()});
   window.speechSynthesis?.addEventListener?.('voiceschanged',()=>refresh());

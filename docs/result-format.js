@@ -9,7 +9,7 @@
  function format(row,input){const options=normalize(input);const names=options.lang==='en'?{page:'page',column:'column',position:'line'}:{page:'страница',column:'колонка',position:'строчка'};
   return options.fields.map(f=>f==='word'||!options.labels?String(row[f]):options.labelOrder==='after'?row[f]+' '+names[f]:names[f]+' '+row[f]).join(options.separator);
  }
- function primaryRows(rows=[]){const seen=new Set();return rows.filter(row=>{const key=String(row.word).normalize('NFC').toUpperCase().replaceAll('Ё','Е').replace(/[\u0300\u0301]/g,'');if(seen.has(key))return false;seen.add(key);return true})}
+ function primaryRows(rows=[]){const first=new Map();for(const row of rows){const key=String(row.word).normalize('NFC').toUpperCase().replaceAll('Ё','Е').replace(/[\u0300\u0301]/g,''),previous=first.get(key);if(!previous||row.page<previous.page||row.page===previous.page&&(row.column<previous.column||row.column===previous.column&&row.position<previous.position))first.set(key,row)}return [...first.values()]}
  function formatRows(rows,input){return primaryRows(rows).map(row=>format(row,input)).filter(Boolean).join('\n')}
  function spoken(text,lang='ru'){return text.replaceAll('/',' ').replace(/###/g,lang==='en'?' three hashes ':' три решётки ').replace(/#/g,lang==='en'?' hash ':' решётка ').replace(/\s+/g,' ').trim()}
  function approximate(query,rows=[],input={}){
