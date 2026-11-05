@@ -4,7 +4,7 @@
  try{connection=JSON.parse(localStorage.getItem('lexicon.web.relay'));active=JSON.parse(localStorage.getItem('lexicon.web.relayActive'))===true}catch{}
  function valid(c){try{const u=new URL(c.read_url);return /^[a-f0-9-]{36}$/.test(c.channel)&&/^[A-Za-z0-9_-]{43}$/.test(c.write_token)&&u.origin===base&&u.pathname==='/v1/channels/'+c.channel+'/latest'&&/^[A-Za-z0-9_-]{43}$/.test(u.searchParams.get('key'))}catch{return false}}
  if(!valid(connection)){connection=null;active=false}
- const ios=()=>/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+ const ios=()=>!window.LexiconAndroid&&(/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1));
  const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
  const usesPush=()=>ios();
  const canPush=()=>isSecureContext&&'Notification'in window&&'serviceWorker'in navigator&&'PushManager'in window&&(!ios()||standalone());

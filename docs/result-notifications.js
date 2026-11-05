@@ -5,7 +5,7 @@
  let enabled=false,t=k=>k,last=null,permissionPending;
  try{enabled=JSON.parse(localStorage.getItem(storage))===true}catch{}
  const native=()=>window.LexiconAndroid;
- const ios=()=>/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+ const ios=()=>!native()?.showResultNotification&&(/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1));
  const supported=()=>!!native()?.showResultNotification||(ios()?window.LexiconRelay?.canPush():isSecureContext&&'Notification' in window);
  function permission(){try{return native()?.resultNotificationPermission?.()||(supported()?Notification.permission:'denied')}catch{return 'denied'}}
  function persist(value){enabled=value;try{localStorage.setItem(storage,JSON.stringify(value))}catch{}}
