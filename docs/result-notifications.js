@@ -2,7 +2,7 @@
 (()=>{
  const storage='lexicon.web.resultNotifications';
  const $=id=>document.getElementById(id);
- let enabled=false,t=k=>k,last=null,permissionPending;
+ let enabled=false,t=k=>k,last=null,permissionPending,diagnostic='';
  try{enabled=JSON.parse(localStorage.getItem(storage))===true}catch{}
  const native=()=>window.LexiconAndroid;
  const ios=()=>!native()?.showResultNotification&&(/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1));
@@ -12,8 +12,8 @@
  const text=row=>window.LexiconFormat.format(row,window.LexiconResultFormat('notification'));
  function refresh(message){
   const toggle=$('result-notifications');if(!toggle)return;
-  const allowed=supported();toggle.disabled=!allowed;toggle.checked=enabled&&permission()==='granted';
-  const messageText=message||(!allowed?t(!isSecureContext?'notificationHttps':ios()?'notificationHomeScreen':'notificationUnavailable'):enabled&&permission()!=='granted'?t('notificationDenied'):'');$('result-notification-status').textContent=messageText;$('result-notification-status').hidden=!messageText;
+  if(message!==undefined)diagnostic=message;const allowed=supported();toggle.disabled=!allowed;toggle.checked=enabled&&permission()==='granted';
+  const messageText=diagnostic||(!allowed?t(!isSecureContext?'notificationHttps':ios()?'notificationHomeScreen':'notificationUnavailable'):enabled&&permission()!=='granted'?t('notificationDenied'):'');$('result-notification-status').textContent=messageText;$('result-notification-status').hidden=!messageText;
  }
  async function requestPermission(){
   if(native()?.requestResultNotifications){
@@ -37,12 +37,12 @@
  window.LexiconResults={text,refresh,wantsNotifications:()=>enabled&&permission()==='granted',
   async notifyUnknown(query,rows,book){if(!enabled||ios())return false;const body=window.LexiconFormat.approximate(query,rows,window.LexiconResultFormat('notification'));if(!body)return false;const signature=JSON.stringify([book,body]);if(last===signature)return true;try{if(await show(null,false,[],body)){last=signature;return true}refresh(t('notificationDenied'))}catch{refresh(t('notificationFailed'))}return false},
   init(translate){t=translate;refresh();
-   $('result-notifications').onchange=async()=>{
+   $('result-notifications').onchange=async()=>{diagnostic='';
     if(!$('result-notifications').checked){persist(false);last=null;native()?.cancelResultNotification?.();if(ios())try{await window.LexiconRelay.unsubscribe()}catch{refresh(t('notificationFailed'))}const reg=await navigator.serviceWorker?.getRegistration();for(const n of await reg?.getNotifications({tag:'lexicon-result'})||[])n.close();refresh();return}
     $('result-notifications').disabled=true;
-    try{persist(await requestPermission()==='granted');refresh(enabled?undefined:t('notificationDenied'))}catch{persist(false);refresh(t('notificationFailed'))}
+    try{persist(await requestPermission()==='granted');refresh(enabled?(ios()?t('notificationSubscribed'):''):t('notificationDenied'))}catch(error){persist(false);if(ios())void window.LexiconRelay.unsubscribe().catch(()=>{});refresh(window.LexiconRelay?.notificationError(error)||t('notificationFailed'))}
    };
-   window.addEventListener('focus',()=>refresh());window.addEventListener('lexicon:format-changed',()=>refresh());const restore=()=>{refresh();if(ios()&&enabled&&permission()==='granted')window.LexiconRelay.subscribe({force:true}).catch(()=>refresh(t('notificationFailed')))};window.addEventListener('online',restore);window.addEventListener('pageshow',restore);window.addEventListener('focus',restore);if(ios()&&enabled&&permission()==='granted')restore();
+   window.addEventListener('storage',event=>{if(event.key===storage){enabled=event.newValue==='true';last=null;diagnostic='';if(!enabled&&ios())window.LexiconRelay.unsubscribe().catch(()=>{});refresh()}});window.addEventListener('focus',()=>refresh());window.addEventListener('lexicon:format-changed',()=>refresh());const restore=()=>{refresh();if(ios()&&enabled&&permission()==='granted')window.LexiconRelay.subscribe({force:true}).then(async()=>{const state=await window.LexiconRelay.notificationStatus();if(state?.last?.push_status==='rejected')refresh(t('notificationPushRejected')+(state.last.errors?.[0]?' ('+state.last.errors[0]+')':''));else if(state?.last?.push_status==='accepted')refresh(t('notificationPushAccepted'));else refresh(t('notificationSubscribed'))}).catch(error=>refresh(window.LexiconRelay?.notificationError(error)||t('notificationFailed')))};window.addEventListener('online',restore);window.addEventListener('pageshow',restore);window.addEventListener('focus',restore);if(ios()&&enabled&&permission()==='granted')restore();
   },
   async notify(rows,book){if(!rows.length)return;void window.LexiconRelay?.publish(rows);if(!enabled||ios())return;const signature=JSON.stringify([book,window.LexiconFormat.formatRows(rows,window.LexiconResultFormat('notification'))]);if(last===signature)return;try{if(await show(rows[0],false,rows))last=signature;else refresh(t('notificationDenied'))}catch{refresh(t('notificationFailed'))}}
  };
