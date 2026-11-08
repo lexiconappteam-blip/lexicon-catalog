@@ -1,5 +1,5 @@
 (()=>{
- const base='https://lexicon-result-relay.lexicon-result-relay.workers.dev';
+ const base=window.LEXICON_PORTABLE?.relayUrl||'https://lexicon-result-relay.lexicon-result-relay.workers.dev';
  const $=id=>document.getElementById(id);let t=k=>k,current=()=>[],query=()=>'',connection,active=false,last='',pending=null,outgoing=Promise.resolve(),subscriptionPending=null,pushReady=false;
  try{connection=JSON.parse(localStorage.getItem('lexicon.web.relay'));active=JSON.parse(localStorage.getItem('lexicon.web.relayActive'))===true}catch{}
  function valid(c){try{const u=new URL(c.read_url);return /^[a-f0-9-]{36}$/.test(c.channel)&&/^[A-Za-z0-9_-]{43}$/.test(c.write_token)&&u.origin===base&&u.pathname==='/v1/channels/'+c.channel+'/latest'&&/^[A-Za-z0-9_-]{43}$/.test(u.searchParams.get('key'))}catch{return false}}
@@ -16,7 +16,7 @@
  }
  const path=kind=>'/v1/channels/'+connection.channel+'/'+kind;
  const pushWanted=()=>ios()&&window.LexiconResults?.wantsNotifications()===true;
- const transportEnabled=()=>active||window.LexiconApi?.ownEnabled()||pushWanted();
+ const transportEnabled=()=>active||window.LexiconApi?.ownEnabled()||window.LexiconRemote?.enabled()||pushWanted();
  async function enqueue(payload){
   if(!transportEnabled())return false;if(pushWanted())try{await subscribe()}catch{refresh(t('relayFailed'));return false}if(!connection)return false;const signature=JSON.stringify(payload);
   outgoing=outgoing.catch(()=>false).then(async()=>{
@@ -25,10 +25,10 @@
   });return outgoing;
  }
  async function publish(rows,{test=false,silent=false}={}){
-  if(!rows.length)return false;const format=window.LexiconResultFormat('impaler'),notification_format=window.LexiconResultFormat('notification');if(!format.fields.length&&!notification_format.fields.length&&!(window.LexiconApi?.ownEnabled()&&window.LexiconResultFormat('api').fields.length))return false;
-  const results=rows.map(({word,page,column,position})=>({word,page,column,position}));return enqueue({results,test,format,notification_format,silent,notifications_enabled:pushWanted(),api_format:window.LexiconResultFormat('api'),api_enabled:window.LexiconApi?.ownEnabled()===true,watch_enabled:active});
+  if(!rows.length)return false;const format=window.LexiconResultFormat('impaler'),notification_format=window.LexiconResultFormat('notification');if(!window.LexiconRemote?.enabled()&&!format.fields.length&&!notification_format.fields.length&&!(window.LexiconApi?.ownEnabled()&&window.LexiconResultFormat('api').fields.length))return false;
+  const results=rows.map(({word,page,column,position})=>({word,page,column,position}));return enqueue({results,test,format,notification_format,silent,notifications_enabled:pushWanted(),api_format:window.LexiconResultFormat('api'),api_enabled:window.LexiconApi?.ownEnabled()===true,passwordx_enabled:window.LexiconRemote?.enabled()===true,watch_enabled:active});
  }
- async function publishUnknown(value,suggestions=window.LexiconApproximateResults?.()||[],options={}){const text=String(value).replace(/[\x00-\x1f\x7f]/g,' ').trim().slice(0,512);if(!text)return false;return enqueue({results:[],unmatched:true,query:text,suggested_results:suggestions,silent:options.silent===true,notify_unmatched:pushWanted(),notifications_enabled:pushWanted(),notification_format:window.LexiconResultFormat('notification'),format:window.LexiconResultFormat('impaler'),api_format:window.LexiconResultFormat('api'),api_enabled:window.LexiconApi?.ownEnabled()===true,watch_enabled:active})}
+ async function publishUnknown(value,suggestions=window.LexiconApproximateResults?.()||[],options={}){const text=String(value).replace(/[\x00-\x1f\x7f]/g,' ').trim().slice(0,512);if(!text)return false;return enqueue({results:[],unmatched:true,query:text,suggested_results:suggestions,silent:options.silent===true,notify_unmatched:pushWanted(),notifications_enabled:pushWanted(),notification_format:window.LexiconResultFormat('notification'),format:window.LexiconResultFormat('impaler'),api_format:window.LexiconResultFormat('api'),api_enabled:window.LexiconApi?.ownEnabled()===true,passwordx_enabled:window.LexiconRemote?.enabled()===true,watch_enabled:active})}
  const publishCurrent=(options={})=>current().length?publish(current(),options):query()?publishUnknown(query(),window.LexiconApproximateResults?.()||[],options):false;
  async function subscribe({force=false}={}){if(force)pushReady=false;if(pushReady)return true;if(subscriptionPending)return subscriptionPending;
   subscriptionPending=(async()=>{if(!canPush()||Notification.permission!=='granted')throw Error('permission');await connect({watch:false});const config=await api('/v1/config');if(!config.push_configured)throw Error('relay');
@@ -40,10 +40,10 @@
  }
 
  async function unsubscribe(){pushReady=false;let failure;try{if(connection)await api(path('subscription'),{method:'DELETE'})}catch(e){failure=e}const reg=await navigator.serviceWorker?.getRegistration();const sub=await reg?.pushManager?.getSubscription();if(sub)await sub.unsubscribe();if(failure)throw failure}
- window.LexiconRelay={connect,apiDetails:()=>connection?{get_url:connection.read_url.replace('/latest?','/output?'),input_url:connection.read_url.replace('/latest?','/input?'),post_url:base+path('input'),write_token:connection.write_token}:null,canPush,usesPush,publish,publishUnknown,subscribe,unsubscribe,refresh,
+ window.LexiconRelay={connect,configuration:()=>api('/v1/config'),passwordUrl:()=>connection?.read_url.replace('/latest?','/passwordx?')||'',publishCurrent,clearPassword:()=>connection?api(path("passwordx"),{method:"DELETE"}):Promise.resolve(),updateSource:source=>api(path('source'),{method:'POST',body:JSON.stringify({...source,watch_enabled:active,api_enabled:window.LexiconApi?.ownEnabled()===true,passwordx_enabled:window.LexiconRemote?.enabled()===true,format:window.LexiconResultFormat('impaler'),api_format:window.LexiconResultFormat('api')})}),apiDetails:()=>connection?{get_url:connection.read_url.replace('/latest?','/output?'),input_url:connection.read_url.replace('/latest?','/input?'),post_url:base+path('input'),write_token:connection.write_token}:null,canPush,usesPush,publish,publishUnknown,subscribe,unsubscribe,refresh,
   init(translate,rows,unmatchedQuery=()=>'' ){t=translate;current=rows;query=unmatchedQuery;refresh();
    $('relay-connect').onclick=async()=>{const button=$('relay-connect');button.disabled=true;try{await connect();await publishCurrent()}catch(e){refresh(t(e.message==='limit'?'relayLimit':'relayFailed'))}finally{button.disabled=false}};
-   $('relay-active').onchange=async()=>{active=$('relay-active').checked;last='';save();if(!active)window.dispatchEvent(new Event('lexicon:relay-disabled'));else await publishCurrent();refresh()};
+   $('relay-active').onchange=async()=>{active=$('relay-active').checked;last='';save();if(!active)window.dispatchEvent(new Event('lexicon:relay-disabled'));else await publishCurrent();refresh();window.LexiconRemote?.sync()};
    $('relay-copy-url').onclick=async()=>{try{if(window.LexiconAndroid)window.LexiconAndroid.copyText(connection.read_url);else await navigator.clipboard.writeText(connection.read_url);refresh();window.LexiconToast(t('copied'),$('relay-copy-url'))}catch{const input=$('relay-read-url');input.type='text';input.focus();input.select();refresh(t('relayCopyManually'))}};
    window.addEventListener('online',()=>publishCurrent());window.addEventListener('lexicon:format-changed',event=>{if(event.detail?.target&&!['impaler','notification','api'].includes(event.detail.target))return;last='';publishCurrent({silent:true})});
   }
