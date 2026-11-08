@@ -1,6 +1,6 @@
 const $=id=>document.getElementById(id);
 const strings={
-  "ru": {"remoteEnable":"Работать без открытого Lexicon","remoteSave":"Сохранить источник и книгу","remoteSaved":"Источник сохранён. Получатель обновляет результат по ссылке, даже когда Lexicon закрыт.","remoteStopped":"Фоновый источник отключён.","remoteSaveFailed":"Не удалось сохранить. Проверьте подключение.","remoteUnavailable":"Этот сервер пока не поддерживает функцию. Подключение нового хостинга ещё не завершено.","passwordxHelp":"Custom API: URL выше, поле value. Формат: 127 / 2 / 7 → 127207. При неточном совпадении код не передаётся.",
+  "ru": {"remoteModeHelp":"В этом режиме ссылки получают слова из Inject. Для ручного поиска отключите этот режим.","remoteEnable":"Работать без открытого Lexicon","remoteSave":"Сохранить источник и книгу","remoteSaved":"Источник сохранён. Получатель обновляет результат по ссылке, даже когда Lexicon закрыт.","remoteStopped":"Фоновый источник отключён.","remoteSaveFailed":"Не удалось сохранить. Проверьте подключение.","remoteUnavailable":"Этот сервер пока не поддерживает функцию. Подключение нового хостинга ещё не завершено.","passwordxHelp":"Custom API: URL выше, поле value. Формат: 127 / 2 / 7 → 127207. При неточном совпадении код не передаётся.",
     "workspace": "ВАША БИБЛИОТЕКА",
     "edition": "Личная библиотека для вашего выступления",
     "contactShort": "Связаться с нами ↗",
@@ -142,7 +142,7 @@ const strings={
     "relayPlaceholder": "Появится после подключения",
     "fieldLabels": "Подписи полей"
   },
-  "en": {"remoteEnable":"Receive without opening Lexicon","remoteSave":"Save source and book","remoteSaved":"Source saved. The receiving app refreshes the link even while Lexicon is closed.","remoteStopped":"Remote source disabled.","remoteSaveFailed":"Could not save. Check your connection.","remoteUnavailable":"This server does not support this feature yet. New hosting is not connected.","passwordxHelp":"Custom API: URL above, field value. Format: 127 / 2 / 7 → 127207. No code is sent for an uncertain match.",
+  "en": {"remoteModeHelp":"In this mode, links receive words from Inject. Turn it off to send manual search results.","remoteEnable":"Receive without opening Lexicon","remoteSave":"Save source and book","remoteSaved":"Source saved. The receiving app refreshes the link even while Lexicon is closed.","remoteStopped":"Remote source disabled.","remoteSaveFailed":"Could not save. Check your connection.","remoteUnavailable":"This server does not support this feature yet. New hosting is not connected.","passwordxHelp":"Custom API: URL above, field value. Format: 127 / 2 / 7 → 127207. No code is sent for an uncertain match.",
     "workspace": "YOUR LIBRARY",
     "edition": "Your library for your performance",
     "contactShort": "Contact us ↗",
