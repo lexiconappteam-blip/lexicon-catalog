@@ -1,0 +1,129 @@
+/* Final static composition: one library outline, transparent rows, shared rhythm.
+   Functional disclosures, guards and output formatting are unchanged. */
+:root[data-theme] body,:root[data-theme] .sidebar,:root[data-theme] header{background:var(--ui-bg)}
+:root[data-theme] button,:root[data-theme] a,:root[data-theme] summary{transition:color 120ms ease,border-color 120ms ease,background-color 120ms ease}
+:root[data-theme] button:active:not(:disabled),:root[data-theme] .book-card:hover,:root[data-theme] .favorite-card:hover{transform:none}
+:root[data-theme] .view,:root[data-theme] .view *{animation:none!important}
+:root[data-theme] #toast{animation:none;box-shadow:none}
+:root[data-theme] .search-box,:root[data-theme] .search-box:focus-within{background:transparent;box-shadow:none;border-radius:8px}
+:root[data-theme] .search-box:focus-within{border-color:var(--ui-muted)}
+:root[data-theme] .search-dropdown{background:var(--ui-bg);border-color:var(--ui-line);border-radius:7px;box-shadow:none}
+:root[data-theme] #books-view{max-width:860px}
+:root[data-theme] #books-view>.page-heading{margin-bottom:16px}
+:root[data-theme] #books-view .library-tabs{margin-bottom:14px}
+:root[data-theme] #books-view .catalog-search{margin-bottom:18px}
+:root[data-theme] .library-collection{border:1px solid var(--ui-line);border-radius:8px;padding:0 16px;background:transparent;overflow:visible}
+:root[data-theme] #books-view .book-grid,:root[data-theme] #books-view .favorite-grid{grid-template-columns:minmax(0,1fr);gap:0}
+:root[data-theme] #books-view .book-card,:root[data-theme] #books-view .favorite-card{grid-template-columns:76px minmax(0,1fr);gap:20px;padding:16px 0;min-height:136px;background:transparent;border:0;border-bottom:1px solid var(--ui-line);border-radius:0;box-shadow:none}
+:root[data-theme] #books-view .book-card:last-child{border-bottom:0}
+:root[data-theme] #books-view .library-collection:has(#catalog-list:empty) .favorite-card:last-child{border-bottom:0}
+:root[data-theme] #books-view .library-collection .section-line{margin:0;padding:12px 0 2px;background:transparent;border:0}
+:root[data-theme] #books-view .library-collection .section-line h2{font-size:13px}
+:root[data-theme] #books-view .library-collection .section-line .subtle{font-size:10px}
+:root[data-theme] #books-view .book-info h3,:root[data-theme] #books-view .favorite-info h3{font:700 21px/1.25 'PT Serif',serif;letter-spacing:-.4px}
+:root[data-theme] #books-view .book-meta,:root[data-theme] #books-view .favorite-info p{font-size:12px;line-height:1.45}
+:root[data-theme] #books-view .data-note{font-size:10px;line-height:1.45}
+:root[data-theme] #books-view .catalog-footer{margin-top:12px;padding:0}
+:root[data-theme] #books-view .catalog-footer .text-link{min-height:40px;margin:0;display:inline-flex;align-items:center;font-size:12px}
+:root[data-theme] #catalog-list>.empty{padding:16px 0;margin:0}
+:root[data-theme] .search-book-heading{background:transparent;border:0;border-bottom:1px solid var(--ui-line);border-radius:0;padding:5px 0;margin-bottom:8px}
+:root[data-theme] #search-book{background:transparent}
+:root[data-theme] .search-book-heading .mini-cover{background:transparent;border:1px solid var(--ui-line);border-radius:3px}
+:root[data-theme] .search-mode{background:transparent;border:0}
+:root[data-theme] .result{border-radius:0;box-shadow:none;background:transparent}
+:root[data-theme] #inline-history{margin-top:8px;padding-top:8px}
+:root[data-theme] #settings-view>.page-heading{margin-bottom:18px}
+:root[data-theme] #settings-view h1{font:600 25px/1.2 Inter,sans-serif;letter-spacing:-.7px}
+:root[data-theme] #settings-tabs{margin-bottom:18px}
+:root[data-theme] #settings-view .panel,:root[data-theme] #settings-panel-general,:root[data-theme] #settings-view .copy-preview{background:transparent;box-shadow:none;border-radius:0}
+:root[data-theme] #settings-view #format-target{gap:2px 6px;margin-bottom:16px;padding:0;background:transparent;border:0;border-radius:0}
+:root[data-theme] #settings-view #format-target button{font-size:12px;min-height:36px;padding:8px 5px;border:0;border-radius:0;background:transparent;color:var(--ui-muted)}
+:root[data-theme] #settings-view #format-target button[aria-selected=true]{background:transparent;border:0;color:var(--ui-text);font-weight:600}
+:root[data-theme] #settings-view .copy-fields{padding-bottom:8px;border-bottom:0;gap:2px 24px}
+:root[data-theme] #settings-view .copy-option input,:root[data-theme] #settings-view input[type=range]{accent-color:var(--ui-text)}
+:root[data-theme] #settings-view .toggle-row input,:root[data-theme] #settings-view .api-switch input,:root[data-theme] #settings-view .api-connection-title input[role=switch]{box-shadow:none;background:var(--ui-line)}
+:root[data-theme] #settings-view .toggle-row input:checked,:root[data-theme] #settings-view .api-switch input:checked,:root[data-theme] #settings-view .api-connection-title input[role=switch]:checked{background:var(--ui-text)}
+:root[data-theme] #settings-view .toggle-row input:checked:before,:root[data-theme] #settings-view .api-switch input:checked:after,:root[data-theme] #settings-view .api-connection-title input[role=switch]:checked:after{background:var(--ui-bg);box-shadow:none}
+:root[data-theme] #settings-view input:not([type=checkbox]):not([type=range]),:root[data-theme] #settings-view textarea,:root[data-theme] #api-source{background:transparent;border-color:var(--ui-line);border-radius:6px;box-shadow:none}
+:root[data-theme] #settings-view .copy-preview{padding:0 0 16px;margin:0 0 16px;border:0;border-bottom:1px solid var(--ui-line)}
+:root[data-theme] #settings-view .copy-preview output .preview-word{font-size:28px;line-height:1.2}
+:root[data-theme] #settings-view .copy-preview output .preview-coordinates{font-size:17px;line-height:1.5}
+:root[data-theme] #settings-view .separator-presets button{background:transparent;border:1px solid var(--ui-line);border-radius:5px}
+:root[data-theme] #settings-panel-integrations>.panel{padding-bottom:8px;margin-bottom:8px}
+:root[data-theme] #settings-panel-integrations .api-connection{background:transparent;border-radius:6px;box-shadow:none}
+:root[data-theme] #settings-panel-integrations .method-switch{background:transparent;box-shadow:none;border-radius:0}
+:root[data-theme] #settings-panel-integrations .method-switch button[aria-pressed=true]{background:transparent;color:var(--ui-text);border-bottom-color:var(--ui-text)}
+:root[data-theme] #speech-format-settings #speech-settings{grid-template-columns:minmax(112px,1fr) minmax(0,1.35fr);grid-template-areas:'title title' 'enable enable' 'headphones headphones' 'note note' 'rate-label rate' 'repeat-label repeat' 'gap-label gap' 'actions actions' 'status status';gap:8px 16px;padding-top:16px;margin-top:16px}
+:root[data-theme] #speech-settings>h2{margin:0 0 4px;font-size:17px;line-height:1.3;letter-spacing:-.3px}
+:root[data-theme] #speech-settings>label:not(.toggle-row){display:flex;align-items:center;margin:0;min-height:42px;font:13px/1.4 Inter,sans-serif}
+:root[data-theme] #speech-settings>.speech-rate-row{margin:0;min-height:42px;gap:12px}
+:root[data-theme] #speech-repeats,:root[data-theme] #speech-gap{justify-self:end;width:112px;max-width:100%;min-height:40px;padding:8px 10px;font:500 16px/1.4 'JetBrains Mono',monospace;text-align:right}
+:root[data-theme] #speech-rate-value{font:12px 'JetBrains Mono',monospace}
+:root[data-theme] #speech-settings>.speech-actions{margin-top:12px;display:flex;align-items:center;gap:14px}
+:root[data-theme] #speech-settings #speech-test{flex:1;display:flex;align-items:center;justify-content:center;min-height:44px;padding:11px 14px;background:var(--ui-button);color:var(--ui-button-text);border:0;border-radius:6px;font:600 14px/1.4 Inter,sans-serif;text-align:center}
+:root[data-theme] #speech-settings #speech-stop{flex:0 0 auto;min-height:44px;padding:10px 0;background:transparent;color:var(--ui-muted);font-size:12px;text-align:center}
+:root[data-theme] #speech-only-note,:root[data-theme] #speech-status{margin:0;font-size:12px;line-height:1.5}
+:root[data-theme] #settings-view :focus-visible{outline-color:var(--ui-text)}
+@media(max-width:700px){
+ :root[data-theme] main{padding:12px 22px calc(82px + env(safe-area-inset-bottom))}
+ :root[data-theme] header{padding-left:22px;padding-right:22px}
+ :root[data-theme] #books-view h1{font-size:26px}
+ :root[data-theme] .library-collection{padding:0 12px;border-radius:7px}
+ :root[data-theme] #books-view .book-card,:root[data-theme] #books-view .favorite-card{grid-template-columns:68px minmax(0,1fr);gap:16px;min-height:132px;padding:16px 0}
+ :root[data-theme] #books-view .book-info,:root[data-theme] #books-view .favorite-info{padding-right:42px}
+ :root[data-theme] #books-view .book-info h3,:root[data-theme] #books-view .favorite-info h3{font-size:20px}
+ :root[data-theme] #books-view .book-art>.star-button,:root[data-theme] #books-view .favorite-card>.star-button{right:-6px}
+ :root[data-theme] #books-view .card-bottom .open-book{right:-6px}
+ :root[data-theme] #settings-view h1{font-size:24px}
+ :root[data-theme] #settings-view>.page-heading{margin-bottom:16px}
+ :root[data-theme] #settings-tabs{margin-bottom:16px}
+ :root[data-theme] #settings-view #format-target{gap:2px 4px;margin-bottom:16px}
+ :root[data-theme] #settings-view #format-target button{font-size:11px;padding:8px 5px}
+ :root[data-theme] #speech-format-settings #speech-settings{grid-template-columns:minmax(110px,1fr) minmax(0,1.2fr);gap:8px 14px}
+ :root[data-theme] #speech-settings>label:not(.toggle-row){font-size:12px}
+ :root[data-theme] .sidebar nav{padding:6px 14px calc(6px + env(safe-area-inset-bottom));background:var(--ui-bg);border-top:1px solid var(--ui-line);box-shadow:none}
+ :root[data-theme] .sidebar nav button,:root[data-theme] .sidebar nav button.active{background:transparent;min-height:46px;border-radius:0;gap:3px}
+ :root[data-theme] .sidebar nav button svg{width:21px;height:21px}
+ /* A semantic wrapper must not hide search results in the pinned keyboard view. */
+ html.catalog-keyboard-open #books-view>.library-collection{display:flex!important;flex:1;min-height:0;flex-direction:column;overflow:hidden;padding:0;border:0;border-radius:0;background:transparent}
+ html.catalog-keyboard-open .library-collection>#favorites-section,html.catalog-keyboard-open .library-collection>.catalog-title{display:none!important}
+ html.catalog-keyboard-open .library-collection>#catalog-list{flex:1;min-height:0;overflow:auto}
+}
+/* Match legacy ID specificity for a genuinely continuous, unfilled surface. */
+:root[data-theme] #books-view .catalog-search{background:transparent}
+:root[data-theme] #settings-view #result-separator,:root[data-theme] #settings-view #speech-repeats,:root[data-theme] #settings-view #speech-gap,:root[data-theme] #settings-view #settings-panel-integrations input:not([type=checkbox]),:root[data-theme] #settings-view #settings-panel-integrations textarea{background:transparent;border-color:var(--ui-line);border-radius:6px;box-shadow:none}
+:root[data-theme] #settings-view #speech-repeats,:root[data-theme] #settings-view #speech-gap{font:500 16px/1.4 'JetBrains Mono',monospace;min-height:40px;padding:8px 10px;text-align:right}
+:root[data-theme] .brand-dot{color:var(--ui-accent)}
+:root[data-theme] #books-view h1{font:700 30px/1.2 'PT Serif',serif;letter-spacing:-.5px}
+/* Static review phase: eliminate inherited CSS motion, including pseudo-elements. */
+:root[data-theme] *,:root[data-theme] *:before,:root[data-theme] *:after{animation:none!important;transition:none!important}
+/* Each safety/control row occupies its own grid area. */
+:root[data-theme] #speech-settings>#speech-headphones-row{grid-area:headphones}
+:root[data-theme] #speech-settings>.toggle-row,:root[data-theme] #speech-settings>.toggle-row+.toggle-row{margin:0;padding:0;min-height:44px;border:0}
+:root[data-theme] #settings-view #speech-repeats,:root[data-theme] #settings-view #speech-gap{margin:0;align-self:center}
+/* Speech opens on playback controls; its existing format controls remain below. */
+:root[data-theme] #settings-view #format-editor[data-target=speech] #speech-format-settings{margin-bottom:20px}
+:root[data-theme] #settings-view #format-editor[data-target=speech] #speech-settings{margin-top:0;padding-top:0;border-top:0}
+
+/* Refinement: selection is independent of favorites and installed status. */
+:root[data-theme] .library-collection{border:0;border-radius:0;padding:0}
+:root[data-theme] #books-view .book-card,:root[data-theme] #books-view .favorite-card{grid-template-columns:64px minmax(0,1fr);gap:16px;padding:12px;min-height:114px;border:1px solid transparent;border-bottom-color:var(--ui-line)}
+:root[data-theme=dark] #books-view .book-card,:root[data-theme=dark] #books-view .favorite-card{border-bottom-color:rgba(255,255,255,.05)}
+:root[data-theme] #books-view .book-card.selected-book,:root[data-theme] #books-view .favorite-card.selected-book{border:1px solid var(--ui-accent);border-radius:9px;box-shadow:0 0 12px rgba(217,149,69,.10),0 0 24px rgba(217,149,69,.04)}
+:root[data-theme] #books-view .book-art .cover,:root[data-theme] #books-view .favorite-card .cover{width:64px;height:90px;min-height:90px}
+:root[data-theme] #books-view .book-info h3,:root[data-theme] #books-view .favorite-info h3{font-size:19px}
+:root[data-theme=dark] #books-view .catalog-search{background:#111115}
+:root[data-theme] #speech-settings>.speech-repeat-stepper{grid-area:repeat;justify-self:end;display:flex;align-items:center;width:136px;height:42px;border:1px solid var(--ui-line);border-radius:6px;overflow:hidden}
+:root[data-theme] #speech-settings .speech-repeat-stepper button{width:40px;min-width:40px;height:40px;padding:0;background:transparent;border:0;color:var(--ui-text);font-size:22px}
+:root[data-theme] #settings-view #speech-repeats{width:54px;min-width:0;padding:4px 0;border:0;text-align:center;background:transparent}
+:root[data-theme] #settings-view #speech-gap{width:84px;height:42px;text-align:center}
+:root[data-theme] #speech-settings input[type=number]{appearance:textfield;-moz-appearance:textfield}
+:root[data-theme] #speech-settings input[type=number]::-webkit-inner-spin-button,:root[data-theme] #speech-settings input[type=number]::-webkit-outer-spin-button{appearance:none;margin:0}
+:root[data-theme] #speech-settings>.speech-actions{gap:12px}
+:root[data-theme] #speech-settings #speech-test,:root[data-theme] #speech-settings #speech-stop{flex:1;min-height:46px;padding:10px 8px;border-radius:8px;font:600 13px/1.4 Inter,sans-serif}
+:root[data-theme] #speech-settings #speech-stop{border:1px solid var(--ui-line);background:transparent;color:var(--ui-text)}
+:root[data-theme] #settings-view #format-editor[data-target=speech] .preview-coordinates{color:var(--ui-muted);font-size:13px}
+:root[data-theme] #settings-view #format-editor[data-target=speech] .preview-number{color:var(--ui-accent)}
+:root[data-theme] #speech-status,:root[data-theme] #speech-only-note{color:var(--ui-muted);font-size:12px}
+
+:root[data-theme] #speech-headphones-row:has(input:disabled){opacity:.5}

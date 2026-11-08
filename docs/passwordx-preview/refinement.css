@@ -1,0 +1,75 @@
+/* One refinement pass: compact rhythm, expressive output preview, transient depth. */
+:root[data-theme] #settings-panel-general>.panel{padding:8px 0}
+:root[data-theme] #settings-panel-general>.language-panel{padding-top:0}
+:root[data-theme] #settings-panel-general>.appearance-panel{padding-bottom:12px;margin-bottom:6px}
+:root[data-theme] #settings-panel-general .toggle-row{min-height:40px}
+:root[data-theme] #settings-panel-general #language,:root[data-theme] #settings-panel-general #theme{min-height:38px}
+:root[data-theme] #settings-panel-general>.panel:has(#result-notifications){row-gap:0;padding-bottom:6px}
+:root[data-theme] #test-result-notification{min-height:32px;padding:5px 9px;margin-top:0;border:1px solid var(--ui-line);border-radius:6px;color:var(--ui-text)}
+:root[data-theme] #settings-view #format-target{background:transparent;border:0;gap:4px 6px;margin-bottom:16px}
+:root[data-theme] #settings-view #format-target button{border:1px solid transparent;border-radius:6px;min-height:36px;padding:8px 9px;font-size:12px}
+:root[data-theme] #settings-view #format-target button[aria-selected=true]{background:var(--ui-inset);border-color:var(--ui-line);color:var(--ui-text)}
+:root[data-theme] #settings-view .copy-fields{max-width:440px;gap:2px 24px;padding-bottom:8px}
+:root[data-theme] #settings-view .copy-option input{accent-color:var(--ui-text)}
+:root[data-theme] #settings-view .toggle-row input:checked,:root[data-theme] #settings-view .api-switch input:checked,:root[data-theme] #settings-view .api-connection-title input[role=switch]:checked{background:var(--ui-text)}
+:root[data-theme] #settings-view input[type=range]{accent-color:var(--ui-text)}
+:root[data-theme] #settings-view #separator-settings{margin:12px 0 18px;gap:6px 10px}
+:root[data-theme] #settings-view .separator-presets{gap:4px}
+:root[data-theme] #settings-view .separator-presets button{background:var(--ui-inset);border-color:transparent;min-width:32px;min-height:32px}
+:root[data-theme] #settings-view .copy-preview{padding:0 0 18px;margin:0 0 18px;background:transparent;border:0;border-bottom:1px solid var(--ui-line);border-radius:0;box-shadow:none}
+:root[data-theme] #settings-view .copy-preview>span{font:11px/1.4 Inter,sans-serif;color:var(--ui-muted)}
+:root[data-theme] #settings-view .copy-preview output{display:block;min-width:0;margin-top:8px;font:500 20px/1.4 'JetBrains Mono',monospace;white-space:normal}
+:root[data-theme] #settings-view .copy-preview output .preview-word{display:block;font:700 30px/1.2 'PT Serif',serif;letter-spacing:-.4px;color:var(--ui-text);overflow-wrap:anywhere}
+:root[data-theme] #settings-view .copy-preview output .preview-coordinates{display:block;margin-top:5px;font:500 18px/1.5 'JetBrains Mono',monospace;letter-spacing:-.4px;color:var(--ui-accent);white-space:pre-wrap;overflow-wrap:anywhere}
+:root[data-theme] #settings-view .copy-preview output .preview-joiner{display:none}
+:root[data-theme] #settings-view .uncertain-preview{margin-top:16px;border-bottom:0;padding-bottom:0}
+:root[data-theme] #settings-view .uncertain-preview output .preview-word{font-size:25px}
+:root[data-theme] #settings-view .uncertain-preview output .preview-coordinates{font-size:15px}
+:root[data-theme] #settings-view .speech-label-toggle{margin:10px 0;padding:6px 0}
+:root[data-theme] #settings-view .unmatched-section{margin-top:18px}
+:root[data-theme] #settings-view .unmatched-section .toggle-row{min-height:42px;padding:8px 0}
+:root[data-theme] #settings-panel-integrations>.panel{padding-bottom:8px;margin-bottom:8px}
+:root[data-theme] #settings-panel-integrations>.panel>summary{min-height:44px}
+:root[data-theme] #settings-panel-integrations .integration-content,:root[data-theme] #settings-panel-integrations .api-details-content{padding:6px 0 2px}
+:root[data-theme] #settings-panel-integrations input:not([type=checkbox]),:root[data-theme] #settings-panel-integrations textarea{min-height:40px;padding:8px 11px}
+:root[data-theme] #settings-panel-integrations .connect-button{min-height:40px;padding:9px 14px}
+:root[data-theme] #inline-history{margin-top:8px;padding-top:8px}
+:root[data-theme] #inline-history .empty{padding:10px 0;margin:0}
+:root[data-theme] .result .location dt{color:var(--ui-muted);font-weight:400}
+:root[data-theme] #settings-panel-integrations details[open]>.integration-content,:root[data-theme] #settings-panel-integrations details[open]>.api-details-content{animation:native-unfold 200ms cubic-bezier(.2,.7,.2,1)}
+:root[data-theme] .search-dropdown{animation:native-unfold 150ms ease-out;box-shadow:0 6px 18px #00000014}
+:root[data-theme] #toast{animation:toast-arrive 130ms ease-out}
+@keyframes native-unfold{from{opacity:.88;transform:translateY(-4px);box-shadow:0 5px 14px #00000018}to{opacity:1;transform:translateY(0);box-shadow:0 0 0 transparent}}
+@keyframes toast-arrive{from{opacity:.5;box-shadow:0 3px 10px #00000020}to{opacity:1;box-shadow:0 1px 3px #00000008}}
+@media(max-width:700px){
+ :root[data-theme] header{height:50px;min-height:calc(50px + env(safe-area-inset-top))}
+ :root[data-theme] main{padding-top:12px}
+ :root[data-theme] .search-topbar{margin-bottom:4px;min-height:28px}
+ :root[data-theme] .search-screen-title{font-size:26px;line-height:1.2;margin-bottom:12px}
+ :root[data-theme] .search-book-heading{padding:6px 10px;margin-bottom:6px}
+ :root[data-theme] .search-mode{margin-bottom:8px;gap:18px}
+ :root[data-theme] .search-mode button{min-height:32px;padding:6px 0}
+ :root[data-theme] .word-search{min-height:51px;padding:11px 14px;border-radius:8px}
+ :root[data-theme] .word-search input{font-size:18px}
+ :root[data-theme] .result{padding-top:16px;padding-bottom:14px}
+ :root[data-theme] .result .location{margin-top:10px}
+ :root[data-theme] #inline-history{margin-top:6px;padding-top:6px}
+ :root[data-theme] #settings-view>.page-heading{margin-bottom:16px}
+ :root[data-theme] #settings-tabs{margin-bottom:16px}
+ :root[data-theme] #settings-panel-general>.panel{padding:8px 0}
+ :root[data-theme] #settings-panel-general>.language-panel{padding-top:0}
+ :root[data-theme] #settings-panel-general>.appearance-panel{padding-bottom:12px}
+ :root[data-theme] #settings-view #format-target{gap:3px 4px}
+ :root[data-theme] #settings-view #format-target button{padding:7px 8px;font-size:11px;min-height:34px}
+ :root[data-theme] #settings-view .copy-preview output .preview-word{font-size:28px}
+ :root[data-theme] #settings-view .copy-preview output .preview-coordinates{font-size:17px}
+ :root[data-theme] #settings-view .uncertain-preview output .preview-word{font-size:24px}
+ :root[data-theme] #settings-view .uncertain-preview output .preview-coordinates{font-size:14px}
+ :root[data-theme] #settings-panel-integrations .inject-connect-row{display:flex;flex-direction:column;align-items:stretch;gap:8px}
+ :root[data-theme] #inject-check{align-self:flex-start}
+ :root[data-theme] .sidebar nav{padding:5px 12px calc(5px + env(safe-area-inset-bottom))}
+ :root[data-theme] .sidebar nav button{min-height:46px;padding:4px;gap:3px}
+ :root[data-theme] .sidebar nav button svg{width:21px;height:21px}
+ :root[data-theme] #toast{bottom:calc(68px + env(safe-area-inset-bottom))}
+}
+@media(prefers-reduced-motion:reduce){:root[data-theme] *, :root[data-theme] *:before,:root[data-theme] *:after{animation:none!important;transition:none!important}}
