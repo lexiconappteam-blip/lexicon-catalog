@@ -18,10 +18,27 @@
  const pushWanted=()=>ios()&&window.LexiconResults?.wantsNotifications()===true;
  const transportEnabled=()=>active||window.LexiconApi?.ownEnabled()||window.LexiconRemote?.enabled()||pushWanted();
  async function enqueue(payload){
-  if(!transportEnabled())return false;if(pushWanted())try{await subscribe()}catch(e){window.LexiconResults?.refresh(notificationError(e));refresh(t('relayFailed'));return false}if(!connection)return false;const signature=JSON.stringify(payload);
+  if(!transportEnabled())return false;
+  let notificationReady=true;
+  if(pushWanted())try{await subscribe()}catch(e){notificationReady=false;window.LexiconResults?.refresh(notificationError(e))}
+  // Push permission/subscription errors must not block independent result outputs.
+  if(!connection)return false;
   outgoing=outgoing.catch(()=>false).then(async()=>{
-   if(!transportEnabled())return false;if(!payload.test&&last===signature)return true;
-   try{const actual={...payload,watch_enabled:payload.watch_enabled&&active,notifications_enabled:payload.notifications_enabled&&pushWanted()};const response=await api(path('result'),{method:'POST',body:JSON.stringify(actual)});if(actual.notifications_enabled&&(actual.test||!actual.silent)&&!response.duplicate&&!(response.push_delivered>0)){pushReady=false;const detail=response.errors?.[0];window.LexiconResults?.refresh(t(response.push_status==='no_subscription'?'notificationNoSubscription':'notificationPushRejected')+(detail?' ('+detail+')':''));throw Error('push')}if(actual.notifications_enabled&&response.push_delivered>0)window.LexiconResults?.refresh(t('notificationPushAccepted'));if(!payload.test)last=signature;refresh();return true}catch{refresh(t('relayFailed'));return false}
+   if(!transportEnabled())return false;
+   const actual={...payload,watch_enabled:payload.watch_enabled&&active,notifications_enabled:payload.notifications_enabled&&pushWanted()&&notificationReady};
+   if(!actual.watch_enabled&&!actual.api_enabled&&!actual.passwordx_enabled&&!actual.notifications_enabled)return false;
+   const signature=JSON.stringify(actual);
+   if(!payload.test&&last===signature)return true;
+   try{
+    const response=await api(path('result'),{method:'POST',body:JSON.stringify(actual)});
+    let pushFailed=false;
+    if(actual.notifications_enabled&&(actual.test||!actual.silent)&&!response.duplicate&&!(response.push_delivered>0)){
+     pushFailed=true;pushReady=false;const detail=response.errors?.[0];
+     window.LexiconResults?.refresh(t(response.push_status==='no_subscription'?'notificationNoSubscription':'notificationPushRejected')+(detail?' ('+detail+')':''));
+    }else if(actual.notifications_enabled&&response.push_delivered>0)window.LexiconResults?.refresh(t('notificationPushAccepted'));
+    if(!payload.test&&!pushFailed)last=signature;
+    refresh();return !pushFailed||actual.watch_enabled||actual.api_enabled||actual.passwordx_enabled;
+   }catch{refresh(t('relayFailed'));return false}
   });return outgoing;
  }
  async function publish(rows,{test=false,silent=false}={}){
@@ -50,7 +67,7 @@
 
  window.LexiconRelay={connect,notificationError,notificationStatus:()=>connection?api(path("notification-status")):Promise.resolve(null),configuration:()=>api('/v1/config'),passwordUrl:()=>connection?.read_url.replace('/latest?','/passwordx?')||'',publishCurrent,clearPassword:()=>connection?api(path("passwordx"),{method:"DELETE"}):Promise.resolve(),updateSource:source=>api(path('source'),{method:'POST',body:JSON.stringify({...source,watch_enabled:active,api_enabled:window.LexiconApi?.ownEnabled()===true,passwordx_enabled:window.LexiconRemote?.enabled()===true,notifications_enabled:pushWanted(),notification_format:window.LexiconResultFormat('notification'),format:window.LexiconResultFormat('impaler'),api_format:window.LexiconResultFormat('api')})}),apiDetails:()=>connection?{get_url:connection.read_url.replace('/latest?','/output?'),input_url:connection.read_url.replace('/latest?','/input?'),post_url:base+path('input'),write_token:connection.write_token}:null,canPush,usesPush,publish,publishUnknown,subscribe,unsubscribe,refresh,
   init(translate,rows,unmatchedQuery=()=>'' ){t=translate;current=rows;query=unmatchedQuery;refresh();
-   $('relay-connect').onclick=async()=>{const button=$('relay-connect');button.disabled=true;try{await connect();await publishCurrent()}catch(e){refresh(t(e.message==='limit'?'relayLimit':'relayFailed'))}finally{button.disabled=false}};
+   $('relay-connect').onclick=async()=>{const button=$('relay-connect');button.disabled=true;try{await connect();await window.LexiconRemote?.sync();await publishCurrent()}catch(e){refresh(t(e.message==='limit'?'relayLimit':'relayFailed'))}finally{button.disabled=false}};
    $('relay-active').onchange=async()=>{active=$('relay-active').checked;last='';save();if(!active)window.dispatchEvent(new Event('lexicon:relay-disabled'));else await publishCurrent();refresh();window.LexiconRemote?.sync()};
    $('relay-copy-url').onclick=async()=>{try{if(window.LexiconAndroid)window.LexiconAndroid.copyText(connection.read_url);else await navigator.clipboard.writeText(connection.read_url);refresh();window.LexiconToast(t('copied'),$('relay-copy-url'))}catch{const input=$('relay-read-url');input.type='text';input.focus();input.select();refresh(t('relayCopyManually'))}};
    window.addEventListener('online',()=>publishCurrent());window.addEventListener('lexicon:format-changed',event=>{if(event.detail?.target&&!['impaler','notification','api'].includes(event.detail.target))return;last='';publishCurrent({silent:true})});

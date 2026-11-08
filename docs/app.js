@@ -138,7 +138,7 @@ const strings={
     "relayCopy": "Скопировать ссылку",
     "relayCopied": "Ссылка скопирована",
     "relayCopyManually": "Скопируйте выделенную ссылку вручную.",
-    "relayWatchHint": "Вставьте ссылку в Custom URL в Impaler. Для выбора данных попробуйте поле text.",
+    "relayWatchHint": "В Impaler выберите Custom URL и поле text. Для обновления без открытого Lexicon включите «Работать без открытого Lexicon» в Inject. Impaler должен обновлять эту ссылку.",
     "relayPlaceholder": "Появится после подключения",
     "fieldLabels": "Подписи полей"
   },
@@ -280,7 +280,7 @@ const strings={
     "relayCopy": "Copy URL",
     "relayCopied": "URL copied",
     "relayCopyManually": "Copy the selected URL manually.",
-    "relayWatchHint": "Paste this URL into Custom URL in Impaler. Try text as the data field.",
+    "relayWatchHint": "In Impaler use Custom URL and the text field. Enable “Receive without opening Lexicon” under Inject. Impaler must refresh this URL to receive new words.",
     "relayPlaceholder": "Available after connecting",
     "fieldLabels": "Field labels"
   }
@@ -366,7 +366,7 @@ $('library-tabs').onclick=event=>{const button=event.target.closest('[data-libra
 $('library-tabs').onkeydown=event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();selectLibraryTab(event.key==='Home'?'mine':event.key==='End'?'catalog':libraryTab==='mine'?'catalog':'mine');document.querySelector('[data-library-tab="'+libraryTab+'"]').focus()};
 
 function renderSelected(){markSelectedBook();if(!selected)return;const picker=$('search-book');picker.replaceChildren();for(const book of books){const option=el('option','',book.name);option.value=book.id;picker.append(option)}picker.value=selected.id;const old=$('selected-favorite');const next=favoriteButton(selected);next.id='selected-favorite';old.replaceWith(next)}
-function openBook(id,{query='',push=true}={}){clearTimeout(searchTimer);searchTimer=null;window.LexiconApi?.stop();apiMode=false;stopInject();injectMode=false;refreshInjectUI();if(query&&!injectMode)manualInputFinished=true;pauseInject();lastInjectEvent=null;suggestionsDismissed=false;const book=books.find(b=>b.id===id);if(book&&myBooks&&!myBooks.includes(id)){myBooks.push(id);save('myBooks',myBooks);renderBooks()}if(!book){toast(t('offline'));return}if(controller)controller.abort();serial++;clearTimeout(resultTimer);selected=book;data=null;$('query').value=query;$('error').hidden=true;$('result-area').replaceChildren();$('suggestions').replaceChildren();$('welcome').hidden=!!query;renderSelected();navigate('search',{push});if(query)search()}
+function openBook(id,{query='',push=true}={}){clearTimeout(searchTimer);searchTimer=null;window.LexiconApi?.stop();apiMode=false;stopInject();injectMode=false;refreshInjectUI();if(query&&!injectMode)manualInputFinished=true;pauseInject();lastInjectEvent=null;suggestionsDismissed=false;const book=books.find(b=>b.id===id);if(book&&myBooks&&!myBooks.includes(id)){myBooks.push(id);save('myBooks',myBooks);renderBooks()}if(!book){toast(t('offline'));return}if(controller)controller.abort();serial++;clearTimeout(resultTimer);selected=book;window.LexiconRemote?.sync();data=null;$('query').value=query;$('error').hidden=true;$('result-area').replaceChildren();$('suggestions').replaceChildren();$('welcome').hidden=!!query;renderSelected();navigate('search',{push});if(query)search()}
 function remember(word,book){if(!historyOn)return;recent=recent.filter(x=>x.book!==book||key(x.word)!==key(word));recent.unshift({word,book});recent=recent.slice(0,100);save('history',recent);renderHistory()}
 function renderHistory(){const list=$('history-list');list.replaceChildren();if(!recent.filter(x=>!selected||x.book===selected.id).length)list.append(el('p','empty',t('noHistory')));for(const item of recent.filter(x=>!selected||x.book===selected.id).slice(0,8)){const b=el('button','history-item');const mark=el('span','history-icon');mark.append(icon('history'));const details=el('span','history-details');details.append(el('strong','',item.word),el('small','',bookName(item.book)));b.append(mark,details,icon('arrow'));b.onclick=()=>openBook(item.book,{query:item.word});list.append(b)}}
 function formatted(row){return window.LexiconFormat.format(row,window.LexiconResultFormat())}
@@ -441,12 +441,19 @@ $('query').addEventListener('focus',()=>{
  suggestionsDismissed=false;if(data)renderSuggestions(data)
 });
 $('query').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.defaultPrevented&&!injectMode&&data?.matches.length&&$('suggestions').hidden){e.preventDefault();$('query').blur()}});
-document.addEventListener('pointerdown',e=>{if(!e.target.closest('.search-combobox'))closeSuggestions()});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('.search-combobox,.result'))closeSuggestions()});
 function render(result){
  $('welcome').hidden=!!result.normalized;renderSuggestions(result);const area=$('result-area');area.replaceChildren();if(!result.normalized)return;
  const uncertain=!result.matches.length&&!!result.approximate?.length,rows=uncertain?result.approximate:result.matches;
  for(const row of rows){
-  const card=el('article','result'+(uncertain?' uncertain-result':''));if(uncertain)card.append(el('div','result-label',t('approximateMatch')));const heading=el('h2'),choose=el('button','result-word',row.word+(uncertain?'#':''));choose.type='button';choose.onpointerdown=e=>e.preventDefault();choose.onclick=()=>{finishManualInput();$('query').blur();if(uncertain){$('query').value=row.word;search()}};heading.append(choose);card.append(heading);
+  const card=el('article','result'+(uncertain?' uncertain-result':''));if(uncertain)card.append(el('div','result-label',t('approximateMatch')));const heading=el('h2'),choose=el('button','result-word',row.word+(uncertain?'#':''));choose.type='button';choose.onpointerdown=e=>e.preventDefault();const selectResult=()=>{finishManualInput();$('query').blur();if(uncertain){$('query').value=row.word;search()}};
+  choose.onclick=selectResult;
+  const actionTarget=target=>target.closest('button,a,input,textarea,select,[role="switch"]');
+  card.tabIndex=0;card.setAttribute('aria-label',row.word);card.style.cursor='pointer';
+  card.onpointerdown=e=>{if(!actionTarget(e.target))e.preventDefault()};
+  card.onclick=e=>{if(!actionTarget(e.target))selectResult()};
+  card.onkeydown=e=>{if(e.target===card&&['Enter',' '].includes(e.key)){e.preventDefault();selectResult()}};
+  heading.append(choose);card.append(heading);
   if(uncertain)card.append(el('p','approximate-input',t('approximateInput')+': «'+result.query+'». '+(lang==='ru'?'Проверьте выбранный вариант.':'Check the suggested word.')));
   const dl=el('dl','location');for(const f of ['page','column','position']){const cell=el('div');cell.append(el('dt','',t(f)),el('dd','',row[f]));dl.append(cell)}card.append(dl);
   const footer=el('div','result-footer'),button=el('button','copy-button');button.append(icon('copy'),el('span','',t('copy')));button.disabled=!window.LexiconResultFormat('copy').fields.length;button.onclick=()=>copy(row,uncertain?result.query:undefined,button);
@@ -478,7 +485,7 @@ function refreshInjectUI(){
 }
 function pauseInject(){injectSerial++;clearTimeout(injectTimer);injectController?.abort()}
 function stopInject(){injectRunning=false;pauseInject();if($('inject-toggle'))refreshInjectUI()}
-function resumeInject(){if(!injectRunning||!injectMode||document.hidden||currentView!=='search')return;pauseInject();const generation=injectSerial;$('inject-status').textContent=t('injectWaiting');pollInject(generation)}
+function resumeInject(){if(!injectRunning||!injectMode||document.hidden||currentView!=='search')return;pauseInject();const generation=injectSerial;$('inject-status').textContent=t('injectWaiting');window.LexiconRemote?.sync();pollInject(generation)}
 async function pollInject(generation){
  if(!injectRunning||generation!==injectSerial||document.hidden||currentView!=='search')return;
  const requestController=new AbortController();injectController=requestController;
@@ -515,7 +522,7 @@ async function startInject(){
  if(!id){showInjectSettings();return}
  try{const response=await fetch('/api/inject/status');if(!response.ok)throw Error();const body=await response.json();injectConfigured=body.configured;if(!injectConfigured){refreshInjectUI();return}}
  catch{$('inject-status').textContent=t('offline');return}
- injectRunning=true;lastInjectEvent=null;injectFailures=0;const generation=++injectSerial;refreshInjectUI();$('inject-status').textContent=t('injectWaiting');pollInject(generation)
+ injectRunning=true;lastInjectEvent=null;injectFailures=0;const generation=++injectSerial;refreshInjectUI();$('inject-status').textContent=t('injectWaiting');window.LexiconRemote?.sync();pollInject(generation)
 }
 function initInject(){
  $('inject-id').value=String(read('injectId','')).slice(0,120);$('inject-id').onchange=()=>{save('injectId',$('inject-id').value.trim());stopInject()};
@@ -541,7 +548,7 @@ $('api-source').onchange=()=>{if(apiMode)window.LexiconApi.start($('api-source')
 $('api-toggle').onclick=()=>{if(window.LexiconApi.isRunning())window.LexiconApi.stop();else if(!$('api-source').value)showApiSettings();else window.LexiconApi.start($('api-source').value)};
 window.addEventListener('lexicon:api-config',()=>{renderCopySettings();refreshApiUI()});
 window.addEventListener('lexicon:api-format',event=>{formatTarget=event.detail.target;navigate('settings');selectSettingsTab('result');renderCopySettings();requestAnimationFrame(()=>$('format-target').scrollIntoView({block:'center'}))});
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.38';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.39';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{
  const status=$('update-status'),link=$('download-update'),native=!!window.LexiconAndroid;status.textContent=t('checkingUpdates');link.hidden=true;
  try{

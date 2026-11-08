@@ -1,7 +1,7 @@
 /* Independent six-digit output and explicitly saved server-side Inject source. */
 (()=>{
  const $=id=>document.getElementById(id),storage='lexicon.web.remote.v1';
- let cfg={passwordx:false,background:false},cap={},t=k=>k,context=()=>({}),saving=Promise.resolve();
+ let cfg={passwordx:false,background:false},cap={},t=k=>k,context=()=>({}),saving=Promise.resolve(),capabilitiesReady=Promise.resolve();
  try{cfg={...cfg,...JSON.parse(localStorage.getItem(storage)||'{}')}}catch{}
  const save=()=>localStorage.setItem(storage,JSON.stringify(cfg));
  const status=(id,key)=>{$(id).textContent=t(key);$(id).hidden=!key};
@@ -13,6 +13,7 @@
  }
  const enabled=()=>cap.passwordx_configured===true&&cfg.passwordx===true;
  async function sync({explicit=false}={}){
+  await capabilitiesReady;
   if(!cap.background_configured||!cfg.background&&!explicit)return;
   const source={enabled:cfg.background===true,...context()};
   if(source.enabled&&!/^[A-Za-z0-9_-]{1,120}$/.test(source.inject_id||'')){status('inject-background-status','injectNeedId');return false}
@@ -22,7 +23,7 @@
   });return saving;
  }
  window.LexiconRemote={enabled,sync,init(translate,getContext){t=translate;context=getContext;refresh();
-  LexiconRelay.configuration().then(config=>{cap=config;refresh();if(!cap.passwordx_configured)status('passwordx-status','remoteUnavailable');if(!cap.background_configured)status('inject-background-status','remoteUnavailable')}).catch(()=>{status('passwordx-status','remoteUnavailable');status('inject-background-status','remoteUnavailable')});
+  capabilitiesReady=LexiconRelay.configuration().then(config=>{cap=config;refresh();if(!cap.passwordx_configured)status('passwordx-status','remoteUnavailable');if(!cap.background_configured)status('inject-background-status','remoteUnavailable')}).catch(()=>{status('passwordx-status','remoteUnavailable');status('inject-background-status','remoteUnavailable')});
   $('passwordx-connect').onclick=async()=>{try{await LexiconRelay.connect({watch:false});cfg.passwordx=true;save();refresh();await LexiconRelay.publishCurrent();await sync();status('passwordx-status','passwordxHelp')}catch{status('passwordx-status','remoteSaveFailed')}};
   $('passwordx-active').onchange=async()=>{const old=cfg.passwordx;try{cfg.passwordx=$('passwordx-active').checked;if(cfg.passwordx)await LexiconRelay.connect({watch:false});if(cfg.passwordx)await LexiconRelay.publishCurrent();else await LexiconRelay.clearPassword();const ok=await sync();if(ok===false)throw Error('source');save()}catch{cfg.passwordx=old;status('passwordx-status','remoteSaveFailed')}refresh()};
   $('passwordx-copy').onclick=async()=>{try{const value=$('passwordx-url').value;if(window.LexiconAndroid)LexiconAndroid.copyText(value);else await navigator.clipboard.writeText(value);LexiconToast(t('copied'),$('passwordx-copy'))}catch{$('passwordx-url').focus();$('passwordx-url').select()}};
