@@ -11,7 +11,7 @@
  }
  function primaryRows(rows=[]){const first=new Map();for(const row of rows){const key=String(row.word).normalize('NFC').toUpperCase().replaceAll('Ё','Е').replace(/[\u0300\u0301]/g,''),previous=first.get(key);if(!previous||row.page<previous.page||row.page===previous.page&&(row.column<previous.column||row.column===previous.column&&row.position<previous.position))first.set(key,row)}return [...first.values()]}
  function formatRows(rows,input){return primaryRows(rows).map(row=>format(row,input)).filter(Boolean).join('\n')}
- function spoken(text,lang='ru'){return text.replaceAll('/',' ').replace(/###/g,lang==='en'?' three hashes ':' три решётки ').replace(/#/g,lang==='en'?' hash ':' решётка ').replace(/\s+/g,' ').trim()}
+ function spoken(text,lang='ru'){return text.replaceAll('/',' ').replace(/###/g,lang==='en'?' not recognized ':' не распознано ').replace(/#/g,lang==='en'?' hash ':' решётка ').replace(/\s+/g,' ').trim()}
  function approximate(query,rows=[],input={}){
   if(!rows.length)return '###';
   rows=primaryRows(rows);
