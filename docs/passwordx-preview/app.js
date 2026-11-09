@@ -290,6 +290,25 @@ Object.assign(strings.en,{"apiMode": "Via API", "apiSettings": "Configure API \u
 $('theme').value=window.LexiconTheme.get();$('theme').onchange=()=>window.LexiconTheme.set($('theme').value);
 Object.assign(strings.ru,{page:'Страница',page_pdf:'Страница PDF',bookPageShort:'В книге'});
 Object.assign(strings.en,{page:'Page',page_pdf:'PDF page',bookPageShort:'In book'});
+Object.assign(strings.ru, {
+ injectTemplate:'Шаблон фразы', injectTemplateExample:'картинки {слово}',
+ injectTemplateHelp:'Например, «картинки {слово}» ищет только часть после «картинки». Пустое поле — без шаблона.',
+ injectTemplateInvalid:'Укажите ровно одно место для поиска: {слово}.',
+ injectCase:'Падеж слова', injectCaseAuto:'Автоматически', injectCaseOff:'Без изменения',
+ injectCaseNom:'Именительный', injectCaseGen:'Родительный', injectCaseDat:'Дательный',
+ injectCaseAcc:'Винительный', injectCaseIns:'Творительный', injectCasePrep:'Предложный',
+ injectCaseAmbiguous:'У этой формы несколько начальных слов. Попробуйте указать падеж.'
+});
+Object.assign(strings.en, {
+ injectTemplate:'Phrase template', injectTemplateExample:'images {word}',
+ injectTemplateHelp:'For example, “images {word}” searches the part after “images”. Leave blank to use the whole phrase.',
+ injectTemplateInvalid:'Include exactly one search slot: {word}.',
+ injectCase:'Word case', injectCaseAuto:'Automatic', injectCaseOff:'Leave unchanged',
+ injectCaseNom:'Nominative', injectCaseGen:'Genitive', injectCaseDat:'Dative',
+ injectCaseAcc:'Accusative', injectCaseIns:'Instrumental', injectCasePrep:'Prepositional',
+ injectCaseAmbiguous:'This form has several possible headwords. Try choosing a case.'
+});
+
 function read(name,fallback){try{return JSON.parse(localStorage.getItem('lexicon.web.'+name))??fallback}catch{return fallback}}
 function save(name,value){try{localStorage.setItem('lexicon.web.'+name,JSON.stringify(value));return true}catch{toast(t('storageFail'));return false}}
 const key=w=>String(w).normalize('NFC').toUpperCase().replaceAll('Ё','Е').replace(/[\u0300\u0301]/g,'').trim();
@@ -366,7 +385,7 @@ $('library-tabs').onclick=event=>{const button=event.target.closest('[data-libra
 $('library-tabs').onkeydown=event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();selectLibraryTab(event.key==='Home'?'mine':event.key==='End'?'catalog':libraryTab==='mine'?'catalog':'mine');document.querySelector('[data-library-tab="'+libraryTab+'"]').focus()};
 
 function renderSelected(){markSelectedBook();if(!selected)return;const picker=$('search-book');picker.replaceChildren();for(const book of books){const option=el('option','',book.name);option.value=book.id;picker.append(option)}picker.value=selected.id;const old=$('selected-favorite');const next=favoriteButton(selected);next.id='selected-favorite';old.replaceWith(next)}
-function openBook(id,{query='',push=true}={}){clearTimeout(searchTimer);searchTimer=null;window.LexiconApi?.stop();apiMode=false;stopInject();injectMode=false;refreshInjectUI();if(query&&!injectMode)manualInputFinished=true;pauseInject();lastInjectEvent=null;suggestionsDismissed=false;const book=books.find(b=>b.id===id);if(book&&myBooks&&!myBooks.includes(id)){myBooks.push(id);save('myBooks',myBooks);renderBooks()}if(!book){toast(t('offline'));return}if(controller)controller.abort();serial++;clearTimeout(resultTimer);selected=book;window.LexiconRemote?.sync();data=null;$('query').value=query;$('error').hidden=true;$('result-area').replaceChildren();$('suggestions').replaceChildren();$('welcome').hidden=!!query;renderSelected();navigate('search',{push});if(query)search()}
+function openBook(id,{query='',push=true}={}){clearTimeout(searchTimer);searchTimer=null;window.LexiconApi?.stop();apiMode=false;stopInject();injectMode=false;refreshInjectUI();if(query&&!injectMode)manualInputFinished=true;pauseInject();lastInjectEvent=null;suggestionsDismissed=false;const book=books.find(b=>b.id===id);if(book&&myBooks&&!myBooks.includes(id)){myBooks.push(id);save('myBooks',myBooks);renderBooks()}if(!book){toast(t('offline'));return}if(controller)controller.abort();serial++;clearTimeout(resultTimer);selected=book;window.LexiconRemote?.sync();data=null;$('query').value=query;$('error').hidden=true;$('result-area').replaceChildren();$('suggestions').replaceChildren();$('welcome').hidden=!!query;renderSelected();navigate('search',{push});if(query)search({preserveInjectSource:!push})}
 function remember(word,book){if(!historyOn)return;recent=recent.filter(x=>x.book!==book||key(x.word)!==key(word));recent.unshift({word,book});recent=recent.slice(0,100);save('history',recent);renderHistory()}
 function renderHistory(){const list=$('history-list');list.replaceChildren();if(!recent.filter(x=>!selected||x.book===selected.id).length)list.append(el('p','empty',t('noHistory')));for(const item of recent.filter(x=>!selected||x.book===selected.id).slice(0,8)){const b=el('button','history-item');const mark=el('span','history-icon');mark.append(icon('history'));const details=el('span','history-details');details.append(el('strong','',item.word),el('small','',bookName(item.book)));b.append(mark,details,icon('arrow'));b.onclick=()=>openBook(item.book,{query:item.word});list.append(b)}}
 function formatted(row){return window.LexiconFormat.format(row,window.LexiconResultFormat())}
@@ -459,7 +478,7 @@ function render(result){
   const footer=el('div','result-footer'),button=el('button','copy-button');button.append(icon('copy'),el('span','',t('copy')));button.disabled=!window.LexiconResultFormat('copy').fields.length;button.onclick=()=>copy(row,uncertain?result.query:undefined,button);
   footer.append(button);card.append(footer);area.append(card);
  }
- if(!rows.length){const empty=el('div','empty');empty.append(el('strong','','###'),el('p','',t(result.mode==='prefix'?'prefix':'notFound')));if(result.corrections.length)empty.append(el('p','',lang==='ru'?'Выберите подходящее слово из списка под строкой поиска.':'Choose a word from the list below the search field.'));area.append(empty)}
+ if(!rows.length){const empty=el('div','empty');empty.append(el('strong','','###'),el('p','',t(result.mode==='ambiguousInject'?'injectCaseAmbiguous':result.mode==='prefix'?'prefix':'notFound')));if(result.corrections.length)empty.append(el('p','',lang==='ru'?'Выберите подходящее слово из списка под строкой поиска.':'Choose a word from the list below the search field.'));area.append(empty)}
 }
 async function resolveApproximate(body,book,signal){
  if(!body.normalized)return [];if(body.matches.length){const raw=window.LexiconSearch.normalize(body.query).replace(/[‐‑–—]/g,'-');if(raw===body.normalized)return [];const rows=body.matches;body.matches=[];body.mode='approximate';body.corrections=[rows[0].word,...body.corrections];return rows;}
@@ -468,7 +487,13 @@ async function resolveApproximate(body,book,signal){
  if(!ranked.length)return [];
  const response=await fetch('/api/search?'+new URLSearchParams({q:ranked[0].word,dictionary:book.id}),{signal});if(!response.ok)return [];const result=await response.json();return result.matches||[];
 }
-async function search({fromInject=false}={}){clearTimeout(searchTimer);searchTimer=null;window.LexiconSpeech?.cancel();if(!selected)return false;clearTimeout(resultTimer);const q=$('query').value;const request=++serial;const book=selected;controller?.abort();controller=new AbortController();data=null;$('error').hidden=true;window.history.replaceState(null,'',route());if(!q.trim()){$('result-area').replaceChildren();$('suggestions').replaceChildren();$('suggestions').hidden=true;$('query').setAttribute('aria-expanded','false');$('query').removeAttribute('aria-activedescendant');$('welcome').hidden=false;return;}try{if(!fromInject)await window.LexiconRemote?.setInjectActive(false);const response=await fetch('/api/search?'+new URLSearchParams({q,dictionary:book.id}),{signal:controller.signal});const body=await response.json();if(!response.ok)throw Error();if(request!==serial||book.id!==selected?.id)return;try{body.approximate=await resolveApproximate(body,book,controller.signal)}catch(e){if(e.name==='AbortError')return;body.approximate=[]}if(request!==serial||book.id!==selected?.id)return;data=body;render(body);$('connection').textContent=t('online');if(body.matches.length){const deliver=()=>{if(request!==serial||currentView!=='search')return;remember(body.matches[0].word,book.id);window.LexiconResults.notify(body.matches,book.id);window.LexiconSpeech.receive(body.matches,book.id);window.LexiconApi.publish(body.matches);};if(fromInject)deliver();else resultTimer=setTimeout(deliver,450)}else{const deliverUnknown=()=>{if(request===serial&&currentView==='search'){window.LexiconRelay.publishUnknown(q,body.approximate);window.LexiconApi.publishUnknown(q,body.approximate);window.LexiconResults.notifyUnknown(q,body.approximate,book.id);window.LexiconSpeech.receiveUnknown(q,body.approximate,book.id)}};if(fromInject)deliverUnknown();else resultTimer=setTimeout(deliverUnknown,1000)}}catch(e){if(e.name==='AbortError'||request!==serial)return;$('error').textContent=t('offline');$('error').hidden=false;$('connection').textContent='';return false}}
+async function search({fromInject=false,ambiguousInject=false,preserveInjectSource=false}={}){clearTimeout(searchTimer);searchTimer=null;window.LexiconSpeech?.cancel();if(!selected)return false;clearTimeout(resultTimer);const q=$('query').value;const request=++serial;const book=selected;controller?.abort();controller=new AbortController();data=null;$('error').hidden=true;window.history.replaceState(null,'',route());if(!q.trim()){$('result-area').replaceChildren();$('suggestions').replaceChildren();$('suggestions').hidden=true;$('query').setAttribute('aria-expanded','false');$('query').removeAttribute('aria-activedescendant');$('welcome').hidden=false;return;}try{if(!fromInject&&!preserveInjectSource)await window.LexiconRemote?.setInjectActive(false);let body;
+ if(ambiguousInject){
+  body={query:q,normalized:window.LexiconSearch.normalize(q),matches:[],suggestions:[],corrections:[],approximate:[],mode:'ambiguousInject'};
+ }else{
+  const response=await fetch('/api/search?'+new URLSearchParams({q,dictionary:book.id}),{signal:controller.signal});
+  body=await response.json();if(!response.ok)throw Error();
+ }if(request!==serial||book.id!==selected?.id)return;try{if(!ambiguousInject)body.approximate=await resolveApproximate(body,book,controller.signal)}catch(e){if(e.name==='AbortError')return;body.approximate=[]}if(request!==serial||book.id!==selected?.id)return;data=body;render(body);$('connection').textContent=t('online');if(body.matches.length){const deliver=()=>{if(request!==serial||currentView!=='search')return;remember(body.matches[0].word,book.id);window.LexiconResults.notify(body.matches,book.id);window.LexiconSpeech.receive(body.matches,book.id);window.LexiconApi.publish(body.matches);};if(fromInject)deliver();else resultTimer=setTimeout(deliver,450)}else{const deliverUnknown=()=>{if(request===serial&&currentView==='search'){window.LexiconRelay.publishUnknown(q,body.approximate);window.LexiconApi.publishUnknown(q,body.approximate);window.LexiconResults.notifyUnknown(q,body.approximate,book.id);window.LexiconSpeech.receiveUnknown(q,body.approximate,book.id)}};if(fromInject)deliverUnknown();else resultTimer=setTimeout(deliverUnknown,1000)}}catch(e){if(e.name==='AbortError'||request!==serial)return;$('error').textContent=t('offline');$('error').hidden=false;$('connection').textContent='';return false}}
 function language(){document.documentElement.lang=lang;$('language').value=lang;document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));document.querySelectorAll('[data-placeholder]').forEach(e=>e.placeholder=t(e.dataset.placeholder));$('query').ariaLabel=t('search');$('search-book').ariaLabel=t('selectBook');$('book-query').ariaLabel=t('findBook');$('search-history').ariaLabel=t('history');$('search-history').title=t('history');renderBooks();renderSelected();renderHistory();renderCopySettings();if(typeof refreshInjectUI==='function')refreshInjectUI();window.LexiconResults?.refresh?.();window.LexiconSpeech?.refresh?.();window.LexiconRelay?.refresh?.();if(data)render(data);$('breadcrumb').textContent=currentView==='search'?t('books')+' / '+bookName(selected?.id):t(currentView==='books'?'library':currentView)}
 async function loadBooks(){const error=$('catalog-error');error.hidden=true;$('book-count').textContent='…';try{const response=await fetch('/api/dictionaries');if(!response.ok)throw Error();const body=await response.json();books=body.dictionaries;renderBooks();renderHistory();restoreRoute()}catch{error.replaceChildren(el('span','',t('offline')));const retry=el('button','quiet-button',t('retry'));retry.onclick=loadBooks;error.append(retry);error.hidden=false;$('book-count').textContent='—'}}
 function restoreRoute(){const params=new URLSearchParams(location.search);const id=params.get('book')||(params.has('q')?'default':null);if(id&&books.some(b=>b.id===id))openBook(id,{query:(params.get('q')||'').slice(0,80),push:false});else navigate(params.get('view')==='history'?'search':['search','settings'].includes(params.get('view'))?params.get('view'):'books',{push:false})}
@@ -479,6 +504,21 @@ function scheduleSearch(){clearTimeout(searchTimer);clearTimeout(resultTimer);co
 $('clear-history').onclick=()=>{recent=[];save('history',recent);renderHistory()};$('book-query').oninput=renderBooks;$('query').oninput=()=>{manualInputFinished=false;suggestionsDismissed=false;scheduleSearch()};$('query').addEventListener('search',()=>{if(!manualInputFinished)scheduleSearch()});$('back-books').onclick=()=>navigate('books');$('language').onchange=()=>{lang=$('language').value;save('language',lang);language();window.dispatchEvent(new Event('lexicon:format-changed'))};document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>navigate(b.dataset.view));document.querySelector('.brand').onclick=e=>{e.preventDefault();navigate('books')};window.addEventListener('popstate',restoreRoute);
 document.addEventListener('keydown',e=>{if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();(()=>{if(currentView!=='search')navigate('books');(currentView==='search'?$('query'):$('book-query')).focus()})()}});
 let injectMode=false,injectRunning=false,injectConfigured=false,injectTimer=null,injectSerial=0,injectController=null,lastInjectEvent=null,injectFailures=0;
+const readInjectRules = () => window.LexiconInjectRules.settings(read('injectRules', {}));
+let injectForms;
+async function prepareInjectQuery(value, bookId) {
+ const settings = readInjectRules();
+ const query = window.LexiconInjectRules.extract(value, settings.template);
+ if (!query || settings.case === 'off') return {query, ambiguous:false};
+ injectForms ??= fetch('./inject-forms.json?v=' + installedVersion).then(response => {
+  if (!response.ok) throw Error('Inject forms');
+  return response.json();
+ }).catch(error => {
+  injectForms = null;
+  throw error;
+ });
+ return window.LexiconInjectRules.resolve(query, settings.case, (await injectForms)[bookId]);
+}
 function refreshInjectUI(){
  $('manual-mode').classList.toggle('active',!injectMode&&!apiMode);$('inject-mode').classList.toggle('active',injectMode);$('manual-mode').setAttribute('aria-pressed',String(!injectMode&&!apiMode));$('inject-mode').setAttribute('aria-pressed',String(injectMode));$('inject-bar').hidden=!injectMode;$('query').readOnly=injectMode||apiMode;$('query').placeholder=apiMode?t('apiWaiting'):injectMode?t('injectWaiting'):t('wordPlaceholder');$('api-mode').classList.toggle('active',apiMode);$('api-mode').setAttribute('aria-pressed',String(apiMode));$('api-bar').hidden=!apiMode;$('inject-toggle').textContent=t(injectRunning?'stopReceive':'startReceive');
  if(!injectRunning)$('inject-status').textContent=t(injectConfigured?'injectReady':'injectMissing');
@@ -500,8 +540,10 @@ async function pollInject(generation){
   $('inject-status').textContent=t(body.word?'injectReceived':'injectWaiting')+' · '+checked;
   if(!body.word)lastInjectEvent=null;
   else if(body.event!==lastInjectEvent){
-   suggestionsDismissed=false;$('query').value=body.word;
-   const found=await search({fromInject:true});
+   const {query,ambiguous}=await prepareInjectQuery(body.word,selected.id);
+   if(generation!==injectSerial||!injectRunning)return;
+   suggestionsDismissed=false;$('query').value=query;
+   const found=await search({fromInject:true,ambiguousInject:ambiguous});
    if(generation===injectSerial&&injectRunning&&found!==false)lastInjectEvent=body.event;
   }
  }catch(error){
@@ -525,6 +567,22 @@ async function startInject(){
  injectRunning=true;lastInjectEvent=null;injectFailures=0;const generation=++injectSerial;refreshInjectUI();$('inject-status').textContent=t('injectWaiting');window.LexiconRemote?.setInjectActive(true);pollInject(generation)
 }
 function initInject(){
+ const settings = readInjectRules();
+ $('inject-template').value = settings.template;
+ $('inject-case').value = settings.case;
+ function saveInjectRules(){
+  const template = $('inject-template').value.trim();
+  const valid = window.LexiconInjectRules.validTemplate(template);
+  $('inject-template').setCustomValidity(valid ? '' : t('injectTemplateInvalid'));
+  if (!valid) {$('inject-template').reportValidity();return}
+  save('injectRules', window.LexiconInjectRules.settings({template,case:$('inject-case').value}));
+  lastInjectEvent = null;
+  if (injectRunning && !document.hidden && currentView === 'search') resumeInject();
+  else window.LexiconRemote?.sync();
+ }
+ $('inject-template').onchange = saveInjectRules;
+ $('inject-template').oninput = () => $('inject-template').setCustomValidity('');
+ $('inject-case').onchange = saveInjectRules;
  $('inject-id').value=String(read('injectId','')).slice(0,120);$('inject-id').onchange=()=>{save('injectId',$('inject-id').value.trim());stopInject();window.LexiconRemote?.setInjectActive(false)};
  $('manual-mode').onclick=()=>{window.LexiconApi.stop();apiMode=false;stopInject();injectMode=false;window.LexiconRemote?.setInjectActive(false);refreshInjectUI();$('query').focus()};$('inject-mode').onclick=()=>{window.LexiconApi.stop();apiMode=false;injectMode=true;$('query').blur();refreshInjectUI();if(!injectRunning)startInject();else resumeInject()};$('inject-toggle').onclick=startInject;
  $('inject-check').onclick=async()=>{
@@ -548,7 +606,7 @@ $('api-source').onchange=()=>{if(apiMode)window.LexiconApi.start($('api-source')
 $('api-toggle').onclick=()=>{if(window.LexiconApi.isRunning())window.LexiconApi.stop();else if(!$('api-source').value)showApiSettings();else window.LexiconApi.start($('api-source').value)};
 window.addEventListener('lexicon:api-config',()=>{renderCopySettings();refreshApiUI()});
 window.addEventListener('lexicon:api-format',event=>{formatTarget=event.detail.target;navigate('settings');selectSettingsTab('result');renderCopySettings();requestAnimationFrame(()=>$('format-target').scrollIntoView({block:'center'}))});
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.40';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.41';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{
  const status=$('update-status'),link=$('download-update'),native=!!window.LexiconAndroid;status.textContent=t('checkingUpdates');link.hidden=true;
  try{
@@ -575,4 +633,4 @@ function selectSettingsTab(key,{focus=false}={}){
 $('settings-tabs').onclick=event=>{const button=event.target.closest('[data-settings-tab]');if(button)selectSettingsTab(button.dataset.settingsTab)};
 $('settings-tabs').onkeydown=event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;const buttons=[...$('settings-tabs').querySelectorAll('[data-settings-tab]')],at=buttons.indexOf(document.activeElement);if(at<0)return;event.preventDefault();const index=event.key==='Home'?0:event.key==='End'?buttons.length-1:(at+(event.key==='ArrowLeft'?-1:1)+buttons.length)%buttons.length;selectSettingsTab(buttons[index].dataset.settingsTab,{focus:true})};
 $('search-book').onchange=()=>{const id=$('search-book').value,query=$('query').value||data?.query||'',wasApi=apiMode,wasInject=injectMode,receivingApi=window.LexiconApi?.isRunning(),receivingInject=injectRunning,source=$('api-source').value;openBook(id,{query});apiMode=wasApi;injectMode=wasInject;refreshInjectUI();refreshApiUI();if(wasApi&&receivingApi)window.LexiconApi.start(source);if(wasInject&&receivingInject)startInject()};
-language();window.LexiconRelay.init(t,()=>data?.matches||[],()=>data?.normalized&&!data.matches.length?data.query:'');window.LexiconApi.init(t,{active:()=>apiMode&&currentView==='search'&&!!selected,receive:async value=>{if(!apiMode||currentView!=='search'||!selected)return false;suggestionsDismissed=false;$('query').value=value;return await search({fromInject:true})},state:refreshApiUI,status:message=>$('api-receive-status').textContent=message});window.LexiconResults.init(t);window.LexiconSpeech.init(t);loadBooks();initInject();window.LexiconRemote.init(t,()=>({inject_id:$("inject-id").value.trim(),dictionary_id:selected?.id||"default"}));
+language();window.LexiconRelay.init(t,()=>data?.matches||[],()=>data?.normalized&&!data.matches.length?data.query:'');window.LexiconApi.init(t,{active:()=>apiMode&&currentView==='search'&&!!selected,receive:async value=>{if(!apiMode||currentView!=='search'||!selected)return false;suggestionsDismissed=false;$('query').value=value;return await search({fromInject:true})},state:refreshApiUI,status:message=>$('api-receive-status').textContent=message});window.LexiconResults.init(t);window.LexiconSpeech.init(t);loadBooks();initInject();window.LexiconRemote.init(t,()=>({inject_id:$("inject-id").value.trim(),dictionary_id:selected?.id||"default",inject_rules:readInjectRules()}));
