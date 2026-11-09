@@ -1,6 +1,6 @@
 const $=id=>document.getElementById(id);
 const strings={
-  "ru": {"notificationSubscribed":"Уведомления подключены. Найдите новое слово.","notificationConnectionFailed":"Не удалось подключиться к серверу уведомлений.","notificationServerFailed":"Сервер уведомлений недоступен или не настроен.","notificationWorkerFailed":"Не запустился обработчик уведомлений. Закройте и снова откройте Lexicon по значку.","notificationSubscribeFailed":"iPhone не создал push-подписку. Проверьте разрешение уведомлений Lexicon в настройках iPhone.","notificationRegisterFailed":"Не удалось сохранить push-подписку на сервере. Проверьте соединение.","notificationNoSubscription":"На сервере нет push-подписки. Выключите и снова включите уведомления.","notificationPushRejected":"Push-сервис отклонил уведомление","notificationPushAccepted":"Push-сервис принял уведомление. Показ баннера на устройстве не подтверждён.","remoteSaved":"Источник сохранён. Получатель обновляет результат по ссылке, даже когда Lexicon закрыт.","remoteStopped":"Фоновый источник отключён.","remoteSaveFailed":"Не удалось сохранить. Проверьте подключение.","remoteUnavailable":"Этот сервер пока не поддерживает функцию. Подключение нового хостинга ещё не завершено.","passwordxHelp":"Custom API: URL выше, поле value. Формат: 127 / 2 / 7 → 127207. При неточном совпадении код не передаётся.",
+  "ru": {"notificationSubscribed":"Уведомления подключены. Найдите новое слово.","notificationConnectionFailed":"Не удалось подключиться к серверу уведомлений.","notificationServerFailed":"Сервер уведомлений недоступен или не настроен.","notificationWorkerFailed":"Не запустился обработчик уведомлений. Закройте и снова откройте Lexicon по значку.","notificationSubscribeFailed":"iPhone не создал push-подписку. Проверьте разрешение уведомлений Lexicon в настройках iPhone.","notificationRegisterFailed":"Не удалось сохранить push-подписку на сервере. Проверьте соединение.","notificationNoSubscription":"На сервере нет push-подписки. Выключите и снова включите уведомления.","notificationPushRejected":"Push-сервис отклонил уведомление","notificationPushAccepted":"Push-сервис принял уведомление. Показ баннера на устройстве не подтверждён.","remoteSaved":"Источник сохранён. Получатель обновляет результат по ссылке, даже когда Lexicon закрыт.","remoteSaveFailed":"Не удалось сохранить. Проверьте подключение.","remoteUnavailable":"Этот сервер пока не поддерживает функцию. Подключение нового хостинга ещё не завершено.","passwordxHelp":"Custom API: URL выше, поле value. Формат: 127 / 2 / 7 → 127207. При неточном совпадении код не передаётся.",
     "workspace": "ВАША БИБЛИОТЕКА",
     "edition": "Личная библиотека для вашего выступления",
     "contactShort": "Связаться с нами ↗",
@@ -142,7 +142,7 @@ const strings={
     "relayPlaceholder": "Появится после подключения",
     "fieldLabels": "Подписи полей"
   },
-  "en": {"notificationSubscribed":"Notifications connected. Search for a new word.","notificationConnectionFailed":"Cannot connect to the notification server.","notificationServerFailed":"Notification server unavailable or not configured.","notificationWorkerFailed":"Notification worker did not start. Close and reopen Lexicon from the Home Screen.","notificationSubscribeFailed":"iPhone could not create a push subscription. Check notification permissions in iPhone Settings.","notificationRegisterFailed":"Could not save the push subscription on the server. Check your connection.","notificationNoSubscription":"No push subscription on the server. Turn notifications off and on again.","notificationPushRejected":"Push service rejected the notification","notificationPushAccepted":"Push service accepted the notification. Device display is not confirmed.","remoteSaved":"Source saved. The receiving app refreshes the link even while Lexicon is closed.","remoteStopped":"Remote source disabled.","remoteSaveFailed":"Could not save. Check your connection.","remoteUnavailable":"This server does not support this feature yet. New hosting is not connected.","passwordxHelp":"Custom API: URL above, field value. Format: 127 / 2 / 7 → 127207. No code is sent for an uncertain match.",
+  "en": {"notificationSubscribed":"Notifications connected. Search for a new word.","notificationConnectionFailed":"Cannot connect to the notification server.","notificationServerFailed":"Notification server unavailable or not configured.","notificationWorkerFailed":"Notification worker did not start. Close and reopen Lexicon from the Home Screen.","notificationSubscribeFailed":"iPhone could not create a push subscription. Check notification permissions in iPhone Settings.","notificationRegisterFailed":"Could not save the push subscription on the server. Check your connection.","notificationNoSubscription":"No push subscription on the server. Turn notifications off and on again.","notificationPushRejected":"Push service rejected the notification","notificationPushAccepted":"Push service accepted the notification. Device display is not confirmed.","remoteSaved":"Source saved. The receiving app refreshes the link even while Lexicon is closed.","remoteSaveFailed":"Could not save. Check your connection.","remoteUnavailable":"This server does not support this feature yet. New hosting is not connected.","passwordxHelp":"Custom API: URL above, field value. Format: 127 / 2 / 7 → 127207. No code is sent for an uncertain match.",
     "workspace": "YOUR LIBRARY",
     "edition": "Your library for your performance",
     "contactShort": "Contact us ↗",
@@ -291,22 +291,14 @@ $('theme').value=window.LexiconTheme.get();$('theme').onchange=()=>window.Lexico
 Object.assign(strings.ru,{page:'Страница',page_pdf:'Страница PDF',bookPageShort:'В книге'});
 Object.assign(strings.en,{page:'Page',page_pdf:'PDF page',bookPageShort:'In book'});
 Object.assign(strings.ru, {
- injectTemplate:'Шаблон фразы', injectTemplateExample:'картинки {слово}',
- injectTemplateHelp:'Например, «картинки {слово}» ищет только часть после «картинки». Пустое поле — без шаблона.',
- injectTemplateInvalid:'Укажите ровно одно место для поиска: {слово}.',
- injectCase:'Падеж слова', injectCaseAuto:'Автоматически', injectCaseOff:'Без изменения',
- injectCaseNom:'Именительный', injectCaseGen:'Родительный', injectCaseDat:'Дательный',
- injectCaseAcc:'Винительный', injectCaseIns:'Творительный', injectCasePrep:'Предложный',
- injectCaseAmbiguous:'У этой формы несколько начальных слов. Попробуйте указать падеж.'
+ injectAutoWords:'Обрабатывать слова автоматически',
+ injectAutoWordsHelp:'«Картинка слона» или «картинки слона» → «слон».',
+ injectCaseAmbiguous:'У этой формы несколько начальных слов.'
 });
 Object.assign(strings.en, {
- injectTemplate:'Phrase template', injectTemplateExample:'images {word}',
- injectTemplateHelp:'For example, “images {word}” searches the part after “images”. Leave blank to use the whole phrase.',
- injectTemplateInvalid:'Include exactly one search slot: {word}.',
- injectCase:'Word case', injectCaseAuto:'Automatic', injectCaseOff:'Leave unchanged',
- injectCaseNom:'Nominative', injectCaseGen:'Genitive', injectCaseDat:'Dative',
- injectCaseAcc:'Accusative', injectCaseIns:'Instrumental', injectCasePrep:'Prepositional',
- injectCaseAmbiguous:'This form has several possible headwords. Try choosing a case.'
+ injectAutoWords:'Process words automatically',
+ injectAutoWordsHelp:'«Картинка слона» or «картинки слона» → «слон».',
+ injectCaseAmbiguous:'This form has several possible headwords.'
 });
 
 function read(name,fallback){try{return JSON.parse(localStorage.getItem('lexicon.web.'+name))??fallback}catch{return fallback}}
@@ -508,8 +500,7 @@ const readInjectRules = () => window.LexiconInjectRules.settings(read('injectRul
 let injectForms;
 async function prepareInjectQuery(value, bookId) {
  const settings = readInjectRules();
- const query = window.LexiconInjectRules.extract(value, settings.template);
- if (!query || settings.case === 'off') return {query, ambiguous:false};
+ if (!settings.enabled) return {query:value, ambiguous:false};
  injectForms ??= fetch('./inject-forms.json?v=' + installedVersion).then(response => {
   if (!response.ok) throw Error('Inject forms');
   return response.json();
@@ -517,7 +508,7 @@ async function prepareInjectQuery(value, bookId) {
   injectForms = null;
   throw error;
  });
- return window.LexiconInjectRules.resolve(query, settings.case, (await injectForms)[bookId]);
+ return window.LexiconInjectRules.prepare(value, settings, (await injectForms)[bookId]);
 }
 function refreshInjectUI(){
  $('manual-mode').classList.toggle('active',!injectMode&&!apiMode);$('inject-mode').classList.toggle('active',injectMode);$('manual-mode').setAttribute('aria-pressed',String(!injectMode&&!apiMode));$('inject-mode').setAttribute('aria-pressed',String(injectMode));$('inject-bar').hidden=!injectMode;$('query').readOnly=injectMode||apiMode;$('query').placeholder=apiMode?t('apiWaiting'):injectMode?t('injectWaiting'):t('wordPlaceholder');$('api-mode').classList.toggle('active',apiMode);$('api-mode').setAttribute('aria-pressed',String(apiMode));$('api-bar').hidden=!apiMode;$('inject-toggle').textContent=t(injectRunning?'stopReceive':'startReceive');
@@ -567,22 +558,14 @@ async function startInject(){
  injectRunning=true;lastInjectEvent=null;injectFailures=0;const generation=++injectSerial;refreshInjectUI();$('inject-status').textContent=t('injectWaiting');window.LexiconRemote?.setInjectActive(true);pollInject(generation)
 }
 function initInject(){
- const settings = readInjectRules();
- $('inject-template').value = settings.template;
- $('inject-case').value = settings.case;
- function saveInjectRules(){
-  const template = $('inject-template').value.trim();
-  const valid = window.LexiconInjectRules.validTemplate(template);
-  $('inject-template').setCustomValidity(valid ? '' : t('injectTemplateInvalid'));
-  if (!valid) {$('inject-template').reportValidity();return}
-  save('injectRules', window.LexiconInjectRules.settings({template,case:$('inject-case').value}));
+ const autoWords = $('inject-auto-words');
+ autoWords.checked = readInjectRules().enabled;
+ autoWords.onchange = () => {
+  save('injectRules', {enabled:autoWords.checked});
   lastInjectEvent = null;
   if (injectRunning && !document.hidden && currentView === 'search') resumeInject();
   else window.LexiconRemote?.sync();
- }
- $('inject-template').onchange = saveInjectRules;
- $('inject-template').oninput = () => $('inject-template').setCustomValidity('');
- $('inject-case').onchange = saveInjectRules;
+ };
  $('inject-id').value=String(read('injectId','')).slice(0,120);$('inject-id').onchange=()=>{save('injectId',$('inject-id').value.trim());stopInject();window.LexiconRemote?.setInjectActive(false)};
  $('manual-mode').onclick=()=>{window.LexiconApi.stop();apiMode=false;stopInject();injectMode=false;window.LexiconRemote?.setInjectActive(false);refreshInjectUI();$('query').focus()};$('inject-mode').onclick=()=>{window.LexiconApi.stop();apiMode=false;injectMode=true;$('query').blur();refreshInjectUI();if(!injectRunning)startInject();else resumeInject()};$('inject-toggle').onclick=startInject;
  $('inject-check').onclick=async()=>{
@@ -606,7 +589,7 @@ $('api-source').onchange=()=>{if(apiMode)window.LexiconApi.start($('api-source')
 $('api-toggle').onclick=()=>{if(window.LexiconApi.isRunning())window.LexiconApi.stop();else if(!$('api-source').value)showApiSettings();else window.LexiconApi.start($('api-source').value)};
 window.addEventListener('lexicon:api-config',()=>{renderCopySettings();refreshApiUI()});
 window.addEventListener('lexicon:api-format',event=>{formatTarget=event.detail.target;navigate('settings');selectSettingsTab('result');renderCopySettings();requestAnimationFrame(()=>$('format-target').scrollIntoView({block:'center'}))});
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.41';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.42';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{
  const status=$('update-status'),link=$('download-update'),native=!!window.LexiconAndroid;status.textContent=t('checkingUpdates');link.hidden=true;
  try{

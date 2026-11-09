@@ -1,54 +1,47 @@
-/* Shared Inject phrase and case rules for the browser and the result relay. */
+/* Shared Inject normalization for the browser and the result relay. */
 (() => {
- const slots = /\{(?:слово|word)\}/giu;
- const cases = {nomn:1, gent:2, datv:4, accs:8, ablt:16, loct:32};
  const normalize = value => value.normalize('NFC').toUpperCase().replaceAll('Ё','Е');
- const tokens = value => [...value.matchAll(/[\p{L}\p{N}]+(?:[-‐‑][\p{L}\p{N}]+)*/gu)];
 
- function settings(input = {}) {
-  const template = typeof input?.template === 'string' ? input.template.trim().slice(0, 120) : '';
-  const inputCase = input?.case;
-  return {template, case: inputCase === 'off' || Object.hasOwn(cases, inputCase) ? inputCase : 'auto'};
+ function settings(input) {
+  return {enabled: typeof input?.enabled === 'boolean' ? input.enabled : input?.case !== 'off'};
  }
 
- function validTemplate(template) {
-  if (!template) return true;
-  const parts = template.split(slots);
-  return parts.length === 2 && parts.every(part => !/[{}]/.test(part));
- }
+ function prepare(value, options, index) {
+  if (!settings(options).enabled) return {query:value, ambiguous:false};
 
- function extract(value, template) {
-  if (!template || !validTemplate(template)) return value;
-  const [prefix, suffix] = template.split(slots).map(part => tokens(part).map(match => normalize(match[0])));
-  const parts = tokens(value);
-  const same = (match, word) => !!match && normalize(match[0]) === word;
-  if (!prefix.every((word, i) => same(parts[i], word))) return value;
-  if (!suffix.every((word, i) => same(parts[parts.length - suffix.length + i], word))) return value;
-  if (parts.length <= prefix.length + suffix.length) return '';
-  const first = parts[prefix.length];
-  const last = parts[parts.length - suffix.length - 1];
-  return value.slice(first.index, last.index + last[0].length);
- }
-
- function resolve(query, inputCase, index) {
-  const word = normalize(query).replace(/[‐‑]/g, '-');
+  const words = [...value.matchAll(/[\p{L}\p{N}]+(?:[-‐‑][\p{L}\p{N}]+)*/gu)];
+  const firstWord = normalize(words[0]?.[0] || '');
+  const imagePrefix = firstWord === 'КАРТИНКА' || firstWord === 'КАРТИНКИ';
+  const lastWord = words.at(-1);
+  const query = imagePrefix
+   ? (words.length > 1 ? value.slice(words[1].index, lastWord.index + lastWord[0].length) : '')
+   : value;
   const unchanged = {query, ambiguous:false};
-  if (!index || inputCase === 'off' || !/^[А-Я]+(?:-[А-Я]+)*$/.test(word) || word.length > 80) return unchanged;
-  if (inputCase === 'auto' && Object.hasOwn(index.heads, word)) return unchanged;
-  const mask = cases[inputCase] || 63;
+  const word = normalize(query).replace(/[‐‑]/g, '-');
+  if (!index || !/^[А-Я]+(?:-[А-Я]+)*$/.test(word) || word.length > 80) return unchanged;
+
+  const exact = Object.hasOwn(index.heads, word);
+  if (exact && !imagePrefix) return unchanged;
+
   const candidates = new Set();
+  const genitives = new Set();
   for (let i = word.length; i >= 0; i--) {
-   const ending = word.slice(i);
-   for (const [replacement, rule] of index.endings[ending] || []) {
+   for (const [replacement, rule] of index.endings[word.slice(i)] || []) {
     const head = word.slice(0, i) + replacement;
-    const paradigm = index.paradigms[index.heads[head]];
-    if (paradigm && (paradigm[rule] & mask)) candidates.add(head);
+    const mask = index.paradigms[index.heads[head]]?.[rule] || 0;
+    if (mask) candidates.add(head);
+    if (mask & 2) genitives.add(head);
    }
   }
-  if (candidates.size > 1) return {query, ambiguous:true};
-  if (candidates.size === 1) return {query:[...candidates][0], ambiguous:false};
+
+  // «Картинки чего?» gives the genitive priority when the form allows it.
+  const preferGenitive = imagePrefix && genitives.size > 0;
+  if (exact && !preferGenitive) return unchanged;
+  const matches = preferGenitive ? genitives : candidates;
+  if (matches.size > 1) return {query, ambiguous:true};
+  if (matches.size === 1) return {query:[...matches][0], ambiguous:false};
   return unchanged;
  }
 
- globalThis.LexiconInjectRules = {settings, validTemplate, extract, resolve};
+ globalThis.LexiconInjectRules = {settings, prepare};
 })();

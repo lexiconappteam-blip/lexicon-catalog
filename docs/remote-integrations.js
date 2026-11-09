@@ -4,7 +4,7 @@
  let cfg={passwordx:false,background:false},cap={},t=k=>k,context=()=>({}),saving=Promise.resolve(),capabilitiesReady=Promise.resolve(),modeSync=Promise.resolve();
  try{cfg={...cfg,...JSON.parse(localStorage.getItem(storage)||'{}')}}catch{}
  const save=()=>localStorage.setItem(storage,JSON.stringify(cfg));
- const status=(id,key)=>{$(id).textContent=t(key);$(id).hidden=!key};
+ const status=(id,key)=>{$(id).textContent=key?t(key):'';$(id).hidden=!key};
  function refresh(){
   $('passwordx-active').disabled=!cap.passwordx_configured;$('passwordx-active').checked=enabled();
   $('passwordx-connect').disabled=!cap.passwordx_configured;
@@ -18,7 +18,7 @@
   const source={enabled:cfg.background===true,...context()};
   if(source.enabled&&!/^[A-Za-z0-9_-]{1,120}$/.test(source.inject_id||'')){status('inject-background-status','injectNeedId');return false}
   saving=saving.catch(()=>{}).then(async()=>{
-   try{await LexiconRelay.connect({watch:false});await LexiconRelay.updateSource(source);status('inject-background-status',source.enabled?'remoteSaved':'remoteStopped');return true}
+   try{await LexiconRelay.connect({watch:false});await LexiconRelay.updateSource(source);status('inject-background-status',source.enabled?'remoteSaved':'');return true}
    catch{status('inject-background-status','remoteSaveFailed');return false}
   });return saving;
  }
