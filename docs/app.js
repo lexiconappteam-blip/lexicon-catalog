@@ -5,11 +5,9 @@ const strings={
     "edition": "Личная библиотека для вашего выступления",
     "contactShort": "Связаться с нами ↗",
     "library": "Библиотека",
-    "collection": "ВАША КОЛЛЕКЦИЯ",
     "books": "Книги",
     "chooseBook": "Выберите книгу, в которой хотите найти слово.",
     "favorites": "Избранное",
-    "quickAccess": "Быстрый доступ",
     "catalog": "Каталог книг",
     "findBook": "Найти книгу в каталоге",
     "newBooks": "Библиотека будет расти",
@@ -17,9 +15,7 @@ const strings={
     "suggestBook": "Предложить книгу ↗",
     "allBooks": "Все книги",
     "wordSearch": "ПОИСК В КНИГЕ",
-    "draft": "База проходит сверку",
     "wordPlaceholder": "Начните вводить слово",
-    "equal": "Е и Ё равнозначны при поиске",
     "startTyping": "Начните с первых букв",
     "searchHint": "Выберите подсказку или введите слово целиком.",
     "recent": "НЕДАВНИЕ ЗАПРОСЫ",
@@ -64,13 +60,12 @@ const strings={
     "pickField": "Выберите хотя бы одно поле.",
     "keepHistory": "История поиска",
     "localHistory": "Сохранять найденные слова на этом устройстве",
-    "dataNote": "База ещё проходит сверку. В написании слов и координатах возможны ошибки.",
     "footerText": "Ваша личная библиотека",
     "open": "Открыть книгу",
     "favoriteEmpty": "Добавьте книгу в избранное по звёздочке — она появится здесь.",
     "noBooks": "Книги с таким названием не найдены.",
-    "category": "СПРАВОЧНОЕ ИЗДАНИЕ",
-    "entries": "слов",
+    "demoBook": "Демо",
+    "entries": "словарных записей",
     "favoriteAdd": "Добавить книгу в избранное",
     "favoriteRemove": "Убрать книгу из избранного",
     "page": "Страница",
@@ -115,7 +110,6 @@ const strings={
     "noUpdates": "Установлена актуальная версия.",
     "updateAvailable": "Доступна новая версия",
     "checkingUpdates": "Проверяем обновления…",
-    "injectSetupHint": "Подключите Inject, чтобы получать слова автоматически.",
     "injectConnected": "Подключено. В поиске выберите «Через Inject».",
     "injectSettings": "Настроить Inject →",
     "injectChecking": "Подключаем…",
@@ -138,7 +132,7 @@ const strings={
     "relayCopy": "Скопировать ссылку",
     "relayCopied": "Ссылка скопирована",
     "relayCopyManually": "Скопируйте выделенную ссылку вручную.",
-    "relayWatchHint": "В Impaler выберите Custom URL и поле text. При поиске через Inject обновление работает автоматически, даже когда Lexicon закрыт. Impaler должен обновлять эту ссылку.",
+    "relayWatchHint": "В Impaler добавьте ссылку в Custom URL и укажите поле text. В режиме «Через Inject» ссылка обновляет результат и при закрытом Lexicon.",
     "relayPlaceholder": "Появится после подключения",
     "fieldLabels": "Подписи полей"
   },
@@ -147,11 +141,9 @@ const strings={
     "edition": "Your library for your performance",
     "contactShort": "Contact us ↗",
     "library": "Library",
-    "collection": "YOUR COLLECTION",
     "books": "Books",
     "chooseBook": "Choose a book to find a word in.",
     "favorites": "Favorites",
-    "quickAccess": "Quick access",
     "catalog": "Book catalog",
     "findBook": "Find a book in the catalog",
     "newBooks": "More books to come",
@@ -159,9 +151,7 @@ const strings={
     "suggestBook": "Suggest a book ↗",
     "allBooks": "All books",
     "wordSearch": "SEARCH THIS BOOK",
-    "draft": "Data under review",
     "wordPlaceholder": "Start typing a word",
-    "equal": "Е and Ё are equivalent in search",
     "startTyping": "Start with a few letters",
     "searchHint": "Choose a suggestion or type a complete word.",
     "recent": "RECENT SEARCHES",
@@ -206,13 +196,12 @@ const strings={
     "pickField": "Select at least one field.",
     "keepHistory": "Search history",
     "localHistory": "Save found words on this device",
-    "dataNote": "The database is still under review. Words and locations may contain errors.",
     "footerText": "Your personal library",
     "open": "Open book",
     "favoriteEmpty": "Tap the star on a book to keep it here.",
     "noBooks": "No books match this title.",
-    "category": "REFERENCE BOOK",
-    "entries": "words",
+    "demoBook": "Demo",
+    "entries": "dictionary entries",
     "favoriteAdd": "Add book to favorites",
     "favoriteRemove": "Remove book from favorites",
     "page": "Page",
@@ -257,7 +246,6 @@ const strings={
     "noUpdates": "You have the latest version.",
     "updateAvailable": "A new version is available",
     "checkingUpdates": "Checking for updates…",
-    "injectSetupHint": "Connect Inject to receive words automatically.",
     "injectConnected": "Connected. Choose Via Inject in Search.",
     "injectSettings": "Inject settings →",
     "injectChecking": "Connecting…",
@@ -280,7 +268,7 @@ const strings={
     "relayCopy": "Copy URL",
     "relayCopied": "URL copied",
     "relayCopyManually": "Copy the selected URL manually.",
-    "relayWatchHint": "In Impaler use Custom URL and the text field. Inject search automatically keeps receiving while Lexicon is closed. Impaler must refresh this URL to receive new words.",
+    "relayWatchHint": "In Impaler, add the link as a Custom URL and use the text field. In Via Inject mode, the link can return new results while Lexicon is closed.",
     "relayPlaceholder": "Available after connecting",
     "fieldLabels": "Field labels"
   }
@@ -373,20 +361,27 @@ function enableFavoriteDrag(card,id){
  };
 }
 function markSelectedBook(){for(const card of document.querySelectorAll('[data-book-id]'))card.classList.toggle('selected-book',card.dataset.bookId===selected?.id)}
+function bookEntryCount(book){
+ const count=book.entries;
+ const label=lang==='ru'
+  ? {one:'словарная запись',few:'словарные записи',many:t('entries')}[new Intl.PluralRules('ru').select(count)]
+  : count===1?'dictionary entry':t('entries');
+ return count.toLocaleString(lang)+' '+label;
+}
 function renderBooks(){
  if(myBooks===null&&books.length){myBooks=books.map(b=>b.id);save('myBooks',myBooks)}
  for(const button of document.querySelectorAll('[data-library-tab]')){const active=button.dataset.libraryTab===libraryTab;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1}
  const query=key($('book-query').value),matches=book=>key(book.name).includes(query),mine=books.filter(b=>(myBooks||[]).includes(b.id));
  const fav=libraryTab==='mine'?favorites.map(id=>mine.find(b=>b.id===id)).filter(Boolean).filter(matches):[],list=$('favorites-list');list.replaceChildren();
- for(const book of fav){const card=el('article','favorite-card'),info=el('div','favorite-info'),title=el('h3'),titleButton=el('button','book-title',book.name);card.dataset.bookId=book.id;card.classList.toggle('selected-book',book.id===selected?.id);titleButton.onclick=()=>openBook(book.id);title.append(titleButton);info.append(title,el('p','',book.entries.toLocaleString(lang)+' '+t('entries')),openButton(book));
+ for(const book of fav){const card=el('article','favorite-card'),info=el('div','favorite-info'),title=el('h3'),titleButton=el('button','book-title',book.name);card.dataset.bookId=book.id;card.classList.toggle('selected-book',book.id===selected?.id);titleButton.onclick=()=>openBook(book.id);title.append(titleButton);info.append(title,el('p','',bookEntryCount(book)));if(book.data_status==='demo')info.append(el('span','data-note',t('demoBook')));info.append(openButton(book));
   if(favorites.length>1){const order=el('div','favorite-order');for(const [step,glyph,label] of [[-1,'↑','moveUp'],[1,'↓','moveDown']]){const button=el('button','order-button',glyph);button.type='button';button.dataset.moveId=book.id;button.dataset.moveStep=step;button.setAttribute('aria-label',t(label)+': '+book.name);button.disabled=favorites.indexOf(book.id)+step<0||favorites.indexOf(book.id)+step>=favorites.length;button.onclick=()=>moveFavorite(book.id,step);order.append(button)}info.append(order)}card.append(cover(book),info,favoriteButton(book));enableFavoriteDrag(card,book.id);enableBookCardClick(card,book.id);list.append(card)}
  $('favorites-section').hidden=!fav.length;
  const available=libraryTab==='mine'?mine:books,filtered=available.filter(matches).filter(b=>libraryTab!=='mine'||!favorites.includes(b.id));$('book-count').textContent=available.length+' '+t(available.length===1?'oneBook':'manyBooks');$('catalog-count').textContent=available.filter(matches).length+' / '+available.length;
  const heading=document.querySelector('.catalog-title h2');heading.dataset.i18n=libraryTab==='mine'?'myBooks':'catalog';heading.textContent=t(heading.dataset.i18n);document.querySelector('.catalog-title').hidden=(!filtered.length&&!!fav.length)||(!fav.length&&!query);
  const catalog=$('catalog-list');catalog.replaceChildren();for(const book of filtered){const card=el('article','book-card'),art=el('div','book-art'),coverButton=el('button','cover-button');coverButton.setAttribute('aria-label',t('open')+': '+book.name);coverButton.append(cover(book));coverButton.onclick=()=>openBook(book.id);art.append(coverButton,favoriteButton(book));
   const info=el('div','book-info'),title=el('h3'),titleButton=el('button','book-title',book.name);card.dataset.bookId=book.id;card.classList.toggle('selected-book',book.id===selected?.id);titleButton.onclick=()=>openBook(book.id);title.append(titleButton);const bottom=el('div','card-bottom');
-  if(libraryTab==='catalog'){const add=el('button','library-add',t((myBooks||[]).includes(book.id)?'bookAdded':'addBook'));add.disabled=(myBooks||[]).includes(book.id);add.onclick=()=>{myBooks.push(book.id);save('myBooks',myBooks);renderBooks()};bottom.append(add)}else bottom.append(el('span','data-note',t('draft')));
-  bottom.append(openButton(book,true));info.append(el('span','category',t('category')),title,el('p','book-meta',book.entries.toLocaleString(lang)+' '+t('entries')),bottom);card.append(art,info);enableBookCardClick(card,book.id);catalog.append(card)}
+  if(libraryTab==='catalog'){const add=el('button','library-add',t((myBooks||[]).includes(book.id)?'bookAdded':'addBook'));add.disabled=(myBooks||[]).includes(book.id);add.onclick=()=>{myBooks.push(book.id);save('myBooks',myBooks);renderBooks()};bottom.append(add)}if(book.data_status==='demo')bottom.append(el('span','data-note',t('demoBook')));
+  bottom.append(openButton(book,true));info.append(title,el('p','book-meta',bookEntryCount(book)),bottom);card.append(art,info);enableBookCardClick(card,book.id);catalog.append(card)}
  if(!filtered.length&&!fav.length){const empty=el('div','empty');empty.append(el('p','',t(query?'noBooks':libraryTab==='mine'?'myBooksEmpty':'noBooks')));if(libraryTab==='mine'&&!query){const browse=el('button','connect-button',t('browseCatalog'));browse.onclick=()=>selectLibraryTab('catalog');empty.append(browse)}catalog.append(empty)}
 }
 $('library-tabs').onclick=event=>{const button=event.target.closest('[data-library-tab]');if(button)selectLibraryTab(button.dataset.libraryTab)};
@@ -605,7 +600,7 @@ $('api-source').onchange=()=>{if(apiMode)window.LexiconApi.start($('api-source')
 $('api-toggle').onclick=()=>{if(window.LexiconApi.isRunning())window.LexiconApi.stop();else if(!$('api-source').value)showApiSettings();else window.LexiconApi.start($('api-source').value)};
 window.addEventListener('lexicon:api-config',()=>{renderCopySettings();refreshApiUI()});
 window.addEventListener('lexicon:api-format',event=>{formatTarget=event.detail.target;navigate('settings');selectSettingsTab('result');renderCopySettings();requestAnimationFrame(()=>$('format-target').scrollIntoView({block:'center'}))});
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.45';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.46';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{
  const status=$('update-status'),link=$('download-update'),native=!!window.LexiconAndroid;status.textContent=t('checkingUpdates');link.hidden=true;
  try{
@@ -618,8 +613,8 @@ $('check-updates').onclick=async()=>{
  }catch{status.textContent=t('offline')}
 };
 window.LexiconCurrentResults=()=>data?.matches||[];window.LexiconApproximateResults=()=>data?.approximate||[];
-Object.assign(strings.ru,{libraryCatalog:'Каталог',myBooks:'Мои книги',myBooksEmpty:'Здесь появятся добавленные книги.',addBook:'Добавить',bookAdded:'Добавлена',browseCatalog:'Открыть каталог',moveUp:'Поднять',moveDown:'Опустить',settingsResultTab:'Вывод',contactDeveloper:'Связаться с разработчиком',outputDestination:'Способ вывода',exactMatchTitle:'Состав результата',uncertainTitle:'Если слово не найдено',useSuggestionLabel:'Использовать ближайшее слово',suggestionCoordinatesLabel:'Передавать его координаты',includeOriginalLabel:'Добавлять исходный ввод',markUncertainLabel:'Помечать неточное совпадение #',approximateMatch:'Неточное совпадение',approximateInput:'Исходный ввод',previewTypo:'Пример: введено «папаа»',speechCoordinatesLabel:'Говорить наименование перед значением',speechCoordinatesHelp:'Говорить слова: страница, колонка, строчка.',writtenCoordinatesLabel:'Писать наименование перед значением',writtenCoordinatesHelp:'Писать слова: страница, колонка, строчка.',speechRate:'Скорость речи',notificationHomeScreen:'На iPhone добавьте сайт на экран «Домой» через меню «Поделиться» и откройте приложение с его иконки. Затем разрешите уведомления.',notificationHttps:'Для уведомлений откройте приложение по HTTPS.',markerOffWarning:'Без отметки # вы не узнаете, ввёл человек именно это слово или приложение подобрало ближайший вариант. Отключить отметку?',apiSettingsTitle:'API',settingsGeneral:'Общие',settingsIntegrations:'Подключения'});
-Object.assign(strings.en,{libraryCatalog:'Catalog',myBooks:'My books',myBooksEmpty:'Books you add will appear here.',addBook:'Add',bookAdded:'Added',browseCatalog:'Browse catalog',moveUp:'Move up',moveDown:'Move down',settingsResultTab:'Output',contactDeveloper:'Contact developer',outputDestination:'Output',exactMatchTitle:'Output fields',uncertainTitle:'If the word is not found',useSuggestionLabel:'Use the closest word',suggestionCoordinatesLabel:'Include its coordinates',includeOriginalLabel:'Include original input',markUncertainLabel:'Mark approximate matches with #',approximateMatch:'Approximate match',approximateInput:'Original input',previewTypo:'Example: input «папаа»',speechCoordinatesLabel:'Say the label before its value',speechCoordinatesHelp:'Say: page, column and line.',writtenCoordinatesLabel:'Write the label before its value',writtenCoordinatesHelp:'Write: page, column and line.',speechRate:'Speech speed',notificationHomeScreen:'On iPhone, add the site to your Home Screen from Share, then open its icon and enable notifications.',notificationHttps:'Open the app over HTTPS to enable notifications.',markerOffWarning:'Without # you cannot tell an exact word from an automatically suggested one. Turn the marker off?',apiSettingsTitle:'API',settingsGeneral:'General',settingsIntegrations:'Connections'});
+Object.assign(strings.ru,{libraryCatalog:'Каталог',myBooks:'Мои книги',myBooksEmpty:'Здесь появятся добавленные книги.',addBook:'Добавить',bookAdded:'Добавлена',browseCatalog:'Открыть каталог',moveUp:'Поднять',moveDown:'Опустить',settingsResultTab:'Вывод',contactDeveloper:'Связаться с разработчиком',exactMatchTitle:'Состав результата',uncertainTitle:'Если слово не найдено',useSuggestionLabel:'Использовать ближайшее слово',suggestionCoordinatesLabel:'Передавать его координаты',includeOriginalLabel:'Добавлять исходный ввод',markUncertainLabel:'Помечать неточное совпадение #',approximateMatch:'Неточное совпадение',approximateInput:'Исходный ввод',previewTypo:'Пример: введено «папаа»',speechCoordinatesLabel:'Говорить наименование перед значением',speechCoordinatesHelp:'Говорить слова: страница, колонка, строчка.',writtenCoordinatesLabel:'Писать наименование перед значением',writtenCoordinatesHelp:'Писать слова: страница, колонка, строчка.',speechRate:'Скорость речи',notificationHomeScreen:'На iPhone добавьте сайт на экран «Домой» через меню «Поделиться» и откройте приложение с его иконки. Затем разрешите уведомления.',notificationHttps:'Для уведомлений откройте приложение по HTTPS.',markerOffWarning:'Без отметки # вы не узнаете, ввёл человек именно это слово или приложение подобрало ближайший вариант. Отключить отметку?',apiSettingsTitle:'API',settingsGeneral:'Общие',settingsIntegrations:'Подключения'});
+Object.assign(strings.en,{libraryCatalog:'Catalog',myBooks:'My books',myBooksEmpty:'Books you add will appear here.',addBook:'Add',bookAdded:'Added',browseCatalog:'Browse catalog',moveUp:'Move up',moveDown:'Move down',settingsResultTab:'Output',contactDeveloper:'Contact developer',exactMatchTitle:'Output fields',uncertainTitle:'If the word is not found',useSuggestionLabel:'Use the closest word',suggestionCoordinatesLabel:'Include its coordinates',includeOriginalLabel:'Include original input',markUncertainLabel:'Mark approximate matches with #',approximateMatch:'Approximate match',approximateInput:'Original input',previewTypo:'Example: input «папаа»',speechCoordinatesLabel:'Say the label before its value',speechCoordinatesHelp:'Say: page, column and line.',writtenCoordinatesLabel:'Write the label before its value',writtenCoordinatesHelp:'Write: page, column and line.',speechRate:'Speech speed',notificationHomeScreen:'On iPhone, add the site to your Home Screen from Share, then open its icon and enable notifications.',notificationHttps:'Open the app over HTTPS to enable notifications.',markerOffWarning:'Without # you cannot tell an exact word from an automatically suggested one. Turn the marker off?',apiSettingsTitle:'API',settingsGeneral:'General',settingsIntegrations:'Connections'});
 Object.assign(strings.ru,{spokenMarkerOffWarning:'Без слова «решётка» вы можете не заметить, что приложение подобрало ближайшее слово. Отключить? Сообщение «не распознано» останется.',speakCoordinates:'Озвучивать его координаты',speakOriginal:'Озвучивать исходный ввод',speakMarker:'Произносить «решётка» при неточном совпадении',unrecognizedSpeech:'Если подходящего слова нет, произносится «не распознано». Это не отключается.',unrecognizedText:'Если подходящего слова нет, выводится ###. Это не отключается.',reloadUpdate:'Обновить страницу',speechTest:'Прослушать',speechWebPaused:'Озвучивание приостановлено. После возврата включите его снова.'});
 Object.assign(strings.en,{spokenMarkerOffWarning:'Without “hash”, you may not notice that the app selected a close match. Turn it off? The “not recognized” message will remain.',speakCoordinates:'Speak its coordinates',speakOriginal:'Speak the original input',speakMarker:'Say “hash” for approximate matches',unrecognizedSpeech:'If no suitable word is found, speech says “not recognized”. This cannot be disabled.',unrecognizedText:'If no suitable word is found, output is ###. This cannot be disabled.',reloadUpdate:'Reload page',speechTest:'Listen',speechWebPaused:'Speech paused. Enable it again after returning.'});
 Object.assign(strings.ru,{selectBook:'Выбрать книгу',apiSource:'Источник слова',apiTitle:'API Lexicon',apiGetResult:'Результат · GET',apiPostWord:'Слово · POST',apiOwnHint:'POST получает слово от другого приложения. GET возвращает результат поиска.',apiExternal:'Внешние API',apiCreate:'Создать ссылки',apiName:'Название подключения',apiReceive:'Получать слово',apiSend:'Отправлять результат',apiReceiveNote:'Включите подключение и выберите его в поиске → Через API.',apiSendTestNote:'«Проверить» отправит пример на этот URL.',apiForeground:'Приём работает, пока открыт поиск → Через API.',apiGetNote:'Передайте эту ссылку другому приложению. Оно получит JSON с полем value.',apiPostNote:'Другое приложение отправляет сюда JSON с полем value и ключом Bearer. В Lexicon выберите поиск → Через API.',speechHeadphonesOnly:'Только в наушниках',speechHeadphonesWeb:'Браузер не может проверить наушники, поэтому звук заблокирован. Для воспроизведения отключите «Только в наушниках» и проверьте аудиовыход.',speechHeadphonesOverride:'Браузер не сможет исключить динамик телефона. Разрешить озвучивание без проверки наушников?'});

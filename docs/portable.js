@@ -38,7 +38,7 @@
   }
   const data=await dictionary();if(options.signal?.aborted)throw new DOMException('Aborted','AbortError');
   if(url.pathname==='/api/health')return json({status:'ok',revision:data.revision,entries:data.rows.length});
-  if(url.pathname==='/api/dictionaries')return json({dictionaries:[{id:'default',name:'Толковый словарь',entries:data.rows.length,revision:data.revision,data_status:'under_review',page_offset:10},{id:'test',name:'Тест',entries:3,revision:'test-1',data_status:'demo',page_offset:0}]});
+  if(url.pathname==='/api/dictionaries')return json({dictionaries:[{id:'default',name:'Толковый словарь',entries:data.rows.length,revision:data.revision,data_status:'reviewed',page_offset:10},{id:'test',name:'Тест',entries:3,revision:'test-1',data_status:'demo',page_offset:0}]});
   if(url.pathname==='/api/search'){
    const q=url.searchParams.get('q')||'',limit=Number(url.searchParams.get('limit')||12);if(q.length>512||!Number.isInteger(limit)||limit<1||limit>30)return json({error:'Некорректный запрос'},400);const id=url.searchParams.get('dictionary')||'default';if(!['default','test'].includes(id))return json({error:'Книга не найдена'},404);if(id==='test')return json(window.LexiconSearch.search(await dictionary('test'),q,limit));
    return json(await searchDictionary(data,q,limit,options.signal));
