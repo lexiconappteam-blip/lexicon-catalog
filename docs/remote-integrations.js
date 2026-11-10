@@ -6,8 +6,7 @@
  const save=()=>localStorage.setItem(storage,JSON.stringify(cfg));
  const status=(id,key)=>{$(id).textContent=key?t(key):'';$(id).hidden=!key};
  function refresh(){
-  $('passwordx-active').disabled=!cap.passwordx_configured;$('passwordx-active').checked=enabled();
-  $('passwordx-connect').disabled=!cap.passwordx_configured;
+  $('passwordx-active').checked=cfg.passwordx===true;
   $('passwordx-url').value=cap.passwordx_configured?LexiconRelay.passwordUrl():'';$('passwordx-copy').disabled=!$('passwordx-url').value;
  }
  const enabled=()=>cap.passwordx_configured===true&&cfg.passwordx===true;
@@ -24,9 +23,48 @@
  }
  window.LexiconRemote={enabled,sync,setInjectActive(active){if(!active&&!cfg.background)return modeSync;cfg.background=active===true;save();modeSync=sync({explicit:true});return modeSync},init(translate,getContext){t=translate;context=getContext;refresh();
   capabilitiesReady=LexiconRelay.configuration().then(config=>{cap=config;refresh();if(!cap.passwordx_configured)status('passwordx-status','remoteUnavailable');if(!cap.background_configured)status('inject-background-status','remoteUnavailable')}).catch(()=>{status('passwordx-status','remoteUnavailable');status('inject-background-status','remoteUnavailable')});
-  $('passwordx-connect').onclick=async()=>{try{await LexiconRelay.connect({watch:false});cfg.passwordx=true;save();refresh();await LexiconRelay.publishCurrent();await sync();status('passwordx-status','passwordxHelp')}catch{status('passwordx-status','remoteSaveFailed')}};
-  $('passwordx-active').onchange=async()=>{const old=cfg.passwordx;try{cfg.passwordx=$('passwordx-active').checked;if(cfg.passwordx)await LexiconRelay.connect({watch:false});if(cfg.passwordx)await LexiconRelay.publishCurrent();else await LexiconRelay.clearPassword();const ok=await sync();if(ok===false)throw Error('source');save()}catch{cfg.passwordx=old;status('passwordx-status','remoteSaveFailed')}refresh()};
-  $('passwordx-copy').onclick=async()=>{try{const value=$('passwordx-url').value;if(window.LexiconAndroid)LexiconAndroid.copyText(value);else await navigator.clipboard.writeText(value);LexiconToast(t('copied'),$('passwordx-copy'))}catch{$('passwordx-url').focus();$('passwordx-url').select()}};
+  const getLink=$('passwordx-connect'),toggle=$('passwordx-active'),copyButton=$('passwordx-copy');
+  const showStatus=message=>{
+   $('passwordx-status').textContent=message;
+   $('passwordx-status').hidden=!message;
+  };
+  async function enablePassword(copy){
+   const old=cfg.passwordx;
+   getLink.disabled=true;toggle.disabled=true;
+   const ready=(async()=>{
+    await capabilitiesReady;
+    if(!cap.passwordx_configured){
+     cap=await LexiconRelay.configuration();
+     refresh();
+    }
+    if(!cap.passwordx_configured)throw Error('unavailable');
+    await LexiconRelay.connect({watch:false});
+    cfg.passwordx=true;save();refresh();
+    return LexiconRelay.passwordUrl();
+   })();
+   try{
+    if(copy)await LexiconRelay.copyLink(ready,'passwordx-url',copyButton,showStatus);
+    else{await ready;showStatus('')}
+    await sync();
+    await LexiconRelay.publishCurrent();
+   }catch(error){
+    cfg.passwordx=old;save();refresh();
+    showStatus(error.message==='unavailable'?t('remoteUnavailable'):LexiconRelay.connectionError(error));
+   }finally{getLink.disabled=false;toggle.disabled=false}
+  }
+  getLink.onclick=()=>enablePassword(true);
+  toggle.onchange=async()=>{
+   if(toggle.checked){await enablePassword(false);return}
+   cfg.passwordx=false;toggle.disabled=true;
+   try{
+    await LexiconRelay.clearPassword();
+    if(await sync()===false)throw Error('source');
+    save();showStatus('');
+   }catch{
+    cfg.passwordx=true;showStatus(t('remoteSaveFailed'));
+   }finally{toggle.disabled=false;refresh()}
+  };
+  copyButton.onclick=()=>LexiconRelay.copyLink(LexiconRelay.passwordUrl(),'passwordx-url',copyButton,showStatus);
   window.addEventListener('lexicon:relay-connected',refresh);
   for(const event of ['lexicon:format-changed','lexicon:api-config'])window.addEventListener(event,()=>sync());
  }};

@@ -9,10 +9,52 @@
  const usesPush=()=>ios();
  const canPush=()=>isSecureContext&&'Notification'in window&&'serviceWorker'in navigator&&'PushManager'in window&&(!ios()||standalone());
  function save(){try{localStorage.setItem('lexicon.web.relay',JSON.stringify(connection));localStorage.setItem('lexicon.web.relayActive',JSON.stringify(active))}catch{}}
- function refresh(message){if(!$('relay-connect'))return;$('relay-active').checked=active;$('relay-active').disabled=!connection;$('relay-connect').hidden=!!connection;$('relay-watch').hidden=false;$('relay-copy-url').disabled=!connection;$('relay-read-url').value=connection?.read_url||'';$('relay-status').textContent=message||'';$('relay-status').hidden=!message}
+ function refresh(message){if(!$('relay-connect'))return;$('relay-active').checked=active;$('relay-connect').hidden=!!connection;$('relay-watch').hidden=false;$('relay-copy-url').disabled=!connection;$('relay-read-url').value=connection?.read_url||'';$('relay-status').textContent=message||'';$('relay-status').hidden=!message}
  async function api(path,options={}){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);try{const response=await fetch(base+path,{...options,headers:{'Content-Type':'application/json',...(connection?{Authorization:'Bearer '+connection.write_token}:{}),...options.headers},cache:'no-store',referrerPolicy:'no-referrer',signal:controller.signal});if(!response.ok)throw Error(response.status===429?'limit':'relay');return await response.json()}finally{clearTimeout(timer)}}
- async function connect({watch=true}={}){if(connection){if(watch)active=true;save();refresh();return connection}if(pending)return pending;
-  pending=(async()=>{const c=await api('/v1/connect',{method:'POST'});if(!valid(c))throw Error('relay');connection=c;active=watch;save();refresh();window.dispatchEvent(new Event('lexicon:relay-connected'));return c})();try{return await pending}finally{pending=null}
+ async function connect({watch=true}={}){
+  if(!connection){
+   if(!pending){
+    pending=(async()=>{
+     const result=await api('/v1/connect',{method:'POST'});
+     if(!valid(result))throw Error('relay');
+     connection=result;
+     save();
+     window.dispatchEvent(new Event('lexicon:relay-connected'));
+    })().finally(()=>{pending=null});
+   }
+   await pending;
+  }
+  if(watch)active=true;
+  save();refresh();
+  return connection;
+ }
+ const connectionError=error=>t(error?.message==='limit'?'relayLimit':'relayFailed');
+ async function copyLink(value,inputId,anchor,showStatus){
+  const link=Promise.resolve(value);
+  let clipboardWrite;
+  // Safari needs the clipboard call during the click, even if the URL is still loading.
+  if(!window.LexiconAndroid&&window.ClipboardItem&&navigator.clipboard?.write){
+   try{
+    const content=link.then(url=>new Blob([url],{type:'text/plain'}));
+    void content.catch(()=>{});
+    clipboardWrite=navigator.clipboard.write([new ClipboardItem({'text/plain':content})])
+     .then(()=>true,()=>false);
+   }catch{}
+  }
+  const url=await link;
+  if(!url)return false;
+  try{
+   if(window.LexiconAndroid)window.LexiconAndroid.copyText(url);
+   else if(!await clipboardWrite)await navigator.clipboard.writeText(url);
+  }catch{
+   const input=$(inputId);
+   input.focus();input.select();
+   showStatus(t('relayCopyManually'));
+   return false;
+  }
+  showStatus(t('relayCopied'));
+  window.LexiconToast(t('relayCopied'),anchor);
+  return true;
  }
  const path=kind=>'/v1/channels/'+connection.channel+'/'+kind;
  const pushWanted=()=>ios()&&window.LexiconResults?.wantsNotifications()===true;
@@ -65,11 +107,30 @@
   connection?api(path('subscription'),{method:'DELETE'}):Promise.resolve()
  ]);const failed=results.find(r=>r.status==='rejected');if(failed)throw failed.reason}
 
- window.LexiconRelay={connect,notificationError,notificationStatus:()=>connection?api(path("notification-status")):Promise.resolve(null),configuration:()=>api('/v1/config'),passwordUrl:()=>connection?.read_url.replace('/latest?','/passwordx?')||'',publishCurrent,clearPassword:()=>connection?api(path("passwordx"),{method:"DELETE"}):Promise.resolve(),updateSource:source=>api(path('source'),{method:'POST',body:JSON.stringify({...source,watch_enabled:active,api_enabled:window.LexiconApi?.ownEnabled()===true,passwordx_enabled:window.LexiconRemote?.enabled()===true,notifications_enabled:pushWanted(),notification_format:window.LexiconResultFormat('notification'),format:window.LexiconResultFormat('impaler'),api_format:window.LexiconResultFormat('api')})}),apiDetails:()=>connection?{get_url:connection.read_url.replace('/latest?','/output?'),input_url:connection.read_url.replace('/latest?','/input?'),post_url:base+path('input'),write_token:connection.write_token}:null,canPush,usesPush,publish,publishUnknown,subscribe,unsubscribe,refresh,
+ window.LexiconRelay={connect,copyLink,connectionError,notificationError,notificationStatus:()=>connection?api(path("notification-status")):Promise.resolve(null),configuration:()=>api('/v1/config'),passwordUrl:()=>connection?.read_url.replace('/latest?','/passwordx?')||'',publishCurrent,clearPassword:()=>connection?api(path("passwordx"),{method:"DELETE"}):Promise.resolve(),updateSource:source=>api(path('source'),{method:'POST',body:JSON.stringify({...source,watch_enabled:active,api_enabled:window.LexiconApi?.ownEnabled()===true,passwordx_enabled:window.LexiconRemote?.enabled()===true,notifications_enabled:pushWanted(),notification_format:window.LexiconResultFormat('notification'),format:window.LexiconResultFormat('impaler'),api_format:window.LexiconResultFormat('api')})}),apiDetails:()=>connection?{get_url:connection.read_url.replace('/latest?','/output?'),input_url:connection.read_url.replace('/latest?','/input?'),post_url:base+path('input'),write_token:connection.write_token}:null,canPush,usesPush,publish,publishUnknown,subscribe,unsubscribe,refresh,
   init(translate,rows,unmatchedQuery=()=>'' ){t=translate;current=rows;query=unmatchedQuery;refresh();
-   $('relay-connect').onclick=async()=>{const button=$('relay-connect');button.disabled=true;try{await connect();await window.LexiconRemote?.sync();await publishCurrent()}catch(e){refresh(t(e.message==='limit'?'relayLimit':'relayFailed'))}finally{button.disabled=false}};
-   $('relay-active').onchange=async()=>{active=$('relay-active').checked;last='';save();if(!active)window.dispatchEvent(new Event('lexicon:relay-disabled'));else await publishCurrent();refresh();window.LexiconRemote?.sync()};
-   $('relay-copy-url').onclick=async()=>{try{if(window.LexiconAndroid)window.LexiconAndroid.copyText(connection.read_url);else await navigator.clipboard.writeText(connection.read_url);refresh();window.LexiconToast(t('copied'),$('relay-copy-url'))}catch{const input=$('relay-read-url');input.type='text';input.focus();input.select();refresh(t('relayCopyManually'))}};
+   const switchWatch=$('relay-active'),getLink=$('relay-connect'),copyButton=$('relay-copy-url');
+   async function enableWatch(copy){
+    getLink.disabled=true;switchWatch.disabled=true;
+    const ready=connect();
+    try{
+     if(copy)await copyLink(ready.then(channel=>channel.read_url),'relay-read-url',copyButton,refresh);
+     else await ready;
+     const message=$('relay-status').textContent;
+     await window.LexiconRemote?.sync();
+     await publishCurrent();
+     if(message)refresh(message);
+    }catch(error){refresh(connectionError(error))}
+    finally{getLink.disabled=false;switchWatch.disabled=false}
+   }
+   getLink.onclick=()=>enableWatch(true);
+   switchWatch.onchange=async()=>{
+    if(switchWatch.checked){await enableWatch(false);return}
+    active=false;last='';save();refresh();
+    window.dispatchEvent(new Event('lexicon:relay-disabled'));
+    await window.LexiconRemote?.sync();
+   };
+   copyButton.onclick=()=>copyLink(connection?.read_url,'relay-read-url',copyButton,refresh);
    window.addEventListener('online',()=>publishCurrent());window.addEventListener('lexicon:format-changed',event=>{if(event.detail?.target&&!['impaler','notification','api'].includes(event.detail.target))return;last='';publishCurrent({silent:true})});
   }
  };

@@ -25,7 +25,7 @@
  function invalidate(id){versions.set(id,(versions.get(id)||0)+1);controllers.get(id)?.abort();sent.delete(id);if(source===id)pause()}
  function sources(){const list=[];if(ownEnabled())list.push({id:'own',name:cfg.own.name});for(const c of cfg.connections)if(c.enabled&&c.direction==='receive'){try{valid(c);list.push({id:c.id,name:c.name})}catch{}}return list}
  function outputs(){return [{id:'api',name:cfg.own.name},...cfg.connections.filter(c=>c.direction==='send').map(c=>({id:'api:'+c.id,name:c.name}))]}
- function renderOwn(){const d=ownDetails();$('own-api-config').hidden=!d;$('own-api-connect').hidden=!!d;$('own-api-enabled').disabled=!d;$('own-api-enabled').checked=ownEnabled();$('own-api-name').value=cfg.own.name;document.querySelectorAll('[data-own-method]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.ownMethod===ownMethod));b.textContent=t(b.dataset.ownMethod==='GET'?'apiGetResult':'apiPostWord')});$('own-api-url').value=d?(ownMethod==='GET'?d.get_url:d.post_url):'';$('own-api-secret').hidden=ownMethod!=='POST';$('own-api-key').type='password';$('own-api-key').value=d?.write_token||'';$('own-api-method-note').textContent=t(ownMethod==='GET'?'apiGetNote':'apiPostNote')}
+ function renderOwn(){const d=ownDetails();$('own-api-config').hidden=!d;$('own-api-connect').hidden=!!d;$('own-api-enabled').checked=ownEnabled();$('own-api-name').value=cfg.own.name;document.querySelectorAll('[data-own-method]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.ownMethod===ownMethod));b.textContent=t(b.dataset.ownMethod==='GET'?'apiGetResult':'apiPostWord')});$('own-api-url').value=d?(ownMethod==='GET'?d.get_url:d.post_url):'';$('own-api-secret').hidden=ownMethod!=='POST';$('own-api-key').type='password';$('own-api-key').value=d?.write_token||'';$('own-api-method-note').textContent=t(ownMethod==='GET'?'apiGetNote':'apiPostNote')}
  function format(id){window.dispatchEvent(new CustomEvent('lexicon:api-format',{detail:{target:id}}))}
  async function copy(value,inputId,anchor){try{if(window.LexiconAndroid)window.LexiconAndroid.copyText(value);else await navigator.clipboard.writeText(value);window.LexiconToast(t('copied'),anchor)}catch{const input=$(inputId);if(input){input.type='text';input.focus();input.select()}status('own',t('apiCopyFailed'))}}
  function segmented(c,property,values){const group=el('div','method-switch');group.setAttribute('role','group');for(const [value,label] of values){const button=el('button','',label);button.type='button';button.dataset[property]=value;button.setAttribute('aria-pressed',String(c[property]===value));button.onclick=()=>{invalidate(c.id);c[property]=value;c.enabled=false;persist();renderConnections();announce()};group.append(button)}return group}
@@ -55,11 +55,29 @@
  }
  window.LexiconApi={ownEnabled,sources,outputs,publish:rows=>publish(rows),publishUnknown:(value,approximate)=>publish([],value,approximate),start,stop,pause,resume,isRunning:()=>running,
   init(translate,handlers){t=translate;callbacks=handlers;renderOwn();renderConnections();
-   $('own-api-connect').onclick=async()=>{const button=$('own-api-connect');button.disabled=true;try{await window.LexiconRelay.connect({watch:false});cfg.own.enabled=true;persist();renderOwn();announce();status('own',t('apiReady'))}catch{status('own',t('apiNetworkError'))}finally{button.disabled=false}};
-   $('own-api-enabled').onchange=()=>{cfg.own.enabled=$('own-api-enabled').checked;persist();if(!cfg.own.enabled&&source==='own')stop();renderOwn();announce()};
+   const getLink=$('own-api-connect'),toggle=$('own-api-enabled'),copyButton=$('own-api-copy-url');
+   async function enableOwn(copy){
+    getLink.disabled=true;toggle.disabled=true;
+    const ready=window.LexiconRelay.connect({watch:false}).then(()=>{
+     cfg.own.enabled=true;persist();renderOwn();announce();
+     return ownMethod==='GET'?ownDetails().get_url:ownDetails().post_url;
+    });
+    try{
+     if(copy)await window.LexiconRelay.copyLink(ready,'own-api-url',copyButton,text=>status('own',text));
+     else{await ready;status('own',t('apiReady'))}
+    }catch(error){renderOwn();status('own',window.LexiconRelay.connectionError(error))}
+    finally{getLink.disabled=false;toggle.disabled=false}
+   }
+   getLink.onclick=()=>enableOwn(true);
+   toggle.onchange=async()=>{
+    if(toggle.checked){await enableOwn(false);return}
+    cfg.own.enabled=false;persist();
+    if(source==='own')stop();
+    renderOwn();announce();
+   };
    $('own-api-name').onchange=()=>{cfg.own.name=$('own-api-name').value.trim().slice(0,48)||'API Lexicon';$('own-api-name').value=cfg.own.name;persist();announce()};
    document.querySelectorAll('[data-own-method]').forEach(button=>button.onclick=()=>{ownMethod=button.dataset.ownMethod;renderOwn()});
-   $('own-api-copy-url').onclick=()=>copy($('own-api-url').value,'own-api-url',$('own-api-copy-url'));$('own-api-copy-key').onclick=()=>copy(ownDetails()?.write_token||'','own-api-key',$('own-api-copy-key'));$('own-api-format').onclick=()=>format('api');
+   $('own-api-copy-url').onclick=()=>window.LexiconRelay.copyLink($('own-api-url').value,'own-api-url',copyButton,text=>status('own',text));$('own-api-copy-key').onclick=()=>copy(ownDetails()?.write_token||'','own-api-key',$('own-api-copy-key'));$('own-api-format').onclick=()=>format('api');
    $('own-api-test').onclick=async()=>{const d=ownDetails();if(!d)return;status('own',t('apiChecking'));try{if(ownMethod==='GET'){const data=await request({url:d.get_url,field:'value',method:'GET',token:''});if(data.status==='source_rejected')throw Error('source_rejected');status('own',t(data.value?'apiConnected':'apiWaiting'))}else{await request({url:d.post_url,field:'value',method:'POST',direction:'send',token:d.write_token},{value:'ПАПА',receive:false});status('own',t('apiTestSent'))}}catch(e){status('own',message(e))}};
    $('api-add').onclick=()=>{if(cfg.connections.length>=3)return;newConnection=crypto.randomUUID();cfg.connections.push({id:newConnection,name:'API '+(cfg.connections.length+1),url:'',field:'value',method:'GET',direction:'receive',enabled:false,token:'',body:'{}'});persist();renderConnections();announce()};
    window.addEventListener('lexicon:relay-connected',()=>{renderOwn();announce()});window.addEventListener('lexicon:format-changed',event=>{const id=event.detail?.target?.replace(/^api:/,'');if(id&&id!==event.detail.target)invalidate(id)});

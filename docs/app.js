@@ -599,7 +599,7 @@ $('api-source').onchange=()=>{if(apiMode)window.LexiconApi.start($('api-source')
 $('api-toggle').onclick=()=>{if(window.LexiconApi.isRunning())window.LexiconApi.stop();else if(!$('api-source').value)showApiSettings();else window.LexiconApi.start($('api-source').value)};
 window.addEventListener('lexicon:api-config',()=>{renderCopySettings();refreshApiUI()});
 window.addEventListener('lexicon:api-format',event=>{formatTarget=event.detail.target;navigate('settings');selectSettingsTab('result');renderCopySettings();requestAnimationFrame(()=>$('format-target').scrollIntoView({block:'center'}))});
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.43';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.44';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{
  const status=$('update-status'),link=$('download-update'),native=!!window.LexiconAndroid;status.textContent=t('checkingUpdates');link.hidden=true;
  try{
