@@ -291,11 +291,13 @@ $('theme').value=window.LexiconTheme.get();$('theme').onchange=()=>window.Lexico
 Object.assign(strings.ru,{page:'Страница',page_pdf:'Страница PDF',bookPageShort:'В книге'});
 Object.assign(strings.en,{page:'Page',page_pdf:'PDF page',bookPageShort:'In book'});
 Object.assign(strings.ru, {
+ apiInjectRejected:'Inject отклонил запрос. Проверьте Integration ID в настройках Inject.',
  injectAutoWords:'Обрабатывать слова автоматически',
  injectAutoWordsHelp:'«Картинка слона» или «картинки слона» → «слон».',
  injectCaseAmbiguous:'У этой формы несколько начальных слов.'
 });
 Object.assign(strings.en, {
+ apiInjectRejected:'Inject rejected the request. Check the Integration ID in Inject settings.',
  injectAutoWords:'Process words automatically',
  injectAutoWordsHelp:'«Картинка слона» or «картинки слона» → «слон».',
  injectCaseAmbiguous:'This form has several possible headwords.'
@@ -332,16 +334,24 @@ function favoriteButton(book){const b=el('button','star-button');const active=fa
 function openButton(book,compact=false){const b=el('button','open-book');b.type='button';b.setAttribute('aria-label',t('open')+': '+book.name);if(!compact)b.append(el('span','',t('open')));b.append(icon('arrow'));b.onclick=()=>openBook(book.id);return b}
 function selectLibraryTab(tab){libraryTab=tab;save('libraryTab',tab);renderBooks()}
 function moveFavorite(id,step){const at=favorites.indexOf(id),to=at+step;if(at<0||to<0||to>=favorites.length)return;[favorites[at],favorites[to]]=[favorites[to],favorites[at]];save('favoriteBooks',favorites);renderBooks();document.querySelector('[data-move-id="'+CSS.escape(id)+'"][data-move-step="'+step+'"]')?.focus()}
+function enableBookCardClick(card,id){
+ card.style.cursor='pointer';
+ card.onclick=event=>{
+  if(card.dataset.dragged||event.target.closest('button,a,input,select,textarea'))return;
+  openBook(id);
+ };
+}
 function enableFavoriteDrag(card,id){
  card.dataset.favoriteId=id;
  card.onpointerdown=event=>{
+  delete card.dataset.dragged;
   if(event.button!==0||event.target.closest('button,a,input,select')||favorites.length<2)return;
   const startX=event.clientX,startY=event.clientY;let dragging=false,target=null;
   const clearTarget=()=>{target?.classList.remove('favorite-drop-target');target=null};
   const move=e=>{
    if(e.pointerId!==event.pointerId)return;
    if(!dragging&&Math.hypot(e.clientX-startX,e.clientY-startY)<8)return;
-   dragging=true;card.classList.add('favorite-dragging');
+   dragging=true;card.dataset.dragged='true';card.classList.add('favorite-dragging');
    e.preventDefault();clearTarget();
    target=document.elementsFromPoint(e.clientX,e.clientY).map(n=>n.closest('.favorite-card')).find(n=>n&&n!==card)||null;
    target?.classList.add('favorite-drop-target');
@@ -363,14 +373,14 @@ function renderBooks(){
  const query=key($('book-query').value),matches=book=>key(book.name).includes(query),mine=books.filter(b=>(myBooks||[]).includes(b.id));
  const fav=libraryTab==='mine'?favorites.map(id=>mine.find(b=>b.id===id)).filter(Boolean).filter(matches):[],list=$('favorites-list');list.replaceChildren();
  for(const book of fav){const card=el('article','favorite-card'),info=el('div','favorite-info'),title=el('h3'),titleButton=el('button','book-title',book.name);card.dataset.bookId=book.id;card.classList.toggle('selected-book',book.id===selected?.id);titleButton.onclick=()=>openBook(book.id);title.append(titleButton);info.append(title,el('p','',book.entries.toLocaleString(lang)+' '+t('entries')),openButton(book));
-  if(favorites.length>1){const order=el('div','favorite-order');for(const [step,glyph,label] of [[-1,'↑','moveUp'],[1,'↓','moveDown']]){const button=el('button','order-button',glyph);button.type='button';button.dataset.moveId=book.id;button.dataset.moveStep=step;button.setAttribute('aria-label',t(label)+': '+book.name);button.disabled=favorites.indexOf(book.id)+step<0||favorites.indexOf(book.id)+step>=favorites.length;button.onclick=()=>moveFavorite(book.id,step);order.append(button)}info.append(order)}card.append(cover(book),info,favoriteButton(book));enableFavoriteDrag(card,book.id);list.append(card)}
+  if(favorites.length>1){const order=el('div','favorite-order');for(const [step,glyph,label] of [[-1,'↑','moveUp'],[1,'↓','moveDown']]){const button=el('button','order-button',glyph);button.type='button';button.dataset.moveId=book.id;button.dataset.moveStep=step;button.setAttribute('aria-label',t(label)+': '+book.name);button.disabled=favorites.indexOf(book.id)+step<0||favorites.indexOf(book.id)+step>=favorites.length;button.onclick=()=>moveFavorite(book.id,step);order.append(button)}info.append(order)}card.append(cover(book),info,favoriteButton(book));enableFavoriteDrag(card,book.id);enableBookCardClick(card,book.id);list.append(card)}
  $('favorites-section').hidden=!fav.length;
  const available=libraryTab==='mine'?mine:books,filtered=available.filter(matches).filter(b=>libraryTab!=='mine'||!favorites.includes(b.id));$('book-count').textContent=available.length+' '+t(available.length===1?'oneBook':'manyBooks');$('catalog-count').textContent=available.filter(matches).length+' / '+available.length;
  const heading=document.querySelector('.catalog-title h2');heading.dataset.i18n=libraryTab==='mine'?'myBooks':'catalog';heading.textContent=t(heading.dataset.i18n);document.querySelector('.catalog-title').hidden=(!filtered.length&&!!fav.length)||(!fav.length&&!query);
  const catalog=$('catalog-list');catalog.replaceChildren();for(const book of filtered){const card=el('article','book-card'),art=el('div','book-art'),coverButton=el('button','cover-button');coverButton.setAttribute('aria-label',t('open')+': '+book.name);coverButton.append(cover(book));coverButton.onclick=()=>openBook(book.id);art.append(coverButton,favoriteButton(book));
   const info=el('div','book-info'),title=el('h3'),titleButton=el('button','book-title',book.name);card.dataset.bookId=book.id;card.classList.toggle('selected-book',book.id===selected?.id);titleButton.onclick=()=>openBook(book.id);title.append(titleButton);const bottom=el('div','card-bottom');
   if(libraryTab==='catalog'){const add=el('button','library-add',t((myBooks||[]).includes(book.id)?'bookAdded':'addBook'));add.disabled=(myBooks||[]).includes(book.id);add.onclick=()=>{myBooks.push(book.id);save('myBooks',myBooks);renderBooks()};bottom.append(add)}else bottom.append(el('span','data-note',t('draft')));
-  bottom.append(openButton(book,true));info.append(el('span','category',t('category')),title,el('p','book-meta',book.entries.toLocaleString(lang)+' '+t('entries')),bottom);card.append(art,info);catalog.append(card)}
+  bottom.append(openButton(book,true));info.append(el('span','category',t('category')),title,el('p','book-meta',book.entries.toLocaleString(lang)+' '+t('entries')),bottom);card.append(art,info);enableBookCardClick(card,book.id);catalog.append(card)}
  if(!filtered.length&&!fav.length){const empty=el('div','empty');empty.append(el('p','',t(query?'noBooks':libraryTab==='mine'?'myBooksEmpty':'noBooks')));if(libraryTab==='mine'&&!query){const browse=el('button','connect-button',t('browseCatalog'));browse.onclick=()=>selectLibraryTab('catalog');empty.append(browse)}catalog.append(empty)}
 }
 $('library-tabs').onclick=event=>{const button=event.target.closest('[data-library-tab]');if(button)selectLibraryTab(button.dataset.libraryTab)};
@@ -589,7 +599,7 @@ $('api-source').onchange=()=>{if(apiMode)window.LexiconApi.start($('api-source')
 $('api-toggle').onclick=()=>{if(window.LexiconApi.isRunning())window.LexiconApi.stop();else if(!$('api-source').value)showApiSettings();else window.LexiconApi.start($('api-source').value)};
 window.addEventListener('lexicon:api-config',()=>{renderCopySettings();refreshApiUI()});
 window.addEventListener('lexicon:api-format',event=>{formatTarget=event.detail.target;navigate('settings');selectSettingsTab('result');renderCopySettings();requestAnimationFrame(()=>$('format-target').scrollIntoView({block:'center'}))});
-const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.42';$('app-version').textContent='Lexicon '+installedVersion;
+const installedVersion=window.LexiconAndroid?.version?.()||window.LEXICON_PORTABLE?.version||'0.8.43';$('app-version').textContent='Lexicon '+installedVersion;
 $('check-updates').onclick=async()=>{
  const status=$('update-status'),link=$('download-update'),native=!!window.LexiconAndroid;status.textContent=t('checkingUpdates');link.hidden=true;
  try{
