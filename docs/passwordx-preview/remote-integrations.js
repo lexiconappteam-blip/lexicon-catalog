@@ -21,8 +21,16 @@
    catch{status('inject-background-status','remoteSaveFailed');return false}
   });return saving;
  }
- window.LexiconRemote={enabled,sync,setInjectActive(active){if(!active&&!cfg.background)return modeSync;cfg.background=active===true;save();modeSync=sync({explicit:true});return modeSync},init(translate,getContext){t=translate;context=getContext;refresh();
+ window.LexiconRemote={enabled,sync,useSuggestion:()=>cfg.passwordxSuggestion===true,setInjectActive(active){if(!active&&!cfg.background)return modeSync;cfg.background=active===true;save();modeSync=sync({explicit:true});return modeSync},init(translate,getContext){t=translate;context=getContext;refresh();
   capabilitiesReady=LexiconRelay.configuration().then(config=>{cap=config;refresh();if(!cap.passwordx_configured)status('passwordx-status','remoteUnavailable');if(!cap.background_configured)status('inject-background-status','remoteUnavailable')}).catch(()=>{status('passwordx-status','remoteUnavailable');status('inject-background-status','remoteUnavailable')});
+  const suggestion=$('passwordx-use-suggestion');
+  suggestion.checked=cfg.passwordxSuggestion===true;
+  suggestion.onchange=async()=>{
+   cfg.passwordxSuggestion=suggestion.checked;
+   save();
+   await sync();
+   if(enabled())await LexiconRelay.publishCurrent({silent:true});
+  };
   const getLink=$('passwordx-connect'),toggle=$('passwordx-active'),copyButton=$('passwordx-copy');
   const showStatus=message=>{
    $('passwordx-status').textContent=message;

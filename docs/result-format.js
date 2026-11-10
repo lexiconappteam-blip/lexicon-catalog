@@ -21,13 +21,13 @@
   if(!selected.fields.length)return query+marker;
   return rows.map(row=>{const first=selected.fields[0],marked={...row,[first]:String(row[first])+marker};if(selected.labels)return format(marked,selected);const values=selected.fields.map(field=>format(row,{...selected,fields:[field]}));return values[0]+marker+(values.length>1?selected.separator:'')+values.slice(1).join(selected.separator)}).join('\n')+(options.includeOriginal?' ('+query+')':'');
  }
- function passwordx(rows=[],{uncertain=false}={}){
-  if(uncertain)return {value:'',status:'unmatched'};
-  const primary=primaryRows(rows);if(!primary.length)return {value:'',status:'empty'};
-  if(primary.length!==1)return {value:'',status:'ambiguous'};
+ function passwordx(rows=[],{uncertain=false,suggestions=[],useSuggestion=false}={}){
+  const primary=primaryRows(uncertain?(useSuggestion?suggestions:[]):rows);
+  if(!primary.length)return {value:'000000',status:uncertain?'unmatched':'empty'};
+  if(primary.length!==1)return {value:'000000',status:'ambiguous'};
   const {page,column,position}=primary[0];
-  if(!Number.isInteger(page)||page<1||page>999||!Number.isInteger(column)||column<1||column>3||!Number.isInteger(position)||position<1||position>99)return {value:'',status:'out_of_range'};
-  return {value:String(page).padStart(3,'0')+column+String(position).padStart(2,'0'),status:'found'};
+  if(!Number.isInteger(page)||page<1||page>999||!Number.isInteger(column)||column<1||column>3||!Number.isInteger(position)||position<1||position>99)return {value:'000000',status:'out_of_range'};
+  return {value:String(page).padStart(3,'0')+column+String(position).padStart(2,'0'),status:uncertain?'approximate':'found'};
  }
  globalThis.LexiconFormat={normalize,format,approximate,primaryRows,formatRows,spoken,passwordx};
 })();
