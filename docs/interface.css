@@ -359,3 +359,7 @@ html[data-theme]{background:var(--ui-bg)}
 :root[data-theme] .result-footer{top:18px}
 :root[data-theme] .uncertain-result .result-footer{top:34px}
 :root[data-theme] .sidebar-bottom{padding-top:20px}
+
+.approximate-summary{margin:0 0 12px}
+.approximate-summary .approximate-input{margin:4px 0 0}
+:root[data-theme] .approximate-summary .result-label{color:var(--ui-accent)}

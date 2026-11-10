@@ -8,6 +8,7 @@
  function refresh(){
   $('passwordx-active').checked=cfg.passwordx===true;
   $('passwordx-url').value=cap.passwordx_configured?LexiconRelay.passwordUrl():'';$('passwordx-copy').disabled=!$('passwordx-url').value;
+  $('passwordx-connect').hidden=!!$('passwordx-url').value;
  }
  const enabled=()=>cap.passwordx_configured===true&&cfg.passwordx===true;
  async function sync({explicit=false}={}){
