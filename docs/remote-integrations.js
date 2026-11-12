@@ -22,8 +22,15 @@
    catch{status('inject-background-status','remoteSaveFailed');return false}
   });return saving;
  }
- window.LexiconRemote={enabled,sync,useSuggestion:()=>cfg.passwordxSuggestion===true,setInjectActive(active){if(!active&&!cfg.background)return modeSync;cfg.background=active===true;save();modeSync=sync({explicit:true});return modeSync},init(translate,getContext){t=translate;context=getContext;refresh();
-  capabilitiesReady=LexiconRelay.configuration().then(config=>{cap=config;refresh();if(!cap.passwordx_configured)status('passwordx-status','remoteUnavailable');if(!cap.background_configured)status('inject-background-status','remoteUnavailable')}).catch(()=>{status('passwordx-status','remoteUnavailable');status('inject-background-status','remoteUnavailable')});
+ window.LexiconRemote={getPreset:()=>({passwordx:enabled(),passwordxSuggestion:cfg.passwordxSuggestion===true}),applySuggestion(value){
+  cfg.passwordxSuggestion=value===true;save();$('passwordx-use-suggestion').checked=cfg.passwordxSuggestion;
+ },async applyPreset(value={}){
+  await capabilitiesReady;
+  cfg.passwordx=value.passwordx===true&&cap.passwordx_configured===true;
+  cfg.passwordxSuggestion=value.passwordxSuggestion===true;
+  save();$('passwordx-use-suggestion').checked=cfg.passwordxSuggestion;refresh();
+ },enabled,sync,useSuggestion:()=>cfg.passwordxSuggestion===true,setInjectActive(active){if(!active&&!cfg.background)return modeSync;cfg.background=active===true;save();modeSync=sync({explicit:true});return modeSync},init(translate,getContext){t=translate;context=getContext;refresh();
+  capabilitiesReady=LexiconRelay.configuration().then(config=>{cap=config;refresh();if(!cap.passwordx_configured)status('passwordx-status','remoteUnavailable');if(!cap.background_configured)status('inject-background-status','injectForegroundOnly')}).catch(()=>{status('passwordx-status','remoteUnavailable');status('inject-background-status','injectForegroundOnly')});
   const suggestion=$('passwordx-use-suggestion');
   suggestion.checked=cfg.passwordxSuggestion===true;
   suggestion.onchange=async()=>{

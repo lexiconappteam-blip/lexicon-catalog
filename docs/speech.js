@@ -45,7 +45,17 @@
   const accepted=(bridge().speakPrivateResultAtRate?bridge().speakPrivateResultAtRate(text,prefs.repeats,prefs.gap,prefs.rate):bridge().speakPrivateResult(text,prefs.repeats,prefs.gap))===true;
   if(accepted&&!test)last=signature;refresh();return accepted;
  }
- window.LexiconSpeech={receive:speak,receiveUnknown:(query,rows,book)=>speakText(window.LexiconFormat.approximate(query,rows,window.LexiconResultFormat('speech')),book),cancel:stop,refresh,init(translate){t=translate;
+ window.LexiconSpeech={getPreset:()=>({...prefs,enabled:requested()}),applyPreset(value={}){
+  stop();
+  const headphonesOnly=value.headphonesOnly!==false;
+  let wanted=value.enabled===true;
+  if(wanted&&!native()&&!headphonesOnly&&!sessionConsent){
+   sessionConsent=window.confirm(t('speechHeadphonesOverride'));
+   if(!sessionConsent)wanted=false;
+  }
+  prefs={enabled:wanted,headphonesOnly,repeats:repeatCount(value.repeats),gap:Math.round(Math.min(30,Math.max(1,Number(value.gap)||5))),rate:Math.min(1.5,Math.max(.25,Number(value.rate)||1))};
+  armed=wanted&&(native()||headphonesOnly||sessionConsent);primed=false;save();refresh();
+ },receive:speak,receiveUnknown:(query,rows,book)=>speakText(window.LexiconFormat.approximate(query,rows,window.LexiconResultFormat('speech')),book),cancel:stop,refresh,init(translate){t=translate;
   $('speech-enabled').onchange=()=>{
    const wanted=$('speech-enabled').checked;stop();statusOverride='';
    if(wanted&&!native())armed=prefs.headphonesOnly||sessionConsent||window.confirm(t('speechWebConfirm'));else if(!wanted){armed=false;primed=false};

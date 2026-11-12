@@ -30,9 +30,9 @@ html[data-theme]{background:var(--ui-bg)}
 :root[data-theme] .workspace{margin-left:196px}
 :root[data-theme] header{height:60px;padding:0 36px;background:transparent;border:0;color:var(--ui-muted);font-size:12px}
 :root[data-theme] main{max-width:1040px;padding:20px 36px 56px;margin:0 auto;min-height:calc(100dvh - 60px)}
-:root[data-theme] h1,:root[data-theme] #settings-view h1{font-family:Inter,sans-serif;font-size:28px;font-weight:600;line-height:1.2;letter-spacing:-.9px;margin:0}
+:root[data-theme] h1,:root[data-theme] :is(#settings-view, #presets-view) h1{font-family:Inter,sans-serif;font-size:28px;font-weight:600;line-height:1.2;letter-spacing:-.9px;margin:0}
 :root[data-theme] .page-heading{align-items:center;gap:16px;margin:0 0 24px}
-:root[data-theme] .page-heading p,:root[data-theme] #settings-view .page-heading .settings-caption{font-size:13px;line-height:1.5;margin-top:8px;color:var(--ui-muted)}
+:root[data-theme] .page-heading p,:root[data-theme] :is(#settings-view, #presets-view) .page-heading .settings-caption{font-size:13px;line-height:1.5;margin-top:8px;color:var(--ui-muted)}
 :root[data-theme] .eyebrow,:root[data-theme] .category,:root[data-theme] .result-label{font-size:11px;font-weight:500;letter-spacing:.3px;text-transform:none;color:var(--ui-muted)}
 :root[data-theme] .count-badge{background:transparent;border:0;border-radius:0;padding:4px 0;color:var(--ui-muted);font:12px 'JetBrains Mono',monospace}
 :root[data-theme] .section-line{margin:24px 0 12px;gap:12px}
@@ -138,14 +138,14 @@ html[data-theme]{background:var(--ui-bg)}
 :root[data-theme] .inject-bar{background:var(--ui-inset);border:0;border-radius:8px;padding:14px;margin-bottom:14px;gap:12px}
 :root[data-theme] .inject-bar strong{font-size:13px;color:var(--ui-text);font-weight:600}
 :root[data-theme] .inject-bar p,:root[data-theme] .inject-settings-link{font-size:12px;color:var(--ui-muted);line-height:1.55}
-:root[data-theme] #settings-view{display:grid;grid-template-columns:144px minmax(0,1fr);gap:0 28px;align-items:start}
-:root[data-theme] #settings-view[hidden]{display:none}
-:root[data-theme] #settings-view>.page-heading{grid-column:1/-1;margin-bottom:24px}
+:root[data-theme] :is(#settings-view, #presets-view){display:grid;grid-template-columns:144px minmax(0,1fr);gap:0 28px;align-items:start}
+:root[data-theme] :is(#settings-view, #presets-view)[hidden]{display:none}
+:root[data-theme] :is(#settings-view, #presets-view)>.page-heading{grid-column:1/-1;margin-bottom:24px}
 :root[data-theme] #settings-tabs{grid-column:1;display:flex;flex-direction:column;gap:4px;border:0;padding:0;background:transparent;border-radius:0;margin:0}
 :root[data-theme] #settings-tabs button{width:100%;text-align:left;min-height:40px;padding:10px 12px;border:0;border-radius:7px;color:var(--ui-muted);font-size:13px;font-weight:500}
 :root[data-theme] #settings-tabs button[aria-selected=true]{background:var(--ui-selected);color:var(--ui-text);border:0;font-weight:600}
-:root[data-theme] #settings-view>.settings-subpanel{grid-column:2;grid-row:2;min-width:0}
-:root[data-theme] #settings-view .panel{background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;margin:0}
+:root[data-theme] :is(#settings-view, #presets-view)>.settings-subpanel{grid-column:2;grid-row:2;min-width:0}
+:root[data-theme] :is(#settings-view, #presets-view) .panel{background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;margin:0}
 :root[data-theme] #settings-panel-general{background:transparent;border:0;border-radius:0;overflow:visible}
 :root[data-theme] #settings-panel-general>.panel{padding:16px 0;border:0}
 :root[data-theme] #settings-panel-general>.panel:first-child{padding-top:0}
@@ -155,33 +155,33 @@ html[data-theme]{background:var(--ui-bg)}
 :root[data-theme] #settings-panel-general .about{margin-top:8px;padding-top:20px;border-top:1px solid var(--ui-line)}
 :root[data-theme] #settings-panel-general .about .eyebrow{font-size:13px;letter-spacing:0;font-weight:600;color:var(--ui-text)}
 :root[data-theme] #settings-panel-general .about p,:root[data-theme] #settings-panel-general .about a{font-size:12px;line-height:1.6;color:var(--ui-muted)}
-:root[data-theme] #settings-view .muted,:root[data-theme] #settings-view .toggle-row small{font-size:12px;line-height:1.6;color:var(--ui-muted)}
-:root[data-theme] #settings-view .quiet-button{min-height:36px;padding:8px 0;color:var(--ui-text);font-size:12px;text-align:left}
-:root[data-theme] #settings-view .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:40px;font-size:14px;color:var(--ui-text);line-height:1.4}
-:root[data-theme] #settings-view .toggle-row input{flex-shrink:0;background:var(--ui-line)}
-:root[data-theme] #settings-view .toggle-row input:before{box-shadow:none;background:var(--ui-muted)}
-:root[data-theme] #settings-view .toggle-row input:checked{background:var(--ui-text)}
-:root[data-theme] #settings-view .toggle-row input:checked:before{background:var(--ui-bg)}
+:root[data-theme] :is(#settings-view, #presets-view) .muted,:root[data-theme] :is(#settings-view, #presets-view) .toggle-row small{font-size:12px;line-height:1.6;color:var(--ui-muted)}
+:root[data-theme] :is(#settings-view, #presets-view) .quiet-button{min-height:36px;padding:8px 0;color:var(--ui-text);font-size:12px;text-align:left}
+:root[data-theme] :is(#settings-view, #presets-view) .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:40px;font-size:14px;color:var(--ui-text);line-height:1.4}
+:root[data-theme] :is(#settings-view, #presets-view) .toggle-row input{flex-shrink:0;background:var(--ui-line)}
+:root[data-theme] :is(#settings-view, #presets-view) .toggle-row input:before{box-shadow:none;background:var(--ui-muted)}
+:root[data-theme] :is(#settings-view, #presets-view) .toggle-row input:checked{background:var(--ui-text)}
+:root[data-theme] :is(#settings-view, #presets-view) .toggle-row input:checked:before{background:var(--ui-bg)}
 :root[data-theme] select,:root[data-theme] select option,:root[data-theme] select optgroup{background:var(--ui-inset);color:var(--ui-text)}
 :root[data-theme] #settings-panel-result{display:block}
 :root[data-theme] .format-destination-label{font-size:12px;color:var(--ui-muted);margin:0 0 8px}
-:root[data-theme] #settings-view #format-target{display:flex;flex-wrap:wrap;gap:4px;border:0;background:var(--ui-inset);padding:4px;border-radius:8px;margin:0 0 20px;max-width:100%}
-:root[data-theme] #settings-view #format-target button{background:transparent;color:var(--ui-muted);border:0;border-radius:6px;padding:8px 10px;min-height:36px;font-size:12px}
-:root[data-theme] #settings-view #format-target button[aria-selected=true]{background:var(--ui-selected);color:var(--ui-text);font-weight:600}
+:root[data-theme] :is(#settings-view, #presets-view) #format-target{display:flex;flex-wrap:wrap;gap:4px;border:0;background:var(--ui-inset);padding:4px;border-radius:8px;margin:0 0 20px;max-width:100%}
+:root[data-theme] :is(#settings-view, #presets-view) #format-target button{background:transparent;color:var(--ui-muted);border:0;border-radius:6px;padding:8px 10px;min-height:36px;font-size:12px}
+:root[data-theme] :is(#settings-view, #presets-view) #format-target button[aria-selected=true]{background:var(--ui-selected);color:var(--ui-text);font-weight:600}
 :root[data-theme] .settings-section-title{font:600 15px/1.4 Inter,sans-serif;letter-spacing:-.2px;color:var(--ui-text);margin:0 0 12px}
-:root[data-theme] #settings-view .copy-fields{gap:6px 20px}
-:root[data-theme] #settings-view .copy-option,:root[data-theme] #settings-view .copy-option:has(input:checked){border:0;border-radius:0;padding:8px 0;min-height:40px;background:transparent;color:var(--ui-text);font-size:14px}
-:root[data-theme] #settings-view .copy-option input{width:18px;height:18px;accent-color:var(--ui-text)}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-fields{gap:6px 20px}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-option,:root[data-theme] :is(#settings-view, #presets-view) .copy-option:has(input:checked){border:0;border-radius:0;padding:8px 0;min-height:40px;background:transparent;color:var(--ui-text);font-size:14px}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-option input{width:18px;height:18px;accent-color:var(--ui-text)}
 :root[data-theme] .speech-label-toggle{margin:12px 0 16px;padding:8px 0;border:0}
 :root[data-theme] .speech-label-toggle>span{min-width:0}
 :root[data-theme] .speech-label-toggle small{display:block;margin-top:4px}
-:root[data-theme] #settings-view #separator-settings{margin:16px 0;grid-template-columns:92px minmax(0,1fr);gap:8px 12px}
-:root[data-theme] #settings-view #result-separator,:root[data-theme] #settings-view #speech-repeats,:root[data-theme] #settings-view #speech-gap{min-height:42px;padding:9px 12px;font-size:16px;color:var(--ui-text);background:var(--ui-inset);border:1px solid var(--ui-line);border-radius:7px;box-shadow:none}
-:root[data-theme] #settings-view .separator-presets{gap:6px}
-:root[data-theme] #settings-view .separator-presets button{border:0;background:var(--ui-inset);color:var(--ui-muted);border-radius:6px;min-width:32px;min-height:32px}
-:root[data-theme] #settings-view .copy-preview{background:var(--ui-inset);border:0;border-radius:8px;padding:14px 16px;margin:16px 0;box-shadow:none}
-:root[data-theme] #settings-view .copy-preview>span{font-size:11px;color:var(--ui-muted);letter-spacing:0}
-:root[data-theme] #settings-view .copy-preview output{font:13px/1.6 'JetBrains Mono',monospace;color:var(--ui-text);margin-top:6px;overflow-wrap:anywhere}
+:root[data-theme] :is(#settings-view, #presets-view) #separator-settings{margin:16px 0;grid-template-columns:92px minmax(0,1fr);gap:8px 12px}
+:root[data-theme] :is(#settings-view, #presets-view) #result-separator,:root[data-theme] :is(#settings-view, #presets-view) #speech-repeats,:root[data-theme] :is(#settings-view, #presets-view) #speech-gap{min-height:42px;padding:9px 12px;font-size:16px;color:var(--ui-text);background:var(--ui-inset);border:1px solid var(--ui-line);border-radius:7px;box-shadow:none}
+:root[data-theme] :is(#settings-view, #presets-view) .separator-presets{gap:6px}
+:root[data-theme] :is(#settings-view, #presets-view) .separator-presets button{border:0;background:var(--ui-inset);color:var(--ui-muted);border-radius:6px;min-width:32px;min-height:32px}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-preview{background:var(--ui-inset);border:0;border-radius:8px;padding:14px 16px;margin:16px 0;box-shadow:none}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-preview>span{font-size:11px;color:var(--ui-muted);letter-spacing:0}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-preview output{font:13px/1.6 'JetBrains Mono',monospace;color:var(--ui-text);margin-top:6px;overflow-wrap:anywhere}
 :root[data-theme] .unmatched-section{border:0;margin:24px 0 0;padding:0}
 :root[data-theme] .unmatched-section .toggle-row+.toggle-row{border:0}
 :root[data-theme] .unmatched-section .toggle-row{padding:8px 0;min-height:44px}
@@ -216,16 +216,16 @@ html[data-theme]{background:var(--ui-bg)}
 :root[data-theme] #toast.anchored{bottom:auto;transform:translateX(-50%);font-size:12px;padding:7px 11px;max-width:calc(100vw - 24px);border-radius:7px;z-index:150}
 :root[data-theme] #settings-panel-integrations details[open]>.integration-content,:root[data-theme] #settings-panel-integrations details[open]>.api-details-content{animation:disclose 180ms ease-out}
 @keyframes disclose{from{opacity:.4;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
-@media(min-width:701px){:root[data-theme] #search-view{max-width:700px;margin:0 auto}:root[data-theme] #settings-view{max-width:880px;margin:0 auto}}
-@media(max-width:1100px) and (min-width:701px){:root[data-theme] .sidebar{width:176px;padding:24px 14px}:root[data-theme] .workspace{margin-left:176px}:root[data-theme] header{padding:0 28px}:root[data-theme] main{padding:16px 28px 48px}:root[data-theme] #settings-view{grid-template-columns:120px minmax(0,1fr);gap:0 24px}:root[data-theme] .book-grid{grid-template-columns:1fr}}
+@media(min-width:701px){:root[data-theme] #search-view{max-width:700px;margin:0 auto}:root[data-theme] :is(#settings-view, #presets-view){max-width:880px;margin:0 auto}}
+@media(max-width:1100px) and (min-width:701px){:root[data-theme] .sidebar{width:176px;padding:24px 14px}:root[data-theme] .workspace{margin-left:176px}:root[data-theme] header{padding:0 28px}:root[data-theme] main{padding:16px 28px 48px}:root[data-theme] :is(#settings-view, #presets-view){grid-template-columns:120px minmax(0,1fr);gap:0 24px}:root[data-theme] .book-grid{grid-template-columns:1fr}}
 @media(max-width:700px){
  :root[data-theme] .sidebar{position:static;width:auto;border:0;padding:0;background:transparent}:root[data-theme] .workspace{margin-left:0}
  :root[data-theme] header{height:56px;padding:env(safe-area-inset-top) 20px 0;min-height:calc(56px + env(safe-area-inset-top));border:0;background:var(--ui-bg)}
  :root[data-theme] .brand-mobile{font-size:24px;letter-spacing:-.6px;line-height:1.2}
  :root[data-theme] main{padding:16px 20px calc(88px + env(safe-area-inset-bottom));min-height:calc(100dvh - 56px)}
  :root[data-theme] .page-heading{align-items:center;margin-bottom:20px;gap:12px}
- :root[data-theme] .page-heading h1,:root[data-theme] #settings-view h1{font:600 27px/1.2 Inter,sans-serif;letter-spacing:-.8px}
- :root[data-theme] .page-heading p,:root[data-theme] #settings-view .page-heading .settings-caption{font-size:13px;line-height:1.45;margin-top:6px;max-width:290px}
+ :root[data-theme] .page-heading h1,:root[data-theme] :is(#settings-view, #presets-view) h1{font:600 27px/1.2 Inter,sans-serif;letter-spacing:-.8px}
+ :root[data-theme] .page-heading p,:root[data-theme] :is(#settings-view, #presets-view) .page-heading .settings-caption{font-size:13px;line-height:1.45;margin-top:6px;max-width:290px}
  :root[data-theme] .page-heading .eyebrow{display:none}
  :root[data-theme] .sidebar nav{position:fixed;left:0;right:0;bottom:0;display:flex;flex-direction:row;gap:0;padding:7px 12px calc(7px + env(safe-area-inset-bottom));background:var(--ui-bg);border:0;border-top:1px solid var(--ui-line);border-radius:0;box-shadow:none;backdrop-filter:none;z-index:30}
  :root[data-theme] .sidebar nav button{flex:1;display:flex;flex-direction:column;justify-content:center;gap:4px;min-height:48px;padding:5px;border:0;border-radius:0;font-size:11px;background:transparent;font-weight:400;color:var(--ui-muted)}
@@ -265,8 +265,8 @@ html[data-theme]{background:var(--ui-bg)}
  :root[data-theme] .location dd{font-size:17px}
  :root[data-theme] #inline-history{margin-top:16px;padding-top:12px}
  :root[data-theme] .welcome{margin:24px 0}
- :root[data-theme] #settings-view{display:block}
- :root[data-theme] #settings-view>.page-heading{margin-bottom:16px}
+ :root[data-theme] :is(#settings-view, #presets-view){display:block}
+ :root[data-theme] :is(#settings-view, #presets-view)>.page-heading{margin-bottom:16px}
  :root[data-theme] #settings-tabs{display:flex;flex-direction:row;gap:0;background:transparent;border:0;border-bottom:1px solid var(--ui-line);border-radius:0;margin:0 0 20px;padding:0}
  :root[data-theme] #settings-tabs button{flex:1;width:auto;min-height:42px;padding:10px 4px;text-align:center;font-size:13px;border:0;border-radius:0;border-bottom:2px solid transparent;background:transparent}
  :root[data-theme] #settings-tabs button[aria-selected=true]{background:transparent;border:0;border-bottom:2px solid var(--ui-text);color:var(--ui-text)}
@@ -274,13 +274,13 @@ html[data-theme]{background:var(--ui-bg)}
  :root[data-theme] #settings-panel-general>.panel{padding:12px 0}
  :root[data-theme] #settings-panel-general #language,:root[data-theme] #settings-panel-general #theme{font-size:16px;min-height:40px;min-width:150px}
  :root[data-theme] #settings-panel-general .about{padding-top:18px;margin-top:12px}
- :root[data-theme] #settings-view #format-target{gap:3px;margin-bottom:20px}
- :root[data-theme] #settings-view #format-target button{padding:8px 9px;min-height:36px;font-size:12px}
- :root[data-theme] #settings-view .copy-fields{gap:4px 18px}
- :root[data-theme] #settings-view .copy-option{min-height:38px}
- :root[data-theme] #settings-view .toggle-row{font-size:13px}
+ :root[data-theme] :is(#settings-view, #presets-view) #format-target{gap:3px;margin-bottom:20px}
+ :root[data-theme] :is(#settings-view, #presets-view) #format-target button{padding:8px 9px;min-height:36px;font-size:12px}
+ :root[data-theme] :is(#settings-view, #presets-view) .copy-fields{gap:4px 18px}
+ :root[data-theme] :is(#settings-view, #presets-view) .copy-option{min-height:38px}
+ :root[data-theme] :is(#settings-view, #presets-view) .toggle-row{font-size:13px}
  :root[data-theme] .speech-label-toggle{margin:12px 0;padding:8px 0}
- :root[data-theme] #settings-view #separator-settings{grid-template-columns:82px minmax(0,1fr);gap:8px}
+ :root[data-theme] :is(#settings-view, #presets-view) #separator-settings{grid-template-columns:82px minmax(0,1fr);gap:8px}
  :root[data-theme] .unmatched-section{margin-top:20px}
  :root[data-theme] .unmatched-section .toggle-row{min-height:44px;font-size:13px}
  :root[data-theme] #settings-panel-integrations>.panel{padding-bottom:10px;margin-bottom:10px}

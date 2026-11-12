@@ -8,7 +8,7 @@
  const ownDetails=()=>window.LexiconRelay.apiDetails(),ownEnabled=()=>cfg.own.enabled&&!!ownDetails();
  const el=(tag,className='',text='')=>{const node=document.createElement(tag);node.className=className;node.textContent=text;return node};
  const message=error=>{const code=error?.message||'';return code.startsWith('http:')?t('apiHttp')+' '+code.slice(5):t({url:'apiUrlError',field:'apiFieldError',body:'apiBodyError',json:'apiJsonError',limit:'apiResponseLimit',timeout:'apiTimeout',disabled:'apiDisabled',missing:'apiNotConfigured',source_rejected:'apiInjectRejected'}[code]||'apiNetworkError')};
- function persist(){try{localStorage.setItem(storage,JSON.stringify(cfg));return true}catch{window.LexiconToast(t('storageFail'));return false}}
+ function persist(){try{let keys={};try{keys=JSON.parse(localStorage.getItem(storage+'.credentials'))||{}}catch{}for(const c of cfg.connections)keys[c.id]=c.token;localStorage.setItem(storage+'.credentials',JSON.stringify(keys));localStorage.setItem(storage,JSON.stringify(cfg));return true}catch{window.LexiconToast(t('storageFail'));return false}}
  function announce(){window.dispatchEvent(new Event('lexicon:api-config'));if(running){if(sources().some(item=>item.id===source))resume();else stop()}callbacks.state?.()}
  function fieldParts(field){const parts=field.trim().split('.');if(!field||field.length>80||parts.length>8||parts.some(p=>!p||['__proto__','prototype','constructor'].includes(p)||!/^[-\p{L}\p{N}_]+$/u.test(p)))throw Error('field');return parts}
  function valid(c){let url;try{url=new URL(c.url)}catch{throw Error('url')}if(url.protocol!=='https:'||url.username||url.password||url.hash||c.url.length>2048)throw Error('url');fieldParts(c.field);if(/[\r\n]/.test(c.token))throw Error('body');if(c.method==='POST'&&c.direction==='receive'){try{const data=JSON.parse(c.body||'{}');if(!data||typeof data!=='object'||Array.isArray(data))throw Error()}catch{throw Error('body')}}return url}
@@ -53,7 +53,33 @@
    if(version!==generation)return;failures=0;callbacks.status?.(t(value?'apiReceived':'apiWaiting'));if(!value)lastEvent=null;else{const event=typeof data.event==='string'?data.event:value;if(event!==lastEvent){const accepted=await callbacks.receive(value);if(version===generation&&accepted!==false)lastEvent=event}}
   }catch(e){if(version===generation){failures++;callbacks.status?.(message(e));if(e.message==='disabled')stop()}}finally{if(receiveController===controller)receiveController=null;if(running&&version===generation&&!document.hidden&&callbacks.active?.())timer=setTimeout(()=>poll(version),Math.min(30000,5000*Math.pow(2,Math.min(failures,3))))}
  }
- window.LexiconApi={ownEnabled,sources,outputs,publish:rows=>publish(rows),publishUnknown:(value,approximate)=>publish([],value,approximate),start,stop,pause,resume,isRunning:()=>running,
+ window.LexiconApi={getPreset:()=>{
+  // Immutable parameter versions are shared by presets; credentials stay on the connection.
+  const key=storage+'.versions';let library={};try{library=JSON.parse(localStorage.getItem(key))||{}}catch{}
+  const references=cfg.connections.map(({token,...parameters})=>{
+   let version=Object.keys(library).find(id=>JSON.stringify(library[id])===JSON.stringify(parameters));
+   if(!version){version=crypto.randomUUID();library[version]=parameters}
+   return {id:parameters.id,version};
+  });
+  localStorage.setItem(key,JSON.stringify(library));
+  return {ownEnabled:cfg.own.enabled,enabledConnections:cfg.connections.filter(c=>c.enabled).map(c=>c.id),references};
+ },applyPreset(value={}){
+  stop();
+  const enabled=new Set(Array.isArray(value.enabledConnections)?value.enabledConnections:[]);
+  let library={};try{library=JSON.parse(localStorage.getItem(storage+'.versions'))||{}}catch{}
+  for(const reference of value.references||[]){
+   const parameters=library[reference.version],connection=cfg.connections.find(c=>c.id===reference.id);
+   if(!parameters||parameters.id!==reference.id)continue;
+   if(connection){const token=connection.token;Object.assign(connection,parameters,{token})}
+   else if(cfg.connections.length<3){let keys={};try{keys=JSON.parse(localStorage.getItem(storage+'.credentials'))||{}}catch{}cfg.connections.push({...parameters,token:keys[reference.id]||''})}
+  }
+  for(const connection of cfg.connections){
+   invalidate(connection.id);connection.enabled=enabled.has(connection.id);
+   if(connection.enabled)try{valid(connection)}catch{connection.enabled=false}
+  }
+  cfg.own.enabled=value.ownEnabled===true;
+  persist();renderOwn();renderConnections();announce();
+ },ownEnabled,sources,outputs,publish:rows=>publish(rows),publishUnknown:(value,approximate)=>publish([],value,approximate),start,stop,pause,resume,isRunning:()=>running,
   init(translate,handlers){t=translate;callbacks=handlers;renderOwn();renderConnections();
    const getLink=$('own-api-connect'),toggle=$('own-api-enabled'),copyButton=$('own-api-copy-url');
    async function enableOwn(copy){

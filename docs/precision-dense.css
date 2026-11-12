@@ -32,23 +32,23 @@
 :root[data-theme] .search-mode{background:transparent;border:0}
 :root[data-theme] .result{border-radius:0;box-shadow:none;background:transparent}
 :root[data-theme] #inline-history{margin-top:8px;padding-top:8px}
-:root[data-theme] #settings-view>.page-heading{margin-bottom:18px}
-:root[data-theme] #settings-view h1{font:600 25px/1.2 Inter,sans-serif;letter-spacing:-.7px}
+:root[data-theme] :is(#settings-view, #presets-view)>.page-heading{margin-bottom:18px}
+:root[data-theme] :is(#settings-view, #presets-view) h1{font:600 25px/1.2 Inter,sans-serif;letter-spacing:-.7px}
 :root[data-theme] #settings-tabs{margin-bottom:18px}
-:root[data-theme] #settings-view .panel,:root[data-theme] #settings-panel-general,:root[data-theme] #settings-view .copy-preview{background:transparent;box-shadow:none;border-radius:0}
-:root[data-theme] #settings-view #format-target{gap:2px 6px;margin-bottom:16px;padding:0;background:transparent;border:0;border-radius:0}
-:root[data-theme] #settings-view #format-target button{font-size:12px;min-height:36px;padding:8px 5px;border:0;border-radius:0;background:transparent;color:var(--ui-muted)}
-:root[data-theme] #settings-view #format-target button[aria-selected=true]{background:transparent;border:0;color:var(--ui-text);font-weight:600}
-:root[data-theme] #settings-view .copy-fields{padding-bottom:8px;border-bottom:0;gap:2px 24px}
-:root[data-theme] #settings-view .copy-option input,:root[data-theme] #settings-view input[type=range]{accent-color:var(--ui-text)}
-:root[data-theme] #settings-view .toggle-row input,:root[data-theme] #settings-view .api-switch input,:root[data-theme] #settings-view .api-connection-title input[role=switch]{box-shadow:none;background:var(--ui-line)}
-:root[data-theme] #settings-view .toggle-row input:checked,:root[data-theme] #settings-view .api-switch input:checked,:root[data-theme] #settings-view .api-connection-title input[role=switch]:checked{background:var(--ui-text)}
-:root[data-theme] #settings-view .toggle-row input:checked:before,:root[data-theme] #settings-view .api-switch input:checked:after,:root[data-theme] #settings-view .api-connection-title input[role=switch]:checked:after{background:var(--ui-bg);box-shadow:none}
-:root[data-theme] #settings-view input:not([type=checkbox]):not([type=range]),:root[data-theme] #settings-view textarea,:root[data-theme] #api-source{background:transparent;border-color:var(--ui-line);border-radius:6px;box-shadow:none}
-:root[data-theme] #settings-view .copy-preview{padding:0 0 16px;margin:0 0 16px;border:0;border-bottom:1px solid var(--ui-line)}
-:root[data-theme] #settings-view .copy-preview output .preview-word{font-size:28px;line-height:1.2}
-:root[data-theme] #settings-view .copy-preview output .preview-coordinates{font-size:17px;line-height:1.5}
-:root[data-theme] #settings-view .separator-presets button{background:transparent;border:1px solid var(--ui-line);border-radius:5px}
+:root[data-theme] :is(#settings-view, #presets-view) .panel,:root[data-theme] #settings-panel-general,:root[data-theme] :is(#settings-view, #presets-view) .copy-preview{background:transparent;box-shadow:none;border-radius:0}
+:root[data-theme] :is(#settings-view, #presets-view) #format-target{gap:2px 6px;margin-bottom:16px;padding:0;background:transparent;border:0;border-radius:0}
+:root[data-theme] :is(#settings-view, #presets-view) #format-target button{font-size:12px;min-height:36px;padding:8px 5px;border:0;border-radius:0;background:transparent;color:var(--ui-muted)}
+:root[data-theme] :is(#settings-view, #presets-view) #format-target button[aria-selected=true]{background:transparent;border:0;color:var(--ui-text);font-weight:600}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-fields{padding-bottom:8px;border-bottom:0;gap:2px 24px}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-option input,:root[data-theme] :is(#settings-view, #presets-view) input[type=range]{accent-color:var(--ui-text)}
+:root[data-theme] :is(#settings-view, #presets-view) .toggle-row input,:root[data-theme] :is(#settings-view, #presets-view) .api-switch input,:root[data-theme] :is(#settings-view, #presets-view) .api-connection-title input[role=switch]{box-shadow:none;background:var(--ui-line)}
+:root[data-theme] :is(#settings-view, #presets-view) .toggle-row input:checked,:root[data-theme] :is(#settings-view, #presets-view) .api-switch input:checked,:root[data-theme] :is(#settings-view, #presets-view) .api-connection-title input[role=switch]:checked{background:var(--ui-text)}
+:root[data-theme] :is(#settings-view, #presets-view) .toggle-row input:checked:before,:root[data-theme] :is(#settings-view, #presets-view) .api-switch input:checked:after,:root[data-theme] :is(#settings-view, #presets-view) .api-connection-title input[role=switch]:checked:after{background:var(--ui-bg);box-shadow:none}
+:root[data-theme] :is(#settings-view, #presets-view) input:not([type=checkbox]):not([type=range]),:root[data-theme] :is(#settings-view, #presets-view) textarea,:root[data-theme] #api-source{background:transparent;border-color:var(--ui-line);border-radius:6px;box-shadow:none}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-preview{padding:0 0 16px;margin:0 0 16px;border:0;border-bottom:1px solid var(--ui-line)}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-preview output .preview-word{font-size:28px;line-height:1.2}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-preview output .preview-coordinates{font-size:17px;line-height:1.5}
+:root[data-theme] :is(#settings-view, #presets-view) .separator-presets button{background:transparent;border:1px solid var(--ui-line);border-radius:5px}
 :root[data-theme] #settings-panel-integrations>.panel{padding-bottom:8px;margin-bottom:8px}
 :root[data-theme] #settings-panel-integrations .api-connection{background:transparent;border-radius:6px;box-shadow:none}
 :root[data-theme] #settings-panel-integrations .method-switch{background:transparent;box-shadow:none;border-radius:0}
@@ -63,7 +63,7 @@
 :root[data-theme] #speech-settings #speech-test{flex:1;display:flex;align-items:center;justify-content:center;min-height:44px;padding:11px 14px;background:var(--ui-button);color:var(--ui-button-text);border:0;border-radius:6px;font:600 14px/1.4 Inter,sans-serif;text-align:center}
 :root[data-theme] #speech-settings #speech-stop{flex:0 0 auto;min-height:44px;padding:10px 0;background:transparent;color:var(--ui-muted);font-size:12px;text-align:center}
 :root[data-theme] #speech-only-note,:root[data-theme] #speech-status{margin:0;font-size:12px;line-height:1.5}
-:root[data-theme] #settings-view :focus-visible{outline-color:var(--ui-text)}
+:root[data-theme] :is(#settings-view, #presets-view) :focus-visible{outline-color:var(--ui-text)}
 @media(max-width:700px){
  :root[data-theme] main{padding:12px 22px calc(82px + env(safe-area-inset-bottom))}
  :root[data-theme] header{padding-left:22px;padding-right:22px}
@@ -74,11 +74,11 @@
  :root[data-theme] #books-view .book-info h3,:root[data-theme] #books-view .favorite-info h3{font-size:20px}
  :root[data-theme] #books-view .book-art>.star-button,:root[data-theme] #books-view .favorite-card>.star-button{right:-6px}
  :root[data-theme] #books-view .card-bottom .open-book{right:-6px}
- :root[data-theme] #settings-view h1{font-size:24px}
- :root[data-theme] #settings-view>.page-heading{margin-bottom:16px}
+ :root[data-theme] :is(#settings-view, #presets-view) h1{font-size:24px}
+ :root[data-theme] :is(#settings-view, #presets-view)>.page-heading{margin-bottom:16px}
  :root[data-theme] #settings-tabs{margin-bottom:16px}
- :root[data-theme] #settings-view #format-target{gap:2px 4px;margin-bottom:16px}
- :root[data-theme] #settings-view #format-target button{font-size:11px;padding:8px 5px}
+ :root[data-theme] :is(#settings-view, #presets-view) #format-target{gap:2px 4px;margin-bottom:16px}
+ :root[data-theme] :is(#settings-view, #presets-view) #format-target button{font-size:11px;padding:8px 5px}
  :root[data-theme] #speech-format-settings #speech-settings{grid-template-columns:minmax(110px,1fr) minmax(0,1.2fr);gap:8px 14px}
  :root[data-theme] #speech-settings>label:not(.toggle-row){font-size:12px}
  :root[data-theme] .sidebar nav{padding:6px 14px calc(6px + env(safe-area-inset-bottom));background:var(--ui-bg);border-top:1px solid var(--ui-line);box-shadow:none}
@@ -91,8 +91,8 @@
 }
 /* Match legacy ID specificity for a genuinely continuous, unfilled surface. */
 :root[data-theme] #books-view .catalog-search{background:transparent}
-:root[data-theme] #settings-view #result-separator,:root[data-theme] #settings-view #speech-repeats,:root[data-theme] #settings-view #speech-gap,:root[data-theme] #settings-view #settings-panel-integrations input:not([type=checkbox]),:root[data-theme] #settings-view #settings-panel-integrations textarea{background:transparent;border-color:var(--ui-line);border-radius:6px;box-shadow:none}
-:root[data-theme] #settings-view #speech-repeats,:root[data-theme] #settings-view #speech-gap{font:500 16px/1.4 'JetBrains Mono',monospace;min-height:40px;padding:8px 10px;text-align:right}
+:root[data-theme] :is(#settings-view, #presets-view) #result-separator,:root[data-theme] :is(#settings-view, #presets-view) #speech-repeats,:root[data-theme] :is(#settings-view, #presets-view) #speech-gap,:root[data-theme] :is(#settings-view, #presets-view) #settings-panel-integrations input:not([type=checkbox]),:root[data-theme] :is(#settings-view, #presets-view) #settings-panel-integrations textarea{background:transparent;border-color:var(--ui-line);border-radius:6px;box-shadow:none}
+:root[data-theme] :is(#settings-view, #presets-view) #speech-repeats,:root[data-theme] :is(#settings-view, #presets-view) #speech-gap{font:500 16px/1.4 'JetBrains Mono',monospace;min-height:40px;padding:8px 10px;text-align:right}
 :root[data-theme] .brand-dot{color:var(--ui-accent)}
 :root[data-theme] #books-view h1{font:700 30px/1.2 'PT Serif',serif;letter-spacing:-.5px}
 /* Static review phase: eliminate inherited CSS motion, including pseudo-elements. */
@@ -100,10 +100,10 @@
 /* Each safety/control row occupies its own grid area. */
 :root[data-theme] #speech-settings>#speech-headphones-row{grid-area:headphones}
 :root[data-theme] #speech-settings>.toggle-row,:root[data-theme] #speech-settings>.toggle-row+.toggle-row{margin:0;padding:0;min-height:44px;border:0}
-:root[data-theme] #settings-view #speech-repeats,:root[data-theme] #settings-view #speech-gap{margin:0;align-self:center}
+:root[data-theme] :is(#settings-view, #presets-view) #speech-repeats,:root[data-theme] :is(#settings-view, #presets-view) #speech-gap{margin:0;align-self:center}
 /* Speech opens on playback controls; its existing format controls remain below. */
-:root[data-theme] #settings-view #format-editor[data-target=speech] #speech-format-settings{margin-bottom:20px}
-:root[data-theme] #settings-view #format-editor[data-target=speech] #speech-settings{margin-top:0;padding-top:0;border-top:0}
+:root[data-theme] :is(#settings-view, #presets-view) #format-editor[data-target=speech] #speech-format-settings{margin-bottom:20px}
+:root[data-theme] :is(#settings-view, #presets-view) #format-editor[data-target=speech] #speech-settings{margin-top:0;padding-top:0;border-top:0}
 
 /* Refinement: selection is independent of favorites and installed status. */
 :root[data-theme] .library-collection{border:0;border-radius:0;padding:0}
@@ -115,15 +115,15 @@
 :root[data-theme=dark] #books-view .catalog-search{background:#111115}
 :root[data-theme] #speech-settings>.speech-repeat-stepper{grid-area:repeat;justify-self:end;display:flex;align-items:center;width:136px;height:42px;border:1px solid var(--ui-line);border-radius:6px;overflow:hidden}
 :root[data-theme] #speech-settings .speech-repeat-stepper button{width:40px;min-width:40px;height:40px;padding:0;background:transparent;border:0;color:var(--ui-text);font-size:22px}
-:root[data-theme] #settings-view #speech-repeats{width:54px;min-width:0;padding:4px 0;border:0;text-align:center;background:transparent}
-:root[data-theme] #settings-view #speech-gap{width:84px;height:42px;text-align:center}
+:root[data-theme] :is(#settings-view, #presets-view) #speech-repeats{width:54px;min-width:0;padding:4px 0;border:0;text-align:center;background:transparent}
+:root[data-theme] :is(#settings-view, #presets-view) #speech-gap{width:84px;height:42px;text-align:center}
 :root[data-theme] #speech-settings input[type=number]{appearance:textfield;-moz-appearance:textfield}
 :root[data-theme] #speech-settings input[type=number]::-webkit-inner-spin-button,:root[data-theme] #speech-settings input[type=number]::-webkit-outer-spin-button{appearance:none;margin:0}
 :root[data-theme] #speech-settings>.speech-actions{gap:12px}
 :root[data-theme] #speech-settings #speech-test,:root[data-theme] #speech-settings #speech-stop{flex:1;min-height:46px;padding:10px 8px;border-radius:8px;font:600 13px/1.4 Inter,sans-serif}
 :root[data-theme] #speech-settings #speech-stop{border:1px solid var(--ui-line);background:transparent;color:var(--ui-text)}
-:root[data-theme] #settings-view #format-editor[data-target=speech] .preview-coordinates{color:var(--ui-muted);font-size:13px}
-:root[data-theme] #settings-view #format-editor[data-target=speech] .preview-number{color:var(--ui-accent)}
+:root[data-theme] :is(#settings-view, #presets-view) #format-editor[data-target=speech] .preview-coordinates{color:var(--ui-muted);font-size:13px}
+:root[data-theme] :is(#settings-view, #presets-view) #format-editor[data-target=speech] .preview-number{color:var(--ui-accent)}
 :root[data-theme] #speech-status,:root[data-theme] #speech-only-note{color:var(--ui-muted);font-size:12px}
 
 :root[data-theme] #speech-headphones-row:has(input:disabled){opacity:.5}

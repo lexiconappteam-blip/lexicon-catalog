@@ -34,7 +34,11 @@
   else new Notification(title,{body,tag:'lexicon-result'});
   return true;
  }
- window.LexiconResults={text,refresh,wantsNotifications:()=>enabled&&permission()==='granted',
+ window.LexiconResults={getPreset:()=>enabled,applyPreset(wanted){
+  persist(wanted===true&&permission()==='granted');last=null;
+  if(!enabled)native()?.cancelResultNotification?.();
+  refresh(wanted&&!enabled?t('notificationDenied'):'');
+ },text,refresh,wantsNotifications:()=>enabled&&permission()==='granted',
   async notifyUnknown(query,rows,book){if(!enabled||ios())return false;const body=window.LexiconFormat.approximate(query,rows,window.LexiconResultFormat('notification'));if(!body)return false;const signature=JSON.stringify([book,body]);if(last===signature)return true;try{if(await show(null,false,[],body)){last=signature;return true}refresh(t('notificationDenied'))}catch{refresh(t('notificationFailed'))}return false},
   init(translate){t=translate;refresh();
    $('result-notifications').onchange=async()=>{diagnostic='';

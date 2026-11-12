@@ -3,8 +3,8 @@
 :root[data-theme] #search-book{display:block;width:100%;min-height:40px;padding:5px 22px 5px 0;border:0;background:transparent;color:var(--ui-text);font:500 16px/1.4 Inter,sans-serif;cursor:pointer}
 :root[data-theme] #search-book option{background:var(--ui-surface);color:var(--ui-text)}
 :root[data-theme] #api-source{display:block;width:100%;min-height:44px;font-size:16px;background:var(--ui-surface);color:var(--ui-text);border:1px solid var(--ui-line);border-radius:7px;padding:8px 12px}
-:root[data-theme] #settings-view .toggle-row input:checked,:root[data-theme] #settings-view .api-switch input:checked,:root[data-theme] #settings-view .api-connection-title input[role=switch]:checked{background:var(--ui-accent)}
-:root[data-theme] #settings-view #uncertain-settings{margin:14px 0 0;padding:0;border:0;border-top:1px solid var(--ui-line)}
+:root[data-theme] :is(#settings-view, #presets-view) .toggle-row input:checked,:root[data-theme] :is(#settings-view, #presets-view) .api-switch input:checked,:root[data-theme] :is(#settings-view, #presets-view) .api-connection-title input[role=switch]:checked{background:var(--ui-accent)}
+:root[data-theme] :is(#settings-view, #presets-view) #uncertain-settings{margin:14px 0 0;padding:0;border:0;border-top:1px solid var(--ui-line)}
 :root[data-theme] #uncertain-settings>summary{display:flex;align-items:center;justify-content:space-between;list-style:none;cursor:pointer;min-height:44px;margin:0;padding:10px 0;font:600 14px/1.4 Inter,sans-serif}
 :root[data-theme] #uncertain-settings>summary::-webkit-details-marker{display:none}
 :root[data-theme] #uncertain-settings>summary:after{content:'⌄';color:var(--ui-muted);font-size:19px}

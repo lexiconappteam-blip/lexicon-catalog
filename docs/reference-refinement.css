@@ -1,31 +1,31 @@
 /* Visual tuning surface: loaded last. No search, audio or integration logic here. */
-:root[data-theme] #settings-view .toggle-row input:checked,
-:root[data-theme] #settings-view .api-switch input:checked,
-:root[data-theme] #settings-view .api-connection-title input[role=switch]:checked{background:var(--ui-accent)}
-:root[data-theme] #settings-view .toggle-row input:checked:before,
-:root[data-theme] #settings-view .api-switch input:checked:after,
-:root[data-theme] #settings-view .api-connection-title input[role=switch]:checked:after{background:#fff}
-:root[data-theme] #settings-view .copy-option input,
-:root[data-theme] #settings-view input[type=range]{accent-color:var(--ui-accent)}
-:root[data-theme] #settings-view #speech-rate-value,
-:root[data-theme] #settings-view #speech-repeats,
-:root[data-theme] #settings-view #speech-gap{color:var(--ui-accent)}
+:root[data-theme] :is(#settings-view, #presets-view) .toggle-row input:checked,
+:root[data-theme] :is(#settings-view, #presets-view) .api-switch input:checked,
+:root[data-theme] :is(#settings-view, #presets-view) .api-connection-title input[role=switch]:checked{background:var(--ui-accent)}
+:root[data-theme] :is(#settings-view, #presets-view) .toggle-row input:checked:before,
+:root[data-theme] :is(#settings-view, #presets-view) .api-switch input:checked:after,
+:root[data-theme] :is(#settings-view, #presets-view) .api-connection-title input[role=switch]:checked:after{background:#fff}
+:root[data-theme] :is(#settings-view, #presets-view) .copy-option input,
+:root[data-theme] :is(#settings-view, #presets-view) input[type=range]{accent-color:var(--ui-accent)}
+:root[data-theme] :is(#settings-view, #presets-view) #speech-rate-value,
+:root[data-theme] :is(#settings-view, #presets-view) #speech-repeats,
+:root[data-theme] :is(#settings-view, #presets-view) #speech-gap{color:var(--ui-accent)}
 :root[data-theme] .search-box:focus-within{border-color:var(--ui-accent)}
-:root[data-theme] #settings-view h1{font:700 30px/1.2 'PT Serif',serif;letter-spacing:-.6px}
-:root[data-theme] #settings-view>.page-heading{margin-bottom:14px}
-:root[data-theme] #settings-view .format-destination-label{display:none}
-:root[data-theme] #settings-view #format-target{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:16px;padding:0 0 2px;margin-bottom:20px}
-:root[data-theme] #settings-view #format-target::-webkit-scrollbar{display:none}
-:root[data-theme] #settings-view #format-target button{flex:0 0 auto;white-space:nowrap;padding:8px 0;min-height:40px;font-size:12px}
-:root[data-theme] #settings-view #format-target button[aria-selected=true]{color:var(--ui-accent);border-bottom:2px solid var(--ui-accent)}
+:root[data-theme] :is(#settings-view, #presets-view) h1{font:700 30px/1.2 'PT Serif',serif;letter-spacing:-.6px}
+:root[data-theme] :is(#settings-view, #presets-view)>.page-heading{margin-bottom:14px}
+:root[data-theme] :is(#settings-view, #presets-view) .format-destination-label{display:none}
+:root[data-theme] :is(#settings-view, #presets-view) #format-target{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:16px;padding:0 0 2px;margin-bottom:20px}
+:root[data-theme] :is(#settings-view, #presets-view) #format-target::-webkit-scrollbar{display:none}
+:root[data-theme] :is(#settings-view, #presets-view) #format-target button{flex:0 0 auto;white-space:nowrap;padding:8px 0;min-height:40px;font-size:12px}
+:root[data-theme] :is(#settings-view, #presets-view) #format-target button[aria-selected=true]{color:var(--ui-accent);border-bottom:2px solid var(--ui-accent)}
 :root[data-theme] #speech-settings>h2{font-size:20px;margin-bottom:6px}
 :root[data-theme] #speech-settings>.toggle-row{font-size:14px}
 :root[data-theme] #speech-settings>label:not(.toggle-row){font-size:14px;line-height:1.4}
 :root[data-theme] #speech-settings>.speech-rate-row{gap:8px}
 :root[data-theme] #speech-settings>.speech-actions{gap:12px;margin-top:14px}
 :root[data-theme] #speech-settings #speech-test,:root[data-theme] #speech-settings #speech-stop{font-size:14px;min-height:46px}
-:root[data-theme] #settings-view #format-editor[data-target=speech] .copy-preview{padding-top:2px;margin-top:2px}
-:root[data-theme] #settings-view #format-editor[data-target=speech] .preview-word{font-size:30px}
+:root[data-theme] :is(#settings-view, #presets-view) #format-editor[data-target=speech] .copy-preview{padding-top:2px;margin-top:2px}
+:root[data-theme] :is(#settings-view, #presets-view) #format-editor[data-target=speech] .preview-word{font-size:30px}
 :root[data-theme] #books-view .library-tabs button[aria-selected=true]{color:var(--ui-accent);border-bottom:2px solid var(--ui-accent)}
 :root[data-theme] #books-view .book-card.selected-book,:root[data-theme] #books-view .favorite-card.selected-book{border-color:var(--ui-accent);box-shadow:0 0 12px rgba(217,149,69,.14),0 0 24px rgba(217,149,69,.05)}
 :root[data-theme] #books-view .star-button[aria-pressed=true]{color:var(--ui-accent)}
@@ -34,7 +34,7 @@
  :root[data-theme] .brand-mobile{font-size:28px}
  :root[data-theme] #settings-tabs{margin-bottom:12px}
  :root[data-theme] #settings-tabs button{font-size:14px}
- :root[data-theme] #settings-view #format-target{gap:12px}
+ :root[data-theme] :is(#settings-view, #presets-view) #format-target{gap:12px}
  :root[data-theme] #speech-format-settings #speech-settings{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 16px}
  :root[data-theme] #speech-settings>label:not(.toggle-row){font-size:13px}
  :root[data-theme] #books-view>.page-heading{margin-bottom:14px}

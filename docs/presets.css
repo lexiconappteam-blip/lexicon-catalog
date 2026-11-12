@@ -1,0 +1,100 @@
+.preset-bar{margin:10px 0 14px;max-width:420px}
+.preset-switch{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.preset-switch button{min-width:0;min-height:44px;padding:8px 4px;border:1px solid var(--ui-line);border-radius:8px;background:transparent;color:var(--ui-text);font:600 14px/1 JetBrains Mono,monospace;cursor:pointer}
+.preset-switch button.is-empty{border-style:dashed;color:var(--ui-muted,#a0a0ab)}
+.preset-switch button[aria-pressed=true]{border-style:solid;border-color:#d99545;background:rgb(217 149 69 / 15%);color:#d99545}
+.preset-switch button:focus-visible{outline:2px solid #d99545;outline-offset:3px}
+.preset-switch button:disabled{opacity:.5;cursor:wait}
+.preset-caption{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:6px 0 0;font:12px/1.4 Inter,sans-serif;color:var(--ui-muted,#a0a0ab)}
+.preset-editor{margin:8px 0 18px;border-bottom:1px solid var(--ui-line);padding-bottom:12px}
+.preset-editor>summary{display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none;font:500 14px/1.4 Inter,sans-serif;min-height:40px}
+.preset-editor>summary::after{content:'⌄';margin-left:auto;color:var(--ui-muted,#a0a0ab)}
+.preset-editor[open]>summary::after{content:'⌃'}
+.preset-editor>summary::-webkit-details-marker{display:none}
+.preset-editor-slot{font:500 12px JetBrains Mono,monospace;color:#d99545}
+.preset-editor-content{max-width:520px;padding-top:10px}
+.preset-editor-content>label{display:block;margin:16px 0 6px;font:13px/1.4 Inter,sans-serif}
+.preset-editor input[type=text]{box-sizing:border-box;width:100%;min-height:44px;border:1px solid var(--ui-line);border-radius:8px;padding:10px 12px;background:transparent;color:var(--ui-text);font:16px/1.4 Inter,sans-serif}
+.preset-editor-content>.muted{font:12px/1.5 Inter,sans-serif;margin:10px 0}
+.preset-actions{display:flex;gap:12px;align-items:center;margin-top:14px}
+
+/* A quiet, compact editor follows the same geometry as the settings tabs. */
+.preset-editor-content{padding:4px 0 8px}
+.preset-editor-content>label{margin-top:12px}
+.preset-editor-content>.muted,.preset-connection-context{font:12px/1.5 Inter,sans-serif;color:var(--ui-muted,#a0a0ab)}
+.preset-connection-context{margin:0 0 12px;max-width:540px}
+#impaler-account-controls>.toggle-row{margin-top:0}
+#impaler-account-controls input[type=url]{width:100%;box-sizing:border-box;font-size:14px}
+#impaler-account-controls .account-actions{gap:12px;flex-wrap:wrap}
+
+#settings-view .presets-open{display:block;margin:0 0 0 auto;padding:8px 0;color:var(--ui-muted,#a0a0ab)}
+#presets-view{max-width:560px}
+#presets-view>.page-heading{margin:14px 0 12px}
+#presets-view .preset-editor{border:0;margin-top:0}
+#presets-view .preset-editor>summary{pointer-events:none;min-height:28px}
+#presets-view .preset-editor>summary::after{display:none}
+#presets-view .preset-configure{margin:8px 0 0;padding-left:0}
+/* Preset composition and its actual controls share one focused page. */
+#presets-view .preset-editor-content{max-width:none}
+#presets-view .preset-switch{margin:4px 0 20px}
+#presets-view .preset-editor>summary{margin-bottom:10px;color:var(--ui-muted);font-size:12px}
+.preset-config-tabs{display:flex;gap:18px;align-items:center;border-bottom:1px solid var(--ui-line);margin:22px 0 18px}
+.preset-config-tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;padding:12px 0;background:transparent;color:var(--ui-muted);font:500 13px Inter,sans-serif;min-height:44px}
+.preset-config-tabs button[aria-selected=true]{color:var(--ui-text);border-bottom-color:#d99545}
+#preset-search-controls>label{display:block;font:13px Inter,sans-serif;margin:16px 0 8px}
+#preset-search-controls select{display:block;width:100%;box-sizing:border-box;min-height:46px;border:1px solid var(--ui-line);border-radius:8px;padding:10px 12px;background:var(--ui-bg);color:var(--ui-text);font:15px Inter,sans-serif}
+#presets-view .preset-actions{position:sticky;bottom:76px;background:var(--ui-bg,#0b0b0f);border-top:1px solid var(--ui-line);padding:14px 0 10px;margin-top:24px;z-index:3;gap:16px}
+#presets-view .preset-actions #preset-save{margin-left:auto;min-height:44px}
+#preset-dirty{font:12px Inter,sans-serif;color:var(--ui-muted);max-width:100px}
+#presets-view #preset-config-host>.settings-subpanel{padding:0;margin:0;border:0}
+#presets-view #preset-config-host .panel{background:transparent;border-radius:0;box-shadow:none}
+#presets-view #preset-status{font-size:12px}
+#presets-view{padding-bottom:20px}
+#presets-view .preset-editor-content>.muted{margin:8px 0 0}
+@media(min-width:760px){#presets-view{margin-inline:auto}#settings-view{max-width:760px;margin-inline:auto}}
+#presets-view .preset-editor>summary{display:none}
+#presets-view>.page-heading{margin:10px 0 6px}
+#presets-view .preset-switch{margin:0 0 14px}
+.preset-config-tabs{margin-top:16px}
+#presets-view .preset-editor-content>.muted{font-size:11px;color:var(--ui-muted)}
+/* The entry is an action, separate from the settings tabs. */
+:root[data-theme] #settings-view .presets-open{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 18px;margin:0;border:1px solid #d99545;border-radius:8px;background:rgb(217 149 69 / 12%);color:var(--ui-text);font:600 14px/1.4 Inter,sans-serif;cursor:pointer}
+#settings-view .presets-open:hover{background:rgb(217 149 69 / 20%)}
+#settings-view .presets-open:focus-visible{outline:2px solid #d99545;outline-offset:3px}
+
+.preset-connections-origin{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--ui-line);padding:0 0 12px;margin:0 0 14px;font:12px/1.5 Inter,sans-serif;color:var(--ui-muted)}
+.preset-connections-origin[hidden]{display:none}
+:root[data-theme] #presets-view #preset-connections-reset{color:#d99545;font-size:12px;padding:6px 0;min-height:36px}
+
+:root[data-theme] #settings-view>.settings-heading{display:block}
+:root[data-theme] #settings-view>.settings-heading>div{display:grid;grid-template-columns:minmax(0,1fr);row-gap:12px;width:100%}
+:root[data-theme] #settings-view>.settings-heading .presets-open{justify-self:end}
+
+/* Preset configuration reuses the library instead of a native dropdown. */
+.preset-field-label{display:block;margin:18px 0 8px;font:500 13px/1.4 Inter,sans-serif;color:var(--ui-text)}
+:root[data-theme] #presets-view .preset-book-pick{display:flex;align-items:center;gap:14px;width:100%;min-height:92px;padding:14px 0;border:0;border-top:1px solid var(--ui-line);border-bottom:1px solid var(--ui-line);border-radius:0;background:transparent;color:var(--ui-text);text-align:left;cursor:pointer}
+.preset-book-cover{display:block;flex-shrink:0;width:42px;height:58px;overflow:hidden;border-radius:3px}
+:root[data-theme] #presets-view .preset-book-cover .cover{width:42px;height:58px;min-height:0;margin:0;transform:none;padding:5px;box-sizing:border-box}
+:root[data-theme] #presets-view .preset-book-cover .cover-label{font-size:4px;line-height:1.2}
+:root[data-theme] #presets-view .preset-book-cover .cover-letter{font-size:27px;line-height:1;margin:2px 0}
+:root[data-theme] #presets-view .preset-book-cover .cover-bottom{font-size:3px}
+.preset-book-info{display:flex;flex:1;min-width:0;flex-direction:column;gap:7px}
+.preset-book-info strong{font:700 18px/1.3 'PT Serif',serif;overflow-wrap:anywhere}
+.preset-book-info>span{font:12px/1.4 Inter,sans-serif;color:var(--ui-muted)}
+#preset-book-arrow svg{width:20px;height:20px;color:var(--ui-muted)}
+.preset-mode-switch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+:root[data-theme] #presets-view .preset-mode-switch button{min-width:0;min-height:44px;padding:10px 4px;border:1px solid var(--ui-line);border-radius:7px;background:transparent;color:var(--ui-muted);font:500 13px/1.3 Inter,sans-serif}
+:root[data-theme] #presets-view .preset-mode-switch button[aria-checked=true]{color:var(--ui-text);border-color:#d99545;background:rgb(217 149 69 / 12%)}
+.preset-api-options{display:grid;gap:6px}
+:root[data-theme] #presets-view .preset-api-options button{min-height:44px;padding:10px 12px;text-align:left;border:1px solid var(--ui-line);border-radius:7px;color:var(--ui-text);background:transparent;font:500 13px/1.4 Inter,sans-serif}
+:root[data-theme] #presets-view .preset-api-options button[aria-checked=true]{border-color:#d99545;background:rgb(217 149 69 / 10%)}
+.preset-book-selection{display:flex;gap:12px;justify-content:space-between;align-items:center;border-left:2px solid #d99545;padding:2px 0 2px 12px;margin:18px 0}
+.preset-book-selection[hidden]{display:none}
+.preset-book-selection>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.preset-book-selection span{font:12px/1.4 Inter,sans-serif;color:var(--ui-muted);overflow-wrap:anywhere}
+.preset-book-selection strong{font:500 14px/1.4 Inter,sans-serif;color:var(--ui-text)}
+:root[data-theme] #preset-book-cancel{min-height:44px;padding:8px;color:var(--ui-text);font:13px Inter,sans-serif}
+.choosing-preset-book #books-view .preset-bar{display:none}
+:root[data-theme] #presets-view :is(.preset-book-pick,.preset-mode-switch button,.preset-api-options button):focus-visible{outline:2px solid #d99545;outline-offset:3px}
+/* Preset editor is one column at every breakpoint. */
+:root[data-theme] #presets-view{display:block;width:100%;max-width:560px;margin-inline:auto}
