@@ -10,6 +10,15 @@
   $('passwordx-url').value=cap.passwordx_configured?LexiconRelay.passwordUrl():'';$('passwordx-copy').disabled=!$('passwordx-url').value;
   $('passwordx-connect').hidden=!!$('passwordx-url').value;
  }
+ function refreshCapabilities(){
+  capabilitiesReady=LexiconRelay.configuration().then(config=>{
+   cap=config;refresh();
+   status('passwordx-status',cap.passwordx_configured?'':'remoteUnavailable');
+   status('inject-background-status',cap.background_configured?'':'injectForegroundOnly');
+   return cap;
+  }).catch(()=>{cap={};refresh();status('passwordx-status','remoteUnavailable');status('inject-background-status','injectBackgroundConnectionFailed');return null});
+  return capabilitiesReady;
+ }
  const enabled=()=>cap.passwordx_configured===true&&cfg.passwordx===true;
  async function sync({explicit=false}={}){
   await capabilitiesReady;
@@ -18,7 +27,7 @@
   const source={enabled:cfg.background===true,...context()};
   if(source.enabled&&!/^[A-Za-z0-9_-]{1,120}$/.test(source.inject_id||'')){status('inject-background-status','injectNeedId');return false}
   saving=saving.catch(()=>{}).then(async()=>{
-   try{await LexiconRelay.connect({watch:false});await LexiconRelay.updateSource(source);status('inject-background-status',source.enabled?'remoteSaved':'');return true}
+   try{await LexiconRelay.connect({watch:false});await LexiconRelay.updateSource(source);status('inject-background-status','');return true}
    catch{status('inject-background-status','remoteSaveFailed');return false}
   });return saving;
  }
@@ -30,7 +39,7 @@
   cfg.passwordxSuggestion=value.passwordxSuggestion===true;
   save();$('passwordx-use-suggestion').checked=cfg.passwordxSuggestion;refresh();
  },enabled,sync,useSuggestion:()=>cfg.passwordxSuggestion===true,setInjectActive(active){if(!active&&!cfg.background)return modeSync;cfg.background=active===true;save();modeSync=sync({explicit:true});return modeSync},init(translate,getContext){t=translate;context=getContext;refresh();
-  capabilitiesReady=LexiconRelay.configuration().then(config=>{cap=config;refresh();if(!cap.passwordx_configured)status('passwordx-status','remoteUnavailable');if(!cap.background_configured)status('inject-background-status','injectForegroundOnly')}).catch(()=>{status('passwordx-status','remoteUnavailable');status('inject-background-status','injectForegroundOnly')});
+  refreshCapabilities();window.addEventListener('online',()=>{refreshCapabilities().then(value=>{if(value?.background_configured&&cfg.background)sync()})});
   const suggestion=$('passwordx-use-suggestion');
   suggestion.checked=cfg.passwordxSuggestion===true;
   suggestion.onchange=async()=>{
