@@ -32,6 +32,9 @@
   if(url.pathname==='/api/inject/status')return json({configured:!!config.injectUrl,poll_seconds:5});
   if(url.pathname==='/api/inject/latest'){
    const id=url.searchParams.get('id')||'';if(!/^[a-zA-Z0-9_-]{1,120}$/.test(id))return json({error:'Укажите корректный ID Inject'},400);
+   if(config.relayUrl){
+    try{return json(await window.LexiconRelay.readInject(id))}catch{return json({error:'Нет связи с Inject. Повторяем подключение.'},502)}
+   }
    if(!config.injectUrl)return json({error:'Inject не настроен'},503);
    const timeout=new AbortController();const timer=setTimeout(()=>timeout.abort(),12000);const abort=()=>timeout.abort();options.signal?.addEventListener('abort',abort,{once:true});
    try{const address=config.injectUrl.replace('{id}',encodeURIComponent(id));const response=await network(address,{signal:timeout.signal,cache:'no-store',headers:{Accept:'application/json'}});if(!response.ok)return json({error:'Inject временно недоступен'},502);let value=await response.json();for(const part of config.injectField.split('.').filter(Boolean))value=value[part];if(value==null||value==='')return json({word:'',event:null});if(typeof value!=='string'||value.trim().length>512)return json({error:'Некорректный ответ Inject'},502);const word=value.trim();return json({word,event:word})}catch(e){if(options.signal?.aborted)throw e;return json({error:'Нет связи с Inject. Повторяем подключение.'},502)}finally{clearTimeout(timer);options.signal?.removeEventListener('abort',abort)}
