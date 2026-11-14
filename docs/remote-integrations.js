@@ -1,6 +1,7 @@
 /* Independent six-digit output and automatic server-side Inject source. */
 (()=>{
  const $=id=>document.getElementById(id),storage='lexicon.web.remote.v1';
+ let capabilityRevision=0,sourceRevision=0;
  let cfg={passwordx:false,background:false},cap={},t=k=>k,context=()=>({}),saving=Promise.resolve(),capabilitiesReady=Promise.resolve(),modeSync=Promise.resolve();
  try{cfg={...cfg,...JSON.parse(localStorage.getItem(storage)||'{}')}}catch{}
  const save=()=>localStorage.setItem(storage,JSON.stringify(cfg));
@@ -11,35 +12,39 @@
   $('passwordx-connect').hidden=!!$('passwordx-url').value;
  }
  function refreshCapabilities(){
+  const generation=++capabilityRevision;
   capabilitiesReady=LexiconRelay.configuration().then(config=>{
+   if(generation!==capabilityRevision)return cap;
    cap=config;refresh();
    status('passwordx-status',cap.passwordx_configured?'':'remoteUnavailable');
    status('inject-background-status',cap.background_configured?'':'injectForegroundOnly');
    return cap;
-  }).catch(()=>{cap={};refresh();status('passwordx-status','remoteUnavailable');status('inject-background-status','injectBackgroundConnectionFailed');return null});
+  }).catch(()=>{if(generation!==capabilityRevision)return cap;cap={};refresh();status('passwordx-status','remoteUnavailable');status('inject-background-status','injectBackgroundConnectionFailed');return null});
   return capabilitiesReady;
  }
  const enabled=()=>cap.passwordx_configured===true&&cfg.passwordx===true;
  async function sync({explicit=false}={}){
+  const generation=++sourceRevision;
   await capabilitiesReady;
+  if(generation!==sourceRevision)return false;
   if(!cap.background_configured||!cfg.background&&!explicit)return;
   if(!cfg.background&&!LexiconRelay.apiDetails())return;
   const source={enabled:cfg.background===true,...context()};
   if(source.enabled&&!/^[A-Za-z0-9_-]{1,120}$/.test(source.inject_id||'')){status('inject-background-status','injectNeedId');return false}
   saving=saving.catch(()=>{}).then(async()=>{
-   try{await LexiconRelay.connect({watch:false});await LexiconRelay.updateSource(source);status('inject-background-status','');return true}
-   catch{status('inject-background-status','remoteSaveFailed');return false}
+   if(generation!==sourceRevision)return false;
+   try{await LexiconRelay.connect({watch:false});if(generation!==sourceRevision)return false;await LexiconRelay.updateSource(source);if(generation===sourceRevision)status('inject-background-status','');return true}
+   catch{if(generation===sourceRevision)status('inject-background-status','remoteSaveFailed');return false}
   });return saving;
  }
- window.LexiconRemote={getPreset:()=>({passwordx:enabled(),passwordxSuggestion:cfg.passwordxSuggestion===true}),applySuggestion(value){
+ window.LexiconRemote={getPreset:()=>({passwordx:cfg.passwordx===true,passwordxSuggestion:cfg.passwordxSuggestion===true}),applySuggestion(value){
   cfg.passwordxSuggestion=value===true;save();$('passwordx-use-suggestion').checked=cfg.passwordxSuggestion;
- },async applyPreset(value={}){
-  await capabilitiesReady;
-  cfg.passwordx=value.passwordx===true&&cap.passwordx_configured===true;
+ },applyPreset(value={}){
+  cfg.passwordx=value.passwordx===true;
   cfg.passwordxSuggestion=value.passwordxSuggestion===true;
   save();$('passwordx-use-suggestion').checked=cfg.passwordxSuggestion;refresh();
  },enabled,sync,useSuggestion:()=>cfg.passwordxSuggestion===true,setInjectActive(active){if(!active&&!cfg.background)return modeSync;cfg.background=active===true;save();modeSync=sync({explicit:true});return modeSync},init(translate,getContext){t=translate;context=getContext;refresh();
-  refreshCapabilities();window.addEventListener('online',()=>{refreshCapabilities().then(value=>{if(value?.background_configured&&cfg.background)sync()})});
+  refreshCapabilities();window.addEventListener('online',()=>{refreshCapabilities().then(value=>{if(value?.background_configured&&(cfg.background||LexiconRelay.apiDetails()))sync({explicit:true})})});
   const suggestion=$('passwordx-use-suggestion');
   suggestion.checked=cfg.passwordxSuggestion===true;
   suggestion.onchange=async()=>{
