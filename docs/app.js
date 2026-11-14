@@ -286,8 +286,8 @@ Object.assign(strings.ru, {
  passwordxMatchTitle:'Если совпадение неточное',
  passwordxSuggestion:'Передавать координаты ближайшего слова',
  passwordxNoMatch:'Если слово не найдено и подходящих координат нет, передаётся 000000. При выключенной настройке неточное совпадение также даёт 000000.',
- injectAutoWords:'Обрабатывать слова автоматически',
- injectAutoWordsHelp:'«Картинка слона» или «картинки слона» → «слон».',
+ injectAutoWords:'Распознавать фразы «картинки …»',
+ injectAutoWordsHelp:'Включено: «картинки слона» → «слон». Без «картинка/картинки» — обычный поиск, без изменения падежа.',
  injectCaseAmbiguous:'У этой формы несколько начальных слов.'
 });
 Object.assign(strings.en, {
@@ -295,8 +295,8 @@ Object.assign(strings.en, {
  passwordxMatchTitle:'If the match is approximate',
  passwordxSuggestion:'Send coordinates for the closest word',
  passwordxNoMatch:'If the word is not found and there are no coordinates to send, MyPasSwordX receives 000000. Approximate matches also give 000000 when this option is off.',
- injectAutoWords:'Process words automatically',
- injectAutoWordsHelp:'«Картинка слона» or «картинки слона» → «слон».',
+ injectAutoWords:'Recognize “images of …” phrases',
+ injectAutoWordsHelp:'On: «картинки слона» → «слон». Without «картинка/картинки», use ordinary search without changing the word form.',
  injectCaseAmbiguous:'This form has several possible headwords.'
 });
 

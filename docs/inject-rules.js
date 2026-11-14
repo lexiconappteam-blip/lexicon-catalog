@@ -12,6 +12,8 @@
   const words = [...value.matchAll(/[\p{L}\p{N}]+(?:[-‐‑][\p{L}\p{N}]+)*/gu)];
   const firstWord = normalize(words[0]?.[0] || '');
   const imagePrefix = firstWord === 'КАРТИНКА' || firstWord === 'КАРТИНКИ';
+  // Bare words keep ordinary typo matching; morphology requires the image prefix.
+  if (!imagePrefix) return {query:value, ambiguous:false};
   const lastWord = words.at(-1);
   const query = imagePrefix
    ? (words.length > 1 ? value.slice(words[1].index, lastWord.index + lastWord[0].length) : '')
