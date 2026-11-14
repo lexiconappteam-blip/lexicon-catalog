@@ -46,3 +46,14 @@
 :root[data-theme] #speech-settings #speech-test,:root[data-theme] #speech-settings #speech-stop{width:100%;min-width:0;box-sizing:border-box}
 
 :root[data-theme] .result h2 .result-word{display:inline-block;padding:0;min-height:44px;border:0;border-radius:0;background:transparent;color:inherit;font:inherit;letter-spacing:inherit;text-align:left;cursor:pointer}
+
+/* Keep each coordinate readable and expose every output profile on phones. */
+:root[data-theme] .preview-coordinate-group{display:inline-block;white-space:nowrap}
+@media(max-width:700px){
+ :root[data-theme] :is(#settings-view,#presets-view) #format-target{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;gap:2px 10px}
+ :root[data-theme] :is(#settings-view,#presets-view) #format-target button{min-width:0;min-height:44px;text-align:center;white-space:normal}
+ :root[data-theme] :is(#settings-view,#presets-view) .separator-presets button{min-width:44px;min-height:44px}
+}
+@media(max-width:360px){
+ :root[data-theme] :is(#settings-view,#presets-view) #format-target{grid-template-columns:repeat(2,minmax(0,1fr))}
+}

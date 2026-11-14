@@ -477,7 +477,16 @@ document.querySelectorAll('[data-separator]').forEach(button=>button.onclick=()=
 // Styled spans preserve exact textContent and never alter transported output.
 function presentPreview(node,text,options,uncertain=false){
  node.replaceChildren();
- const coordinates=text=>{const span=el('span','preview-coordinates');for(const part of text.split(/(\d+)/))span.append(/^\d+$/.test(part)?el('span','preview-number',part):document.createTextNode(part));return span};
+ const coordinates=text=>{
+  const span=el('span','preview-coordinates');
+  const group=/((?:страница|колонка|строчка|page|column|line)\s+\d+#?|\d+#?\s+(?:страница|колонка|строчка|page|column|line))/giu;
+  for(const piece of text.split(group)){
+   const target=/^(?:(?:страница|колонка|строчка|page|column|line)\s+\d+#?|\d+#?\s+(?:страница|колонка|строчка|page|column|line))$/iu.test(piece)?el('span','preview-coordinate-group'):span;
+   for(const part of piece.split(/(\d+)/))target.append(/^\d+$/.test(part)?el('span','preview-number',part):document.createTextNode(part));
+   if(target!==span)span.append(target);
+  }
+  return span;
+ };
  const word=uncertain&&!options.useSuggestion?'папаа':'ПАПА';
  if((options.fields.includes('word')||uncertain&&!options.useSuggestion)&&text.startsWith(word)){
   const end=word.length+(text[word.length]==='#'?1:0);node.append(el('span','preview-word',text.slice(0,end)));
@@ -513,7 +522,7 @@ function renderSuggestions(result){
  list.hidden=suggestionsDismissed||!options.length;$('query').setAttribute('aria-expanded',String(!list.hidden));
 }
 $('query').addEventListener('keydown',e=>{
- const options=[...$('suggestions').children];if(e.key==='Escape'){closeSuggestions();return}
+ const options=[...$('suggestions').children];if(e.key==='Escape'){e.preventDefault();closeSuggestions();return}
  if($('suggestions').hidden||!options.length)return;
  if(e.key==='ArrowDown'||e.key==='ArrowUp'){
   e.preventDefault();activeSuggestion=activeSuggestion<0?(e.key==='ArrowDown'?0:options.length-1):(activeSuggestion+(e.key==='ArrowDown'?1:-1)+options.length)%options.length;
