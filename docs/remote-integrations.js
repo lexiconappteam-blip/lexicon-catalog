@@ -37,7 +37,14 @@
    catch{if(generation===sourceRevision)status('inject-background-status','remoteSaveFailed');return false}
   });return saving;
  }
- window.LexiconRemote={getPreset:()=>({passwordx:cfg.passwordx===true,passwordxSuggestion:cfg.passwordxSuggestion===true}),applySuggestion(value){
+ window.LexiconRemote={async beforePublish(){
+  // Serialize manual output after source changes; retry a previously failed stop.
+  if(typeof capabilitiesReady!=='undefined')await capabilitiesReady;
+  const receiving=$('inject-mode')?.getAttribute('aria-pressed')==='true'||$('inject-mode')?.classList.contains('active');
+  if(receiving){if(typeof modeSync!=='undefined')await modeSync;return true}
+  cfg.background=false;save();
+  return (await sync({explicit:true}))!==false;
+ },getPreset:()=>({passwordx:cfg.passwordx===true,passwordxSuggestion:cfg.passwordxSuggestion===true}),applySuggestion(value){
   cfg.passwordxSuggestion=value===true;save();$('passwordx-use-suggestion').checked=cfg.passwordxSuggestion;
  },applyPreset(value={}){
   cfg.passwordx=value.passwordx===true;

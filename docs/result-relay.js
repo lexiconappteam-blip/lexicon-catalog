@@ -73,6 +73,7 @@
    const signature=JSON.stringify(actual);
    if(!payload.test&&last===signature)return true;
    try{
+    if(await window.LexiconRemote?.beforePublish?.()===false){refresh(t('relayFailed'));return false}
     const response=await api(path('result'),{method:'POST',body:JSON.stringify(actual)});
     let pushFailed=false;
     if(actual.notifications_enabled&&(actual.test||!actual.silent)&&!response.duplicate&&!(response.push_delivered>0)){
