@@ -1,4 +1,5 @@
 const $=id=>document.getElementById(id);
+const outputs=window.LexiconOutputDispatcher.create({relay:window.LexiconRelay,notifications:window.LexiconResults,speech:window.LexiconSpeech,api:window.LexiconApi});
 const strings={
   "ru": {"notificationSubscribed":"Уведомления подключены. Найдите новое слово.","notificationConnectionFailed":"Не удалось подключиться к серверу уведомлений.","notificationServerFailed":"Сервер уведомлений недоступен или не настроен.","notificationWorkerFailed":"Не запустился обработчик уведомлений. Закройте и снова откройте Lexicon по значку.","notificationSubscribeFailed":"iPhone не создал push-подписку. Проверьте разрешение уведомлений Lexicon в настройках iPhone.","notificationRegisterFailed":"Не удалось сохранить push-подписку на сервере. Проверьте соединение.","notificationNoSubscription":"На сервере нет push-подписки. Выключите и снова включите уведомления.","notificationPushRejected":"Push-сервис отклонил уведомление","notificationPushAccepted":"Push-сервис принял уведомление. Показ баннера на устройстве не подтверждён.","remoteSaved":"Источник сохранён. Получатель обновляет результат по ссылке, даже когда Lexicon закрыт.","remoteSaveFailed":"Не удалось сохранить. Проверьте подключение.","remoteUnavailable":"Сервис подключения недоступен. Попробуйте ещё раз.","passwordxHelp":"Custom API: URL выше, поле value. Формат: 127 / 2 / 7 → 127207.",
     "workspace": "ВАША БИБЛИОТЕКА",
@@ -574,13 +575,74 @@ async function resolveApproximate(body,book,signal){
  if(!ranked.length)return [];
  const response=await fetch('/api/search?'+new URLSearchParams({q:ranked[0].word,dictionary:book.id}),{signal});if(!response.ok)return [];const result=await response.json();return result.matches||[];
 }
-async function search({fromInject=false,ambiguousInject=false,preserveInjectSource=false}={}){clearTimeout(searchTimer);searchTimer=null;window.LexiconSpeech?.cancel();if(!selected)return false;clearTimeout(resultTimer);const q=$('query').value;const request=++serial;const book=selected;controller?.abort();controller=new AbortController();data=null;$('error').hidden=true;window.history.replaceState(null,'',route());if(!q.trim()){$('result-area').replaceChildren();$('suggestions').replaceChildren();$('suggestions').hidden=true;$('query').setAttribute('aria-expanded','false');$('query').removeAttribute('aria-activedescendant');$('welcome').hidden=false;return;}try{if(!fromInject&&!preserveInjectSource)void window.LexiconRemote?.setInjectActive(false);let body;
- if(ambiguousInject){
-  body={query:q,normalized:window.LexiconSearch.normalize(q),matches:[],suggestions:[],corrections:[],approximate:[],mode:'ambiguousInject'};
- }else{
-  const response=await fetch('/api/search?'+new URLSearchParams({q,dictionary:book.id}),{signal:controller.signal});
-  body=await response.json();if(!response.ok)throw Error();
- }if(request!==serial||book.id!==selected?.id)return;try{if(!ambiguousInject)body.approximate=await resolveApproximate(body,book,controller.signal)}catch(e){if(e.name==='AbortError')return;body.approximate=[]}if(request!==serial||book.id!==selected?.id)return;data=body;render(body);$('connection').textContent=t('online');if(body.matches.length){const deliver=()=>{if(request!==serial||currentView!=='search')return;remember(body.matches[0].word,book.id);window.LexiconResults.notify(body.matches,book.id);window.LexiconSpeech.receive(body.matches,book.id);window.LexiconApi.publish(body.matches);};if(fromInject)deliver();else resultTimer=setTimeout(deliver,450)}else{const deliverUnknown=()=>{if(request===serial&&currentView==='search'){window.LexiconRelay.publishUnknown(q,body.approximate);window.LexiconApi.publishUnknown(q,body.approximate);window.LexiconResults.notifyUnknown(q,body.approximate,book.id);window.LexiconSpeech.receiveUnknown(q,body.approximate,book.id)}};if(fromInject)deliverUnknown();else resultTimer=setTimeout(deliverUnknown,1000)}}catch(e){if(e.name==='AbortError'||request!==serial)return;$('error').textContent=t('offline');$('error').hidden=false;$('connection').textContent='';return false}}
+function scheduleSearchOutputs(body,{query,book,request,immediate}){
+ const deliver=()=>{
+  // Editing, navigation and book changes invalidate the scheduled result.
+  if(request!==serial||currentView!=='search')return;
+  if(body.matches.length){
+   remember(body.matches[0].word,book.id);
+   void outputs.found(body.matches,book.id);
+  }else{
+   void outputs.unknown(query,body.approximate,book.id);
+  }
+ };
+ if(immediate)deliver();
+ else resultTimer=setTimeout(deliver,body.matches.length?450:1000);
+}
+
+async function search({fromInject=false,ambiguousInject=false,preserveInjectSource=false}={}){
+ clearTimeout(searchTimer);
+ searchTimer=null;
+ window.LexiconSpeech?.cancel();
+ if(!selected)return false;
+ clearTimeout(resultTimer);
+ const q=$('query').value;
+ const request=++serial;
+ const book=selected;
+ controller?.abort();
+ controller=new AbortController();
+ data=null;
+ $('error').hidden=true;
+ window.history.replaceState(null,'',route());
+ if(!q.trim()){
+  $('result-area').replaceChildren();
+  $('suggestions').replaceChildren();
+  $('suggestions').hidden=true;
+  $('query').setAttribute('aria-expanded','false');
+  $('query').removeAttribute('aria-activedescendant');
+  $('welcome').hidden=false;
+  return;
+ }
+ try{
+  if(!fromInject&&!preserveInjectSource)void window.LexiconRemote?.setInjectActive(false);
+  let body;
+  if(ambiguousInject){
+   body={query:q,normalized:window.LexiconSearch.normalize(q),matches:[],suggestions:[],corrections:[],approximate:[],mode:'ambiguousInject'};
+  }else{
+   const response=await fetch('/api/search?'+new URLSearchParams({q,dictionary:book.id}),{signal:controller.signal});
+   body=await response.json();
+   if(!response.ok)throw Error();
+  }
+  if(request!==serial||book.id!==selected?.id)return;
+  try{
+   if(!ambiguousInject)body.approximate=await resolveApproximate(body,book,controller.signal);
+  }catch(error){
+   if(error.name==='AbortError')return;
+   body.approximate=[];
+  }
+  if(request!==serial||book.id!==selected?.id)return;
+  data=body;
+  render(body);
+  $('connection').textContent=t('online');
+  scheduleSearchOutputs(body,{query:q,book,request,immediate:fromInject});
+ }catch(error){
+  if(error.name==='AbortError'||request!==serial)return;
+  $('error').textContent=t('offline');
+  $('error').hidden=false;
+  $('connection').textContent='';
+  return false;
+ }
+}
 function language(){document.documentElement.lang=lang;$('language').value=lang;document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));document.querySelectorAll('[data-placeholder]').forEach(e=>e.placeholder=t(e.dataset.placeholder));$('query').ariaLabel=t('search');$('search-book').ariaLabel=t('selectBook');$('book-query').ariaLabel=t('findBook');$('search-history').ariaLabel=t('history');$('search-history').title=t('history');renderBooks();renderSelected();renderHistory();renderCopySettings();if(typeof refreshInjectUI==='function')refreshInjectUI();window.LexiconResults?.refresh?.();window.LexiconSpeech?.refresh?.();window.LexiconRelay?.refresh?.();if(data)render(data);$('breadcrumb').textContent=currentView==='search'?t('books')+' / '+bookName(selected?.id):t(currentView==='books'?'library':currentView==='presets'?'presetTitle':currentView)}
 async function loadBooks(){const error=$('catalog-error');error.hidden=true;$('book-count').textContent='…';try{const response=await fetch('/api/dictionaries');if(!response.ok)throw Error();const body=await response.json();books=body.dictionaries;renderBooks();renderHistory();restoreRoute()}catch{error.replaceChildren(el('span','',t('offline')));const retry=el('button','quiet-button',t('retry'));retry.onclick=loadBooks;error.append(retry);error.hidden=false;$('book-count').textContent='—'}}
 function restoreRoute(){const params=new URLSearchParams(location.search);const id=params.get('book')||(params.has('q')?'default':null);if(id&&books.some(b=>b.id===id))openBook(id,{query:(params.get('q')||'').slice(0,80),push:false});else navigate(params.get('view')==='history'?'search':['search','settings','presets'].includes(params.get('view'))?params.get('view'):'books',{push:false})}
@@ -719,7 +781,7 @@ function selectSettingsTab(key,{focus=false}={}){
 $('settings-tabs').onclick=event=>{const button=event.target.closest('[data-settings-tab]');if(button)selectSettingsTab(button.dataset.settingsTab)};
 $('settings-tabs').onkeydown=event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;const buttons=[...$('settings-tabs').querySelectorAll('[data-settings-tab]')],at=buttons.indexOf(document.activeElement);if(at<0)return;event.preventDefault();const index=event.key==='Home'?0:event.key==='End'?buttons.length-1:(at+(event.key==='ArrowLeft'?-1:1)+buttons.length)%buttons.length;selectSettingsTab(buttons[index].dataset.settingsTab,{focus:true})};
 $('search-book').onchange=()=>{const id=$('search-book').value,query=$('query').value||data?.query||'',wasApi=apiMode,wasInject=injectMode,receivingApi=window.LexiconApi?.isRunning(),receivingInject=injectRunning,source=$('api-source').value;openBook(id,{query});apiMode=wasApi;injectMode=wasInject;refreshInjectUI();refreshApiUI();if(wasApi&&receivingApi)window.LexiconApi.start(source);if(wasInject&&receivingInject)startInject()};
-language();window.LexiconRelay.init(t,()=>data?.matches||[],()=>data?.normalized&&!data.matches.length?data.query:'');window.LexiconApi.init(t,{active:()=>apiMode&&currentView==='search'&&!!selected,receive:async value=>{if(!apiMode||currentView!=='search'||!selected)return false;suggestionsDismissed=false;$('query').value=value;return await search({fromInject:true})},state:refreshApiUI,status:message=>$('api-receive-status').textContent=message});window.LexiconResults.init(t);window.LexiconSpeech.init(t);const booksReady=loadBooks();initInject();window.LexiconRemote.init(t,()=>({inject_id:$("inject-id").value.trim(),dictionary_id:selected?.id||"default",inject_rules:readInjectRules()}));
+language();window.LexiconRelay.init(t,()=>data?.matches||[],()=>data?.normalized&&!data.matches.length?data.query:'');window.LexiconApi.init(t,{active:()=>apiMode&&currentView==='search'&&!!selected,receive:async value=>{if(!apiMode||currentView!=='search'||!selected)return false;suggestionsDismissed=false;$('query').value=value;return await search({fromInject:true})},state:refreshApiUI,status:message=>$('api-receive-status').textContent=message});window.LexiconResults.init(t);window.LexiconSpeech.init(t);const booksReady=loadBooks();initInject();window.LexiconRemote.init(t,()=>({inject_id:$("inject-id").value.trim(),dictionary_id:selected?.id||"default",inject_rules:readInjectRules()}),()=>injectMode?"inject":apiMode?"api":"manual");
 
 Object.assign(strings.ru,{injectBackgroundConnectionFailed:'Нет связи с фоновым приёмом. Inject пока работает только при открытом Lexicon.'});
 Object.assign(strings.en,{injectBackgroundConnectionFailed:'Cannot connect to background receiving. Inject currently works only while Lexicon is open.'});

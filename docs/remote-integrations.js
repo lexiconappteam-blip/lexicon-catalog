@@ -2,7 +2,7 @@
 (()=>{
  const $=id=>document.getElementById(id),storage='lexicon.web.remote.v1';
  let capabilityRevision=0,sourceRevision=0;
- let cfg={passwordx:false,background:false},cap={},t=k=>k,context=()=>({}),saving=Promise.resolve(),capabilitiesReady=Promise.resolve(),modeSync=Promise.resolve();
+ let cfg={passwordx:false,background:false},cap={},t=k=>k,context=()=>({}),inputMode=()=> 'manual',saving=Promise.resolve(),capabilitiesReady=Promise.resolve(),modeSync=Promise.resolve();
  try{cfg={...cfg,...JSON.parse(localStorage.getItem(storage)||'{}')}}catch{}
  const save=()=>localStorage.setItem(storage,JSON.stringify(cfg));
  const status=(id,key)=>{$(id).textContent=key?t(key):'';$(id).hidden=!key};
@@ -40,7 +40,7 @@
  window.LexiconRemote={async beforePublish(){
   // Serialize manual output after source changes; retry a previously failed stop.
   if(typeof capabilitiesReady!=='undefined')await capabilitiesReady;
-  const receiving=$('inject-mode')?.getAttribute('aria-pressed')==='true'||$('inject-mode')?.classList.contains('active');
+  const receiving=inputMode()==='inject';
   if(receiving){if(typeof modeSync!=='undefined')await modeSync;return true}
   cfg.background=false;save();
   return (await sync({explicit:true}))!==false;
@@ -50,7 +50,7 @@
   cfg.passwordx=value.passwordx===true;
   cfg.passwordxSuggestion=value.passwordxSuggestion===true;
   save();$('passwordx-use-suggestion').checked=cfg.passwordxSuggestion;refresh();
- },enabled,sync,useSuggestion:()=>cfg.passwordxSuggestion===true,setInjectActive(active){if(!active&&!cfg.background)return modeSync;cfg.background=active===true;save();modeSync=sync({explicit:true});return modeSync},init(translate,getContext){t=translate;context=getContext;refresh();
+ },enabled,sync,useSuggestion:()=>cfg.passwordxSuggestion===true,setInjectActive(active){if(!active&&!cfg.background)return modeSync;cfg.background=active===true;save();modeSync=sync({explicit:true});return modeSync},init(translate,getContext,getInputMode){t=translate;context=getContext;inputMode=getInputMode||(()=>'manual');refresh();
   refreshCapabilities();window.addEventListener('online',()=>{refreshCapabilities().then(value=>{if(value?.background_configured&&(cfg.background||LexiconRelay.apiDetails()))sync({explicit:true})})});
   const suggestion=$('passwordx-use-suggestion');
   suggestion.checked=cfg.passwordxSuggestion===true;
